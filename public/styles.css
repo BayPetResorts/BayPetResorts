@@ -4,6 +4,12 @@
     box-sizing: border-box;
 }
 
+html, body {
+    width: 100%;
+    height: 100%;
+    overflow-x: hidden;
+}
+
 :root {
     --primary-blue: #1E3A5F;
     --beige-bg: #F5F0E8;
@@ -148,45 +154,68 @@ body {
 
 /* Hero Section */
 .hero {
-    background-color: var(--beige-bg);
-    min-height: calc(100vh - 140px);
-    display: flex;
-    align-items: center;
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    margin: 0;
+    padding: 0;
 }
 
-.hero-container {
+.hero-video-container {
+    position: absolute;
+    top: 0;
+    left: 0;
     width: 100%;
-    max-width: 1400px;
-    margin: 0 auto;
-    padding: 60px 20px;
+    height: 100%;
+    z-index: 1;
+}
+
+.hero-video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.hero-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.3);
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .hero-content {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 60px;
+    max-width: 1400px;
+    width: 100%;
+    padding: 0 40px;
+    display: flex;
     align-items: center;
+    justify-content: center;
 }
 
 .hero-text {
     display: flex;
     flex-direction: column;
     gap: 30px;
+    align-items: center;
+    text-align: center;
 }
 
 .hero-headline {
     font-size: 56px;
     font-weight: 700;
     line-height: 1.2;
-    color: var(--primary-blue);
+    color: var(--white);
     letter-spacing: -0.5px;
-}
-
-.hero-subheadline {
-    font-size: 24px;
-    font-weight: 600;
-    color: var(--primary-blue);
-    margin-top: 10px;
+    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.5);
+    margin: 0;
 }
 
 .search-box {
@@ -200,18 +229,19 @@ body {
     flex: 1;
     padding: 14px 18px;
     font-size: 16px;
-    border: 2px solid rgba(30, 58, 95, 0.2);
+    border: 2px solid rgba(255, 255, 255, 0.3);
     border-radius: 4px;
-    background-color: var(--white);
+    background-color: rgba(255, 255, 255, 0.95);
     color: var(--text-dark);
     font-family: inherit;
-    transition: border-color 0.2s;
+    transition: border-color 0.2s, background-color 0.2s;
 }
 
 .zip-input:focus {
-    outline: none;
-    border-color: var(--primary-blue);
+    background-color: var(--white);
+    border-color: var(--white);
 }
+
 
 .zip-input::placeholder {
     color: #999;
@@ -240,36 +270,36 @@ body {
     transform: translateY(0);
 }
 
-.hero-image {
-    width: 100%;
-    height: 100%;
-    min-height: 500px;
-    border-radius: 8px;
-    overflow: hidden;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+.btn-register-dog {
+    background-color: var(--primary-blue);
+    color: var(--white);
+    border: none;
+    padding: 20px 50px;
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    cursor: pointer;
+    border-radius: 6px;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+    pointer-events: auto;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+    text-transform: uppercase;
+    margin-top: 10px;
 }
 
-.image-placeholder {
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(135deg, #E8E0D6 0%, #D4C5B8 100%);
-    display: flex;
-    align-items: center;
-    justify-content: center;
+.btn-register-dog:hover {
+    background-color: #152A47;
+    transform: translateY(-2px) scale(1.05);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
+}
+
+.btn-register-dog:active {
+    transform: translateY(0) scale(1);
 }
 
 /* Responsive Design */
 @media (max-width: 1024px) {
-    .hero-content {
-        grid-template-columns: 1fr;
-        gap: 40px;
-    }
-
-    .hero-image {
-        min-height: 400px;
-        order: -1;
-    }
-
     .hero-headline {
         font-size: 48px;
     }
@@ -300,6 +330,11 @@ body {
     .btn-find-resort {
         padding: 10px 20px;
         font-size: 13px;
+    }
+
+    .hero-content {
+        padding: 0 20px;
+        gap: 30px;
     }
 
     .hero-headline {
@@ -334,8 +369,13 @@ body {
         font-size: 28px;
     }
 
-    .hero-container {
-        padding: 40px 15px;
+    .hero-content {
+        padding: 0 15px;
+    }
+
+    .btn-register-dog {
+        padding: 16px 35px;
+        font-size: 16px;
     }
 }
 

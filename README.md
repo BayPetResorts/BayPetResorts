@@ -48,6 +48,9 @@ The project uses `nodemon` for automatic server restarts during development. Whe
 ```
 BayPetVentures_Website_v2/
 ├── public/
+│   ├── assets/
+│   │   ├── images/     # Image files (jpg, png, svg, webp, etc.)
+│   │   └── videos/     # Video files (mp4, webm, mov, etc.)
 │   ├── index.html      # Main HTML file
 │   ├── styles.css      # Stylesheet
 │   └── script.js       # JavaScript functionality
@@ -84,11 +87,24 @@ Search for locations by zip code.
 }
 ```
 
+## Assets
+
+Place your images and videos in the `public/assets/` directory:
+- **Images**: `public/assets/images/` - Use paths like `/assets/images/your-image.jpg` in your HTML/CSS
+- **Videos**: `public/assets/videos/` - Use paths like `/assets/videos/your-video.mp4` in your HTML
+
+Example usage in HTML:
+```html
+<img src="/assets/images/hero-image.jpg" alt="Hero Image">
+<video src="/assets/videos/promo-video.mp4" controls></video>
+```
+
 ## Customization
 
 - **Colors**: Edit CSS variables in `public/styles.css` under `:root`
 - **Content**: Modify text and structure in `public/index.html`
 - **Functionality**: Add features in `public/script.js`
+- **Assets**: Add images and videos to `public/assets/`
 - **API**: Update the `/api/locations` endpoint in `server.js` to connect to your database
 
 ## Environment Variables
