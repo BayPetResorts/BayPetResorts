@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bay Pet Ventures - Luxury Pet Care</title>
+    <title>Bay Pet Resorts - Luxury Pet Care</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -36,7 +36,7 @@
                         <path d="M20 0C8.95 0 0 8.95 0 20C0 31.05 8.95 40 20 40C31.05 40 40 31.05 40 20C40 8.95 31.05 0 20 0ZM20 24C16.69 24 14 21.31 14 18C14 14.69 16.69 12 20 12C23.31 12 26 14.69 26 18C26 21.31 23.31 24 20 24Z" fill="#1E3A5F"/>
                         <path d="M12 28C12 28 14 32 20 32C26 32 28 28 28 28" stroke="#1E3A5F" stroke-width="2" stroke-linecap="round"/>
                     </svg>
-                    <span class="logo-text">BAY PET VENTURES</span>
+                    <span class="logo-text">BAY PET RESORTS</span>
                 </div>
                 <nav class="main-nav">
                     <a href="#boarding" class="nav-link">LUXURY BOARDING</a>
@@ -68,6 +68,48 @@
             </div>
         </div>
     </section>
+
+    <!-- Contact Form Modal -->
+    <div id="contactModal" class="modal">
+        <div class="modal-content">
+            <span class="modal-close">&times;</span>
+            <h2>Register Your Dog</h2>
+            <p class="modal-subtitle">Fill out the form below and we'll get back to you soon!</p>
+            <form id="contactForm" class="contact-form">
+                <div class="form-group">
+                    <label for="name">Full Name *</label>
+                    <input type="text" id="name" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email Address *</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="phone">Phone Number *</label>
+                    <input type="tel" id="phone" name="phone" required>
+                </div>
+                <div class="form-group">
+                    <label for="dogName">Dog's Name</label>
+                    <input type="text" id="dogName" name="dogName">
+                </div>
+                <div class="form-group">
+                    <label for="service">Service Interested In</label>
+                    <select id="service" name="service">
+                        <option value="">Select a service...</option>
+                        <option value="Luxury Boarding">Luxury Boarding</option>
+                        <option value="Doggie Daycare">Doggie Daycare</option>
+                        <option value="Both">Both</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="message">Message</label>
+                    <textarea id="message" name="message" rows="4"></textarea>
+                </div>
+                <div id="formMessage" class="form-message"></div>
+                <button type="submit" class="btn-submit">Submit</button>
+            </form>
+        </div>
+    </div>
 
     <script src="script.js"></script>
 </body>

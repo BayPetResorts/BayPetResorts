@@ -1,6 +1,6 @@
-# Bay Pet Ventures Website
+# Bay Pet Resorts Website
 
-A modern, responsive website for Bay Pet Ventures, featuring luxury pet care services. Built with Node.js and Express.
+A modern, responsive website for Bay Pet Resorts, featuring luxury pet care services. Built with Node.js and Express.
 
 ## Features
 
@@ -46,7 +46,7 @@ The project uses `nodemon` for automatic server restarts during development. Whe
 ## File Structure
 
 ```
-BayPetVentures_Website_v2/
+BayPetResorts_Website_v2/
 ├── public/
 │   ├── assets/
 │   │   ├── images/     # Image files (jpg, png, svg, webp, etc.)
@@ -75,7 +75,7 @@ Search for locations by zip code.
   "locations": [
     {
       "id": 1,
-      "name": "Bay Pet Ventures - Main Location",
+      "name": "Bay Pet Resorts - Main Location",
       "address": "123 Pet Care Blvd",
       "city": "San Francisco",
       "state": "CA",

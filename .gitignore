@@ -8,6 +8,9 @@ yarn.lock
 .env.local
 .env.*.local
 
+# Google Sheets credentials (if using file-based auth)
+credentials.json
+
 # Logs
 logs
 *.log
