@@ -252,6 +252,33 @@ GOOGLE_REDIRECT_URI=https://baypetresorts.com/oauth2callback
 2. Restart your server
 3. Test the form on https://baypetresorts.com
 
+### Troubleshooting Production Issues
+
+**Check server startup logs:**
+- You should see: `✅ Google Sheets integration enabled (OAuth 2.0)`
+- You should see: `📋 Environment: production`
+- If you see "Google Sheets not configured", your environment variables aren't loading
+
+**Common Issues:**
+
+1. **Environment variables not loading:**
+   - Make sure `NODE_ENV=production` is set
+   - Verify all variables are set (not just in `.env` file)
+   - If using a hosting service, set variables in their dashboard
+
+2. **403 Forbidden error:**
+   - Verify Google Sheets API is enabled in your project
+   - Check that redirect URI `https://baypetresorts.com/oauth2callback` is added in Google Cloud Console
+   - The redirect URI must match exactly (including https://)
+
+3. **Refresh token issues:**
+   - The refresh token should work for both local and production
+   - If you get token errors, you may need to regenerate it using the production redirect URI
+
+4. **Check production logs:**
+   - Look for error messages that show what's failing
+   - The server now logs detailed error information including status codes
+
 ## Next Steps
 
 - Set up email notifications when new submissions arrive

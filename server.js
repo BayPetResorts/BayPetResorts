@@ -96,6 +96,7 @@ app.post('/api/contact', async (req, res) => {
     // If Google Sheets is configured, save to sheet
     const sheetId = process.env.GOOGLE_SHEET_ID;
     if (sheets && sheetId) {
+      console.log(`📊 Attempting to save to Google Sheets (Sheet ID: ${sheetId.substring(0, 10)}...)`);
       const range = 'Sheet1!A:G'; // Adjust range based on your sheet structure
 
       // Refresh OAuth token if using OAuth 2.0
@@ -169,12 +170,24 @@ app.post('/api/contact', async (req, res) => {
     });
 
   } catch (error) {
-    console.error('Error processing contact form:', error);
+    console.error('❌ Error processing contact form:', error);
+    console.error('Error details:', {
+      message: error.message,
+      code: error.code,
+      status: error.status,
+      statusText: error.statusText,
+      errors: error.errors
+    });
     
     // If it's a Google Sheets error, still return success to user
     // but log the error for debugging
     if (error.code === 'ENOTFOUND' || error.code === 'ECONNREFUSED') {
       console.error('⚠️  Could not connect to Google Sheets API. Check your credentials.');
+    } else if (error.status === 403) {
+      console.error('⚠️  Permission denied. Check that:');
+      console.error('   1. Google Sheets API is enabled in your project');
+      console.error('   2. The OAuth redirect URI matches: ' + (process.env.GOOGLE_REDIRECT_URI || (process.env.NODE_ENV === 'production' ? 'https://baypetresorts.com/oauth2callback' : 'http://localhost:3000/oauth2callback')));
+      console.error('   3. Your refresh token is valid');
     }
 
     res.status(500).json({ 
@@ -189,7 +202,11 @@ app.get('*', (req, res) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`🚀 Bay Pet Resorts server running on http://localhost:${PORT}`);
+  const serverUrl = process.env.NODE_ENV === 'production' 
+    ? 'https://baypetresorts.com' 
+    : `http://localhost:${PORT}`;
+  console.log(`🚀 Bay Pet Resorts server running on ${serverUrl}`);
+  console.log(`📋 Environment: ${process.env.NODE_ENV || 'development'}`);
   if (!sheets) {
     console.log('ℹ️  Google Sheets not configured. Form submissions will be logged to console only.');
     console.log('   See SETUP.md for instructions on setting up Google Sheets integration.');
