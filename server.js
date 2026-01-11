@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const path = require('path');
 const { google } = require('googleapis');
@@ -20,7 +21,9 @@ if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET && process.
     oauth2Client = new google.auth.OAuth2(
       process.env.GOOGLE_CLIENT_ID,
       process.env.GOOGLE_CLIENT_SECRET,
-      process.env.GOOGLE_REDIRECT_URI || 'http://localhost:3000/oauth2callback'
+      process.env.GOOGLE_REDIRECT_URI || (process.env.NODE_ENV === 'production' 
+        ? 'https://baypetresorts.com/oauth2callback' 
+        : 'http://localhost:3000/oauth2callback')
     );
 
     // Set the refresh token

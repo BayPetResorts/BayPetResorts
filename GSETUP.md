@@ -22,33 +22,37 @@ The contact form is already integrated into the website. When users click "Regis
    - Click "Enable"
 
 ### Step 2: Complete OAuth Consent Screen
-
 1. In Google Cloud Console, go to "APIs & Services" > "OAuth consent screen"
 2. Fill in the required information:
    - **App name**: `Bay Pet Resorts Contact Form` (or similar)
    - **User support email**: Your email address
-   - Click "Save and Continue"
-3. **Add Scopes:**
+3. **Select User Type:**
+   - Choose **"Internal"** (only available to users within your organization)
+   - Click "Next"
+4. **Add Scopes:**
    - Click "Add or Remove Scopes"
-   - Search for and add: `https://www.googleapis.com/auth/spreadsheets`
+   - If the Google Sheets API scope doesn't appear in the list, use the **"Manually add scopes"** section at the bottom
+   - In the text area, paste: `https://www.googleapis.com/auth/spreadsheets`
+   - Click "Add to table"
    - Click "Update" then "Save and Continue"
-4. Complete the remaining steps (Test users, Summary)
-5. Click "Back to Dashboard"
+5. Complete the remaining steps (Test users, Summary)
+6. Click "Back to Dashboard"
 
 ### Step 3: Create OAuth Client ID
-
 1. Go to "APIs & Services" > "Credentials"
 2. Click "Create Credentials" > "OAuth client ID"
 3. If prompted, configure the consent screen (you may have already done this in Step 2)
 4. Choose "Web application"
 5. Fill in:
    - **Name**: `Bay Pet Resorts Sheets Client`
-   - **Authorized redirect URIs**: `http://localhost:3001/oauth2callback`
+   - **Authorized redirect URIs**: 
+     - `http://localhost:3000/oauth2callback` (for local development)
+     - `https://baypetresorts.com/oauth2callback` (for production)
+     - Click "Add URI" to add multiple redirect URIs
 6. Click "Create"
 7. **Copy the Client ID and Client Secret** - you'll need these for your `.env` file!
 
 ### Step 4: Get Your Refresh Token
-
 1. **Set environment variables temporarily:**
    ```bash
    export GOOGLE_CLIENT_ID="your-client-id.apps.googleusercontent.com"
@@ -72,7 +76,6 @@ The contact form is already integrated into the website. When users click "Regis
 **Note:** The refresh token is long-lived and won't expire unless you revoke access. Once set up, your app will work automatically without re-authentication.
 
 ### Step 5: Create Google Sheet
-
 1. Create a new Google Sheet in your Google Drive
 2. Name it something like "Bay Pet Resorts - Contact Submissions"
 3. **Share the sheet** with your Google account (the one you used for OAuth)
@@ -100,7 +103,12 @@ GOOGLE_SHEET_ID=your_sheet_id_here
 GOOGLE_CLIENT_ID=your-client-id.apps.googleusercontent.com
 GOOGLE_CLIENT_SECRET=your-client-secret
 GOOGLE_REFRESH_TOKEN=your-refresh-token-from-setup-script
-GOOGLE_REDIRECT_URI=http://localhost:3001/oauth2callback
+GOOGLE_REDIRECT_URI=http://localhost:3000/oauth2callback
+```
+
+**For Production (baypetresorts.com):**
+```env
+GOOGLE_REDIRECT_URI=https://baypetresorts.com/oauth2callback
 ```
 
 **Important Notes:**
@@ -215,6 +223,34 @@ If you prefer to receive submissions via email instead of Google Sheets, you can
 
 **Pros:** Simple, no Google Cloud setup needed, works immediately  
 **Cons:** Submissions go to email instead of a spreadsheet
+
+## Production Deployment (baypetresorts.com)
+
+### Step 1: Update Google Cloud Console
+1. Go to "APIs & Services" > "Credentials"
+2. Find your OAuth 2.0 Client ID
+3. Click "Edit" (pencil icon)
+4. Under "Authorized redirect URIs", add:
+   - `https://baypetresorts.com/oauth2callback`
+5. Click "Save"
+
+### Step 2: Update Environment Variables
+On your production server, set the environment variables:
+```env
+NODE_ENV=production
+GOOGLE_SHEET_ID=your_sheet_id_here
+GOOGLE_CLIENT_ID=your-client-id.apps.googleusercontent.com
+GOOGLE_CLIENT_SECRET=your-client-secret
+GOOGLE_REFRESH_TOKEN=your-refresh-token
+GOOGLE_REDIRECT_URI=https://baypetresorts.com/oauth2callback
+```
+
+**Note:** The server will automatically use the production redirect URI when `NODE_ENV=production` is set.
+
+### Step 3: Deploy
+1. Make sure your production server has all environment variables set
+2. Restart your server
+3. Test the form on https://baypetresorts.com
 
 ## Next Steps
 
