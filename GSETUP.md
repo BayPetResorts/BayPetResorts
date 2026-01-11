@@ -234,23 +234,63 @@ If you prefer to receive submissions via email instead of Google Sheets, you can
    - `https://baypetresorts.com/oauth2callback`
 5. Click "Save"
 
-### Step 2: Update Environment Variables
-On your production server, set the environment variables:
-```env
-NODE_ENV=production
-GOOGLE_SHEET_ID=your_sheet_id_here
-GOOGLE_CLIENT_ID=your-client-id.apps.googleusercontent.com
-GOOGLE_CLIENT_SECRET=your-client-secret
-GOOGLE_REFRESH_TOKEN=your-refresh-token
-GOOGLE_REDIRECT_URI=https://baypetresorts.com/oauth2callback
-```
+### Step 2: Configure Environment Variables in Vercel
 
-**Note:** The server will automatically use the production redirect URI when `NODE_ENV=production` is set.
+If you're deploying to Vercel, you need to add environment variables in the Vercel dashboard:
 
-### Step 3: Deploy
-1. Make sure your production server has all environment variables set
-2. Restart your server
-3. Test the form on https://baypetresorts.com
+1. **Go to your Vercel Dashboard:**
+   - Navigate to [vercel.com](https://vercel.com) and log in
+   - Select your project (BayPetResorts)
+
+2. **Open Environment Variables:**
+   - Go to **Settings** → **Environment Variables**
+
+3. **Add the following environment variables:**
+   - Click **"Add New"** for each variable below
+   - Use the same values from your local `.env` file
+   
+   **Required Variables:**
+   - `GOOGLE_SHEET_ID` = `your_sheet_id_here`
+   - `GOOGLE_CLIENT_ID` = `your-client-id.apps.googleusercontent.com`
+   - `GOOGLE_CLIENT_SECRET` = `your-client-secret`
+   - `GOOGLE_REFRESH_TOKEN` = `your-refresh-token`
+   - `GOOGLE_REDIRECT_URI` = `https://baypetresorts.com/oauth2callback`
+   - `NODE_ENV` = `production` (optional, but recommended)
+
+4. **Set Environment Scope:**
+   - For each variable, select **"Production"** (and optionally "Preview" if you want it in preview deployments)
+   - Click **"Save"**
+
+5. **Redeploy:**
+   - After adding all variables, go to **Deployments** tab
+   - Click the three dots (⋯) on your latest deployment
+   - Select **"Redeploy"** to apply the new environment variables
+   - Or wait for the next automatic deployment after pushing code
+
+**Important:** 
+- The environment variables in Vercel are separate from your local `.env` file
+- You must add them manually in the Vercel dashboard
+- After adding variables, you must redeploy for them to take effect
+
+### Step 3: Verify Deployment
+
+1. **Check deployment logs:**
+   - Go to your Vercel project → **Deployments**
+   - Click on the latest deployment
+   - Check the build logs or function logs
+   - You should see: `✅ Google Sheets integration enabled (OAuth 2.0)`
+   - You should see: `📋 Environment: production`
+
+2. **Test the form:**
+   - Visit https://baypetresorts.com
+   - Click "Register Your Dog"
+   - Fill out and submit the form
+   - Check your Google Sheet - the submission should appear!
+
+**If you see "Google Sheets not configured" in the logs:**
+- Verify all environment variables are set in Vercel
+- Make sure you selected "Production" environment for each variable
+- Try redeploying the project
 
 ### Troubleshooting Production Issues
 
@@ -264,7 +304,9 @@ GOOGLE_REDIRECT_URI=https://baypetresorts.com/oauth2callback
 1. **Environment variables not loading:**
    - Make sure `NODE_ENV=production` is set
    - Verify all variables are set (not just in `.env` file)
-   - If using a hosting service, set variables in their dashboard
+   - **If using Vercel:** Go to Settings → Environment Variables and verify all variables are added with "Production" environment selected
+   - After adding/updating variables in Vercel, you must redeploy for changes to take effect
+   - Check Vercel deployment logs to see if variables are being loaded
 
 2. **403 Forbidden error:**
    - Verify Google Sheets API is enabled in your project

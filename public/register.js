@@ -1,15 +1,12 @@
-// Bay Pet Resorts - Contact Form Handler
+// Bay Pet Resorts - Registration Form Handler
 document.addEventListener('DOMContentLoaded', function() {
     // Constants
     const TOTAL_STEPS = 3;
-    const MODAL_CLOSE_DELAY = 2000;
     const PHONE_REGEX = /^[\d\s\(\)\-]+$/;
     const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     const MIN_PHONE_LENGTH = 10;
     
     // DOM Elements
-    const modal = document.getElementById('contactModal');
-    const closeBtn = document.querySelector('.modal-close');
     const contactForm = document.getElementById('contactForm');
     const formMessage = document.getElementById('formMessage');
     const successScreen = document.getElementById('successScreen');
@@ -50,22 +47,6 @@ document.addEventListener('DOMContentLoaded', function() {
         if (btn) {
             btn.disabled = false;
             btn.textContent = originalText;
-        }
-    }
-    
-    // Modal Functions
-    function openModal() {
-        if (modal) {
-            modal.style.display = 'flex';
-            document.body.style.overflow = 'hidden';
-        }
-    }
-    
-    function closeModal() {
-        if (modal) {
-            modal.style.display = 'none';
-            document.body.style.overflow = 'auto';
-            resetForm();
         }
     }
     
@@ -254,37 +235,17 @@ document.addEventListener('DOMContentLoaded', function() {
             
             if (response.ok) {
                 showSuccessScreen();
-                
-                setTimeout(() => {
-                    closeModal();
-                    resetForm();
-                }, MODAL_CLOSE_DELAY * 2);
             } else {
                 showError(data.error || 'Something went wrong. Please try again.');
+                resetSubmitButton(submitBtn, originalBtnText);
             }
         } catch (error) {
             showError('Network error. Please check your connection and try again.');
-        } finally {
             resetSubmitButton(submitBtn, originalBtnText);
         }
     }
     
     // Event Listeners
-    if (closeBtn) {
-        closeBtn.addEventListener('click', closeModal);
-    }
-    
-    const closeSuccessBtn = document.querySelector('.btn-close-success');
-    if (closeSuccessBtn) {
-        closeSuccessBtn.addEventListener('click', closeModal);
-    }
-    
-    if (modal) {
-        modal.addEventListener('click', (e) => {
-            if (e.target === modal) closeModal();
-        });
-    }
-    
     document.querySelectorAll('.btn-next').forEach(btn => {
         btn.addEventListener('click', (e) => {
             e.preventDefault();
@@ -313,60 +274,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function(e) {
-            e.preventDefault();
-            const target = document.querySelector(this.getAttribute('href'));
-            if (target) {
-                target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            }
-        });
-    });
-    
-    // Ensure video autoplays on mobile
-    const heroVideo = document.querySelector('.hero-video');
-    if (heroVideo) {
-        // Set video properties for mobile compatibility
-        heroVideo.setAttribute('playsinline', '');
-        heroVideo.setAttribute('webkit-playsinline', '');
-        heroVideo.muted = true;
-        
-        // Function to attempt video playback
-        const attemptPlay = () => {
-            const playPromise = heroVideo.play();
-            if (playPromise !== undefined) {
-                playPromise.catch(() => {
-                    // Autoplay was prevented, try again after user interaction
-                    const playOnInteraction = () => {
-                        heroVideo.play().catch(() => {});
-                        document.removeEventListener('touchstart', playOnInteraction);
-                        document.removeEventListener('click', playOnInteraction);
-                    };
-                    document.addEventListener('touchstart', playOnInteraction, { once: true });
-                    document.addEventListener('click', playOnInteraction, { once: true });
-                });
-            }
-        };
-        
-        // Try to play immediately
-        if (heroVideo.readyState >= 2) {
-            attemptPlay();
-        } else {
-            heroVideo.addEventListener('loadeddata', attemptPlay, { once: true });
-            heroVideo.addEventListener('canplay', attemptPlay, { once: true });
-        }
-        
-        // Ensure video plays when it becomes visible
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting && heroVideo.paused) {
-                    attemptPlay();
-                }
-            });
-        }, { threshold: 0.1 });
-        
-        observer.observe(heroVideo);
-    }
-    
     initializeFormFields();
 });
+

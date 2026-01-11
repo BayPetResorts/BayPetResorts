@@ -8,6 +8,12 @@ const PORT = process.env.PORT || 3000;
 
 // Middleware
 app.use(express.json());
+
+// Serve register page (before static middleware to ensure it's matched)
+app.get('/register', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'register.html'));
+});
+
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Google Sheets setup with OAuth 2.0
@@ -80,11 +86,11 @@ app.get('/api/locations', (req, res) => {
 // API route for contact form submission
 app.post('/api/contact', async (req, res) => {
   try {
-    const { name, email, phone, dogName, service, message, timestamp } = req.body;
+    const { phone, firstName, lastName, email, dogName, breed, notes, timestamp } = req.body;
 
     // Validate required fields
-    if (!name || !email || !phone) {
-      return res.status(400).json({ error: 'Name, email, and phone are required fields' });
+    if (!phone || !firstName || !lastName || !email || !dogName || !breed) {
+      return res.status(400).json({ error: 'All fields are required' });
     }
 
     // Validate email format
@@ -97,7 +103,7 @@ app.post('/api/contact', async (req, res) => {
     const sheetId = process.env.GOOGLE_SHEET_ID;
     if (sheets && sheetId) {
       console.log(`📊 Attempting to save to Google Sheets (Sheet ID: ${sheetId.substring(0, 10)}...)`);
-      const range = 'Sheet1!A:G'; // Adjust range based on your sheet structure
+      const range = 'Sheet1!A:H'; // Timestamp, First Name, Last Name, Email, Phone, Dog Name, Breed, Notes
 
       // Refresh OAuth token if using OAuth 2.0
       if (oauth2Client) {
@@ -114,17 +120,17 @@ app.post('/api/contact', async (req, res) => {
       try {
         const headerResponse = await sheets.spreadsheets.values.get({
           spreadsheetId: sheetId,
-          range: 'Sheet1!A1:G1'
+          range: 'Sheet1!A1:H1'
         });
 
         if (!headerResponse.data.values || headerResponse.data.values.length === 0) {
           // Add headers
-          await sheets.spreadsheets.values.append({
+          await sheets.spreadsheets.values.update({
             spreadsheetId: sheetId,
-            range: 'Sheet1!A1:G1',
+            range: 'Sheet1!A1:H1',
             valueInputOption: 'RAW',
             resource: {
-              values: [['Timestamp', 'Name', 'Email', 'Phone', 'Dog Name', 'Service', 'Message']]
+              values: [['Timestamp', 'First Name', 'Last Name', 'Email', 'Phone', 'Dog Name', 'Breed', 'Notes']]
             }
           });
         }
@@ -140,12 +146,13 @@ app.post('/api/contact', async (req, res) => {
         resource: {
           values: [[
             timestamp || new Date().toISOString(),
-            name,
+            firstName,
+            lastName,
             email,
             phone,
-            dogName || '',
-            service || '',
-            message || ''
+            dogName,
+            breed,
+            notes || ''
           ]]
         }
       });
@@ -154,12 +161,13 @@ app.post('/api/contact', async (req, res) => {
     } else {
       // Log to console if Google Sheets is not configured
       console.log('📝 Contact Form Submission (not saved to Sheets):', {
-        name,
+        firstName,
+        lastName,
         email,
         phone,
         dogName,
-        service,
-        message,
+        breed,
+        notes: notes || '(none)',
         timestamp
       });
     }
@@ -196,7 +204,7 @@ app.post('/api/contact', async (req, res) => {
   }
 });
 
-// Serve index.html for all routes (SPA support)
+// Serve index.html for all other routes (SPA support)
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });

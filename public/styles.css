@@ -286,6 +286,8 @@ body {
     box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
     text-transform: uppercase;
     margin-top: 10px;
+    display: inline-block;
+    text-decoration: none;
 }
 
 .btn-register-dog:hover {
@@ -341,9 +343,6 @@ body {
         font-size: 36px;
     }
 
-    .hero-subheadline {
-        font-size: 20px;
-    }
 
     .search-box {
         flex-direction: column;
@@ -487,6 +486,19 @@ body {
     transition: border-color 0.2s, box-shadow 0.2s;
 }
 
+.form-group select {
+    cursor: pointer;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%231E3A5F' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    padding-right: 40px;
+}
+
+.form-group select option {
+    padding: 8px;
+}
+
 .form-group input:focus,
 .form-group select:focus,
 .form-group textarea:focus {
@@ -523,6 +535,88 @@ body {
     border: 1px solid #f5c6cb;
 }
 
+/* Success Screen */
+.success-screen {
+    padding: 40px 20px;
+    animation: fadeIn 0.5s ease-out;
+}
+
+.success-content {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    flex-wrap: wrap;
+}
+
+.success-icon {
+    flex-shrink: 0;
+    animation: scaleIn 0.5s ease-out;
+}
+
+@keyframes scaleIn {
+    from {
+        opacity: 0;
+        transform: scale(0.5);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.success-text {
+    flex: 1;
+    min-width: 200px;
+}
+
+.success-screen h2 {
+    color: var(--primary-blue);
+    font-size: 32px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    letter-spacing: -0.5px;
+}
+
+.success-message {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text-dark);
+    margin-bottom: 8px;
+}
+
+.success-submessage {
+    font-size: 16px;
+    color: #6c757d;
+    line-height: 1.6;
+    margin: 0;
+}
+
+.success-action {
+    flex-shrink: 0;
+}
+
+.btn-close-success {
+    background-color: var(--primary-blue);
+    color: var(--white);
+    border: none;
+    padding: 14px 32px;
+    font-size: 16px;
+    font-weight: 600;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 0.3px;
+    display: inline-block;
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+.btn-close-success:hover {
+    background-color: #152A47;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(30, 58, 95, 0.3);
+}
+
 .btn-submit {
     background-color: var(--primary-blue);
     color: var(--white);
@@ -552,6 +646,212 @@ body {
     cursor: not-allowed;
 }
 
+/* Multi-step Form Styles with Dog Walking Animation */
+.form-progress {
+    margin-bottom: 40px;
+    padding: 0 10px;
+}
+
+.progress-track {
+    position: relative;
+    height: 80px;
+    display: flex;
+    align-items: center;
+}
+
+.progress-track::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(to right, var(--primary-blue) 0%, var(--primary-blue) 0%, var(--beige-light) 0%);
+    background-size: 100% 100%;
+    transform: translateY(-50%);
+    border-radius: 2px;
+    transition: background 0.5s ease;
+}
+
+.dog-walker {
+    position: absolute;
+    top: calc(50% + 20px);
+    left: 0;
+    transform: translate(-50%, -100%);
+    z-index: 10;
+    transition: left 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    animation: dogWalk 0.8s ease-in-out infinite;
+}
+
+.dog-walker.step-1 { left: 0%; }
+.dog-walker.step-2 { left: 50%; }
+.dog-walker.step-3 { left: 100%; }
+
+.dog-icon {
+    width: 120px;
+    height: auto;
+    object-fit: contain;
+    filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.3));
+    animation: dogBounce 0.6s ease-in-out infinite;
+    transform-origin: center bottom;
+}
+
+@keyframes dogWalk {
+    0%, 100% {
+        transform: translate(-50%, -100%) rotate(0deg);
+    }
+    25% {
+        transform: translate(-50%, calc(-100% - 2px)) rotate(-2deg);
+    }
+    75% {
+        transform: translate(-50%, calc(-100% + 2px)) rotate(2deg);
+    }
+}
+
+@keyframes dogBounce {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-3px);
+    }
+}
+
+.progress-milestones {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    height: 100%;
+    z-index: 5;
+}
+
+.milestone {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    flex: 1;
+    position: relative;
+}
+
+.milestone-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background-color: var(--beige-light);
+    border: 2px solid var(--beige-light);
+    transition: all 0.3s ease;
+    margin-top: 34px;
+}
+
+.milestone.active .milestone-dot {
+    background-color: var(--primary-blue);
+    border-color: var(--primary-blue);
+    box-shadow: 0 0 0 4px rgba(30, 58, 95, 0.1);
+    transform: scale(1.2);
+}
+
+.milestone-label {
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--text-dark);
+    opacity: 0.5;
+    text-align: center;
+    transition: all 0.3s ease;
+    margin-top: 4px;
+}
+
+.milestone.active .milestone-label {
+    opacity: 1;
+    color: var(--primary-blue);
+    font-weight: 600;
+}
+
+/* Update progress track background based on step */
+.progress-track.step-1::before {
+    background: linear-gradient(to right, var(--primary-blue) 0%, var(--beige-light) 0%);
+}
+
+.progress-track.step-2::before {
+    background: linear-gradient(to right, var(--primary-blue) 50%, var(--beige-light) 50%);
+}
+
+.progress-track.step-3::before {
+    background: linear-gradient(to right, var(--primary-blue) 100%, var(--primary-blue) 100%);
+}
+
+.form-step {
+    display: none;
+    animation: fadeIn 0.3s ease-out;
+}
+
+.form-step.active {
+    display: block;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateX(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.form-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid var(--beige-light);
+}
+
+.btn-next,
+.btn-back {
+    padding: 12px 24px;
+    font-size: 16px;
+    font-weight: 600;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: none;
+    letter-spacing: 0.3px;
+}
+
+.btn-next {
+    background-color: var(--primary-blue);
+    color: var(--white);
+}
+
+.btn-next:hover:not(:disabled) {
+    background-color: #152A47;
+    transform: translateY(-1px);
+}
+
+.btn-back {
+    background-color: transparent;
+    color: var(--text-dark);
+    border: 2px solid var(--beige-light);
+}
+
+.btn-back:hover {
+    border-color: var(--primary-blue);
+    color: var(--primary-blue);
+}
+
+.form-group input.error {
+    border-color: #dc3545;
+    box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.1);
+}
+
+
 /* Responsive Modal */
 @media (max-width: 768px) {
     .modal-content {
@@ -564,6 +864,97 @@ body {
 
     .modal-subtitle {
         font-size: 14px;
+    }
+
+    .form-progress {
+        padding: 0 5px;
+        margin-bottom: 30px;
+    }
+    
+    .progress-track {
+        height: 70px;
+    }
+    
+    .dog-icon {
+        width: 90px;
+        height: auto;
+    }
+    
+    .milestone-dot {
+        width: 10px;
+        height: 10px;
+        margin-top: 30px;
+    }
+    
+    .milestone-label {
+        font-size: 9px;
+    }
+
+    .form-actions {
+        flex-direction: column-reverse;
+    }
+
+    .btn-next,
+    .btn-back {
+        width: 100%;
+    }
+}
+
+/* Register Page Styles */
+.register-page {
+    min-height: calc(100vh - 200px);
+    padding: 60px 0;
+    background-color: var(--beige-bg);
+}
+
+.register-content {
+    max-width: 700px;
+    margin: 0 auto;
+    background-color: var(--white);
+    border-radius: 12px;
+    padding: 50px 40px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.register-content h1 {
+    color: var(--primary-blue);
+    font-size: 36px;
+    font-weight: 700;
+    margin-bottom: 40px;
+    text-align: center;
+    letter-spacing: -0.5px;
+}
+
+@media (max-width: 768px) {
+    .register-page {
+        padding: 40px 0;
+    }
+
+    .register-content {
+        padding: 30px 20px;
+        margin: 0 20px;
+    }
+
+    .register-content h1 {
+        font-size: 28px;
+        margin-bottom: 30px;
+    }
+
+    .success-content {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .success-text {
+        min-width: auto;
+    }
+
+    .success-action {
+        width: 100%;
+    }
+
+    .btn-close-success {
+        width: 100%;
     }
 }
 
