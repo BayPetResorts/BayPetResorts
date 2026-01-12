@@ -2,6 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const path = require('path');
 const { google } = require('googleapis');
+const { formatInTimeZone } = require('date-fns-tz');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -86,7 +87,7 @@ app.get('/api/locations', (req, res) => {
 // API route for contact form submission
 app.post('/api/contact', async (req, res) => {
   try {
-    const { phone, firstName, lastName, email, dogName, breed, notes, timestamp } = req.body;
+    const { phone, firstName, lastName, email, dogName, breed, notes } = req.body;
 
     // Validate required fields
     if (!phone || !firstName || !lastName || !email || !dogName || !breed) {
@@ -133,10 +134,39 @@ app.post('/api/contact', async (req, res) => {
               values: [['Timestamp', 'First Name', 'Last Name', 'Email', 'Phone', 'Dog Name', 'Breed', 'Notes']]
             }
           });
+          
+          // Format headers as bold
+          await sheets.spreadsheets.batchUpdate({
+            spreadsheetId: sheetId,
+            resource: {
+              requests: [{
+                repeatCell: {
+                  range: {
+                    sheetId: 0,
+                    startRowIndex: 0,
+                    endRowIndex: 1,
+                    startColumnIndex: 0,
+                    endColumnIndex: 8
+                  },
+                  cell: {
+                    userEnteredFormat: {
+                      textFormat: {
+                        bold: true
+                      }
+                    }
+                  },
+                  fields: 'userEnteredFormat.textFormat.bold'
+                }
+              }]
+            }
+          });
         }
       } catch (headerError) {
         console.warn('Could not check/add headers:', headerError.message);
       }
+
+      // Generate PST timestamp
+      const pstTimestamp = formatInTimeZone(new Date(), 'America/Los_Angeles', 'yyyy-MM-dd HH:mm:ss zzz');
 
       // Append the new row
       await sheets.spreadsheets.values.append({
@@ -145,7 +175,7 @@ app.post('/api/contact', async (req, res) => {
         valueInputOption: 'RAW',
         resource: {
           values: [[
-            timestamp || new Date().toISOString(),
+            pstTimestamp,
             firstName,
             lastName,
             email,
@@ -160,6 +190,7 @@ app.post('/api/contact', async (req, res) => {
       console.log(`✅ Contact form submission saved to Google Sheets: ${email}`);
     } else {
       // Log to console if Google Sheets is not configured
+      const pstTimestamp = formatInTimeZone(new Date(), 'America/Los_Angeles', 'yyyy-MM-dd HH:mm:ss zzz');
       console.log('📝 Contact Form Submission (not saved to Sheets):', {
         firstName,
         lastName,
@@ -168,7 +199,7 @@ app.post('/api/contact', async (req, res) => {
         dogName,
         breed,
         notes: notes || '(none)',
-        timestamp
+        timestamp: pstTimestamp
       });
     }
 
