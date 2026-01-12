@@ -195,6 +195,8 @@ document.addEventListener('DOMContentLoaded', function() {
     
     function collectFormData() {
         const notesEl = getElement('notes');
+        
+        // Return plain object (files are optional and not stored for now)
         return {
             phone: getFieldValue('phone'),
             firstName: getFieldValue('firstName'),
@@ -206,26 +208,34 @@ document.addEventListener('DOMContentLoaded', function() {
         };
     }
     
-    function validateFormData(formData) {
+    function validateFormData() {
         const errors = [];
+        const phone = getFieldValue('phone');
+        const firstName = getFieldValue('firstName');
+        const lastName = getFieldValue('lastName');
+        const email = getFieldValue('email');
+        const dogName = getFieldValue('dogName');
+        const breed = getFieldValue('breed');
         
-        if (!formData.phone) {
+        if (!phone) {
             errors.push({ field: 'phone', step: 1, message: 'Phone number is required' });
-        } else if (!validatePhone(formData.phone)) {
+        } else if (!validatePhone(phone)) {
             errors.push({ field: 'phone', step: 1, message: 'Please enter a valid phone number' });
         }
         
-        if (!formData.firstName) errors.push({ field: 'firstName', step: 2, message: 'First name is required' });
-        if (!formData.lastName) errors.push({ field: 'lastName', step: 2, message: 'Last name is required' });
+        if (!firstName) errors.push({ field: 'firstName', step: 2, message: 'First name is required' });
+        if (!lastName) errors.push({ field: 'lastName', step: 2, message: 'Last name is required' });
         
-        if (!formData.email) {
+        if (!email) {
             errors.push({ field: 'email', step: 2, message: 'Email address is required' });
-        } else if (!validateEmail(formData.email)) {
+        } else if (!validateEmail(email)) {
             errors.push({ field: 'email', step: 2, message: 'Please enter a valid email address' });
         }
         
-        if (!formData.dogName) errors.push({ field: 'dogName', step: 3, message: 'Dog name is required' });
-        if (!formData.breed) errors.push({ field: 'breed', step: 3, message: 'Breed is required' });
+        if (!dogName) errors.push({ field: 'dogName', step: 3, message: 'Dog name is required' });
+        if (!breed) errors.push({ field: 'breed', step: 3, message: 'Breed is required' });
+        
+        // Vaccination files are optional - no validation needed
         
         return errors;
     }
@@ -245,8 +255,7 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
         
-        const formData = collectFormData();
-        const validationErrors = validateFormData(formData);
+        const validationErrors = validateFormData();
         
         if (validationErrors.length > 0) {
             const firstError = validationErrors[0];
@@ -268,6 +277,8 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         
         try {
+            const formData = collectFormData();
+            
             const response = await fetch('/api/contact', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -465,6 +476,32 @@ document.addEventListener('DOMContentLoaded', function() {
         const requiredInputs = stepEl.querySelectorAll('input[required]');
         
         requiredInputs.forEach(input => {
+            // Handle checkboxes separately
+            if (input.type === 'checkbox') {
+                if (!input.checked) {
+                    isValid = false;
+                    input.classList.add('error');
+                    const label = input.closest('.sms-checkbox-label');
+                    if (label) label.classList.add('error');
+                } else {
+                    input.classList.remove('error');
+                    const label = input.closest('.sms-checkbox-label');
+                    if (label) label.classList.remove('error');
+                }
+                return;
+            }
+            
+            // Handle file inputs separately
+            if (input.type === 'file') {
+                if (!input.files || input.files.length === 0) {
+                    isValid = false;
+                    input.classList.add('error');
+                } else {
+                    input.classList.remove('error');
+                }
+                return;
+            }
+            
             const value = input.value.trim();
             
             if (!value) {
@@ -495,7 +532,42 @@ document.addEventListener('DOMContentLoaded', function() {
         return isValid;
     }
     
+    // Initialize vaccination card click handlers
+    function initializeVaccinationCards() {
+        const vaccinationItems = document.querySelectorAll('.vaccination-item');
+        
+        vaccinationItems.forEach(item => {
+            const vaccinationType = item.dataset.vaccination;
+            const fileInput = item.querySelector('input[type="file"]');
+            const fileNameSpan = item.querySelector('.vaccination-file-name');
+            
+            if (!fileInput) return;
+            
+            // Click on card to trigger file input
+            item.addEventListener('click', (e) => {
+                // Don't trigger if clicking on the file name (for potential future remove functionality)
+                if (e.target.classList.contains('vaccination-file-name')) {
+                    return;
+                }
+                fileInput.click();
+            });
+            
+            // Handle file selection
+            fileInput.addEventListener('change', (e) => {
+                const file = e.target.files[0];
+                if (file) {
+                    item.classList.add('has-file');
+                    fileNameSpan.textContent = file.name;
+                } else {
+                    item.classList.remove('has-file');
+                    fileNameSpan.textContent = '';
+                }
+            });
+        });
+    }
+    
     initializeFormFields();
     initializeBreedDropdown();
+    initializeVaccinationCards();
 });
 

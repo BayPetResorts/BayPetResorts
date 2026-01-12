@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doggie Daycare - Bay Pet Resorts</title>
+    <link rel="icon" type="image/png" href="/assets/images/BayPetLogo.png">
+    <link rel="apple-touch-icon" href="/assets/images/BayPetLogo.png">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div id="header-placeholder"></div>
+
+    <!-- Doggie Daycare Page Content -->
+    <div class="daycare-page">
+        <div class="container">
+            <div class="daycare-content">
+                <h1 class="daycare-title">Doggie Daycare</h1>
+                
+                <div class="package-section">
+                    <h2 class="package-title">The All-Inclusive Package</h2>
+                    <ul class="package-list">
+                        <li class="package-item">
+                            <button class="package-header" type="button">
+                                <span class="package-icon">✓</span>
+                                <span class="package-text">Door-to-door pickup & drop-off</span>
+                                <span class="package-arrow">▼</span>
+                            </button>
+                            <div class="package-details">
+                                <p>We offer free pickup and drop-off service in the South Bay area. Your dog will be safely transported to and from our facility, making it convenient for you and stress-free for your pet.</p>
+                            </div>
+                        </li>
+                        <li class="package-item">
+                            <button class="package-header" type="button">
+                                <span class="package-icon">✓</span>
+                                <span class="package-text">Certified Training Session</span>
+                                <span class="package-arrow">▼</span>
+                            </button>
+                            <div class="package-details">
+                                <p>All adventures are led by a CCPDT-Certified Trainer, ensuring your dog receives professional guidance and training throughout the day. Our certified trainers use positive reinforcement techniques to help your dog learn and grow.</p>
+                            </div>
+                        </li>
+                        <li class="package-item">
+                            <button class="package-header" type="button">
+                                <span class="package-icon">✓</span>
+                                <span class="package-text">Beach Adventure & Socialization</span>
+                                <span class="package-arrow">▼</span>
+                            </button>
+                            <div class="package-details">
+                                <p>Dogs get along much better in open areas like the beach where there are far fewer territorial disputes and more stimulation. The natural environment provides endless opportunities for exploration, play, and positive social interactions with other dogs.</p>
+                            </div>
+                        </li>
+                        <li class="package-item">
+                            <button class="package-header" type="button">
+                                <span class="package-icon">✓</span>
+                                <span class="package-text">Bath, Brush & Shampoo Refresh</span>
+                                <span class="package-arrow">▼</span>
+                            </button>
+                            <div class="package-details">
+                                <p>After a fun day at the beach, your dog will receive a thorough refresh using Tek Shampoo (originally developed for NASA research) for the best deep clean, and Virbac Epi-Otic Advanced Ear Cleanser to refresh and protect your dog's ears after a day of beach activities.</p>
+                            </div>
+                        </li>
+                        <li class="package-item">
+                            <button class="package-header" type="button">
+                                <span class="package-icon">✓</span>
+                                <span class="package-text">Photo/Video Report Card</span>
+                                <span class="package-arrow">▼</span>
+                            </button>
+                            <div class="package-details">
+                                <p>We take tons of videos and photos throughout the day, capturing all the special moments of your dog's adventure. You'll receive a comprehensive report card with photos and videos showing your dog's activities, interactions, and fun moments.</p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        // Package item dropdown functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const packageHeaders = document.querySelectorAll('.package-header');
+            
+            packageHeaders.forEach(header => {
+                header.addEventListener('click', function() {
+                    const packageItem = this.closest('.package-item');
+                    const packageDetails = packageItem.querySelector('.package-details');
+                    const arrow = this.querySelector('.package-arrow');
+                    
+                    // Toggle active state
+                    const isActive = packageItem.classList.contains('active');
+                    
+                    // Close all other items
+                    document.querySelectorAll('.package-item').forEach(item => {
+                        if (item !== packageItem) {
+                            item.classList.remove('active');
+                            const otherDetails = item.querySelector('.package-details');
+                            const otherArrow = item.querySelector('.package-arrow');
+                            if (otherDetails) {
+                                otherDetails.style.maxHeight = null;
+                            }
+                            if (otherArrow) {
+                                otherArrow.style.transform = 'rotate(0deg)';
+                            }
+                        }
+                    });
+                    
+                    // Toggle current item
+                    if (isActive) {
+                        packageItem.classList.remove('active');
+                        packageDetails.style.maxHeight = null;
+                        arrow.style.transform = 'rotate(0deg)';
+                    } else {
+                        packageItem.classList.add('active');
+                        packageDetails.style.maxHeight = packageDetails.scrollHeight + 'px';
+                        arrow.style.transform = 'rotate(180deg)';
+                    }
+                });
+            });
+        });
+    </script>
+    
+    <div id="footer-placeholder"></div>
+    <script src="components.js"></script>
+</body>
+</html>
+

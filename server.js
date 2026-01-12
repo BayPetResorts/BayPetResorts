@@ -15,6 +15,36 @@ app.get('/register', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'register.html'));
 });
 
+// Serve luxury boarding page
+app.get('/luxury-boarding', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'luxury-boarding.html'));
+});
+
+// Serve doggie daycare page
+app.get('/doggie-daycare', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'doggie-daycare.html'));
+});
+
+// Serve meet the owners page
+app.get('/meet-the-owners', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'meet-the-owners.html'));
+});
+
+// Serve FAQ page
+app.get('/faq', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'faq.html'));
+});
+
+// Serve contact page
+app.get('/contact', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'contact.html'));
+});
+
+// Serve why we're better page
+app.get('/why-we-are-better', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'why-we-are-better.html'));
+});
+
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Google Sheets setup with OAuth 2.0
@@ -99,6 +129,8 @@ app.post('/api/contact', async (req, res) => {
     if (!emailRegex.test(email)) {
       return res.status(400).json({ error: 'Invalid email format' });
     }
+
+    // Vaccination files are optional - not storing files for now
 
     // If Google Sheets is configured, save to sheet
     const sheetId = process.env.GOOGLE_SHEET_ID;
