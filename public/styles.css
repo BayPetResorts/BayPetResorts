@@ -210,147 +210,62 @@ body {
     transform: translateY(0);
 }
 
-/* Hero Section */
-.hero {
-    position: relative;
+/* Hero Split Section */
+.hero-split {
+    display: flex;
     width: 100vw;
     height: 100vh;
-    overflow: hidden;
     margin: 0;
     padding: 0;
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
 }
 
-.hero-overlay {
+.hero-section {
+    position: relative;
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+.hero-gif {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.3);
+    object-fit: cover;
+    z-index: 0;
+    filter: grayscale(100%);
+    transition: filter 0.4s ease;
+}
+
+.hero-section:hover .hero-gif {
+    filter: grayscale(0%);
+}
+
+.hero-section-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    transition: background 0.4s ease;
+    z-index: 1;
+}
+
+.hero-section:hover .hero-section-overlay {
+    background: rgba(0, 0, 0, 0.25);
+}
+
+.hero-section-content {
+    position: relative;
     z-index: 2;
     display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.hero-content {
-    max-width: 1400px;
-    width: 100%;
-    padding: 0 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.hero-text {
-    display: flex;
     flex-direction: column;
-    gap: 30px;
     align-items: center;
-    text-align: center;
-}
-
-.hero-headline {
-    font-size: 56px;
-    font-weight: 700;
-    line-height: 1.2;
-    color: var(--white);
-    letter-spacing: -0.5px;
-    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.5);
-    margin: 0;
-}
-
-.search-box {
-    display: flex;
-    gap: 12px;
-    margin-top: 20px;
-    max-width: 500px;
-}
-
-.zip-input {
-    flex: 1;
-    padding: 14px 18px;
-    font-size: 16px;
-    border: 2px solid rgba(255, 255, 255, 0.3);
-    border-radius: 4px;
-    background-color: rgba(255, 255, 255, 0.95);
-    color: var(--text-dark);
-    font-family: inherit;
-    transition: border-color 0.2s, background-color 0.2s;
-}
-
-.zip-input:focus {
-    background-color: var(--white);
-    border-color: var(--white);
-}
-
-
-.zip-input::placeholder {
-    color: #999;
-}
-
-.btn-search {
-    background-color: var(--primary-blue);
-    color: var(--white);
-    border: none;
-    padding: 14px 32px;
-    font-size: 14px;
-    font-weight: 600;
-    letter-spacing: 0.5px;
-    cursor: pointer;
-    border-radius: 4px;
-    transition: background-color 0.2s, transform 0.1s;
-    white-space: nowrap;
-}
-
-.btn-search:hover {
-    background-color: #152A47;
-    transform: translateY(-1px);
-}
-
-.btn-search:active {
-    transform: translateY(0);
-}
-
-.btn-register-dog {
-    background-color: var(--primary-blue);
-    color: var(--white);
-    border: none;
-    padding: 20px 50px;
-    font-size: 20px;
-    font-weight: 700;
-    letter-spacing: 1.5px;
-    cursor: pointer;
-    border-radius: 6px;
-    transition: all 0.3s ease;
-    white-space: nowrap;
-    pointer-events: auto;
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
-    text-transform: uppercase;
-    margin-top: 10px;
-    display: inline-block;
-    text-decoration: none;
-}
-
-.btn-register-dog:hover {
-    background-color: #152A47;
-    transform: translateY(-2px) scale(1.05);
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
-}
-
-.btn-register-dog:active {
-    transform: translateY(0) scale(1);
-}
-
-/* Hero Buttons Container */
-.hero-buttons {
-    display: flex;
-    gap: 24px;
-    flex-wrap: wrap;
-    justify-content: center;
 }
 
 /* Base Hero Button Style */
@@ -358,23 +273,19 @@ body {
     position: relative;
     display: flex;
     align-items: center;
-    gap: 12px;
-    padding: 20px 40px;
-    font-size: 20px;
+    justify-content: center;
+    padding: 24px 60px;
+    font-size: 28px;
     font-weight: 700;
-    letter-spacing: 1px;
+    letter-spacing: 3px;
     text-decoration: none;
     border-radius: 50px;
     cursor: pointer;
     transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    overflow: visible;
+    overflow: hidden;
     border: none;
     outline: none;
-}
-
-.btn-hero .btn-icon {
-    font-size: 28px;
-    transition: transform 0.3s ease;
+    text-transform: uppercase;
 }
 
 .btn-hero .btn-text {
@@ -382,164 +293,84 @@ body {
     z-index: 2;
 }
 
-/* Boarding Button - Cozy Home Theme */
+/* Button Shine Effect */
+.btn-shine {
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 255, 255, 0.4),
+        transparent
+    );
+    z-index: 1;
+    transition: none;
+}
+
+.hero-section:hover .btn-shine {
+    animation: shine 0.8s ease-in-out;
+}
+
+@keyframes shine {
+    0% {
+        left: -100%;
+    }
+    100% {
+        left: 100%;
+    }
+}
+
+/* Boarding Button */
 .btn-boarding {
     background: linear-gradient(135deg, #1E3A5F 0%, #2D5A87 100%);
     color: #fff;
-    box-shadow: 0 4px 15px rgba(30, 58, 95, 0.4);
+    box-shadow: 0 6px 25px rgba(30, 58, 95, 0.5);
 }
 
-.btn-boarding:hover {
-    transform: translateY(-4px) scale(1.05);
-    box-shadow: 0 8px 30px rgba(30, 58, 95, 0.6);
+.hero-boarding:hover .btn-boarding {
+    transform: translateY(-6px) scale(1.08);
+    box-shadow: 0 12px 40px rgba(30, 58, 95, 0.7);
     background: linear-gradient(135deg, #2D5A87 0%, #3D7AB7 100%);
 }
 
-.btn-boarding:hover .btn-icon {
-    animation: houseWiggle 0.5s ease-in-out;
-}
-
-/* Sleep animation for Boarding */
-.btn-sleep {
-    position: absolute;
-    font-size: 14px;
-    opacity: 0;
-    pointer-events: none;
-    z-index: 1;
-}
-
-.btn-sleep-1 { top: -8px; left: 15%; }
-.btn-sleep-2 { top: 10%; right: 10%; }
-.btn-sleep-3 { bottom: -8px; left: 40%; }
-.btn-sleep-4 { bottom: 20%; left: -5px; }
-
-.btn-boarding:hover .btn-sleep {
-    animation: sleepFloat 1s ease-out infinite;
-}
-
-.btn-boarding:hover .btn-sleep-1 { animation-delay: 0s; }
-.btn-boarding:hover .btn-sleep-2 { animation-delay: 0.2s; }
-.btn-boarding:hover .btn-sleep-3 { animation-delay: 0.4s; }
-.btn-boarding:hover .btn-sleep-4 { animation-delay: 0.6s; }
-
-@keyframes houseWiggle {
-    0%, 100% { transform: rotate(0deg); }
-    25% { transform: rotate(-10deg); }
-    75% { transform: rotate(10deg); }
-}
-
-@keyframes sleepFloat {
-    0% { 
-        opacity: 0; 
-        transform: translateY(0) scale(0); 
-    }
-    25% { 
-        opacity: 1; 
-        transform: translateY(-5px) scale(1); 
-    }
-    50% { 
-        opacity: 1; 
-        transform: translateY(-10px) scale(1.2); 
-    }
-    100% { 
-        opacity: 0; 
-        transform: translateY(-20px) scale(0); 
-    }
-}
-
-/* Daycare Button - Sunny Fun Theme */
+/* Daycare Button */
 .btn-daycare {
     background: linear-gradient(135deg, #F59E0B 0%, #FBBF24 100%);
     color: #1E3A5F;
-    box-shadow: 0 4px 15px rgba(245, 158, 11, 0.4);
+    box-shadow: 0 6px 25px rgba(245, 158, 11, 0.5);
 }
 
-.btn-daycare:hover {
-    transform: translateY(-4px) scale(1.05);
-    box-shadow: 0 8px 30px rgba(245, 158, 11, 0.6);
+.hero-daycare:hover .btn-daycare {
+    transform: translateY(-6px) scale(1.08);
+    box-shadow: 0 12px 40px rgba(245, 158, 11, 0.7);
     background: linear-gradient(135deg, #FBBF24 0%, #FCD34D 100%);
 }
 
-.btn-daycare:hover .btn-icon {
-    animation: sunPulse 0.6s ease-in-out infinite;
-}
-
-/* Sparkle animation for Daycare */
-.btn-sparkle {
-    position: absolute;
-    font-size: 14px;
-    opacity: 0;
-    pointer-events: none;
-    z-index: 1;
-}
-
-.btn-sparkle-1 { top: -8px; left: 15%; }
-.btn-sparkle-2 { top: 10%; right: 10%; }
-.btn-sparkle-3 { bottom: -8px; left: 40%; }
-.btn-sparkle-4 { bottom: 20%; left: -5px; }
-
-.btn-daycare:hover .btn-sparkle {
-    animation: sparkleFloat 1s ease-out infinite;
-}
-
-.btn-daycare:hover .btn-sparkle-1 { animation-delay: 0s; }
-.btn-daycare:hover .btn-sparkle-2 { animation-delay: 0.2s; }
-.btn-daycare:hover .btn-sparkle-3 { animation-delay: 0.4s; }
-.btn-daycare:hover .btn-sparkle-4 { animation-delay: 0.6s; }
-
-@keyframes sunPulse {
-    0%, 100% { transform: scale(1) rotate(0deg); }
-    50% { transform: scale(1.2) rotate(15deg); }
-}
-
-@keyframes sparkleFloat {
-    0% { 
-        opacity: 0; 
-        transform: translateY(0) scale(0); 
-    }
-    25% { 
-        opacity: 1; 
-        transform: translateY(-5px) scale(1); 
-    }
-    50% { 
-        opacity: 1; 
-        transform: translateY(-10px) scale(1.2); 
-    }
-    100% { 
-        opacity: 0; 
-        transform: translateY(-20px) scale(0); 
-    }
-}
-
-/* Hero Buttons Responsive */
+/* Hero Split Responsive */
 @media (max-width: 768px) {
-    .hero-buttons {
+    .hero-split {
         flex-direction: column;
-        gap: 16px;
-        width: 100%;
-        padding: 0 20px;
+    }
+    
+    .hero-section {
+        min-height: 50vh;
     }
     
     .btn-hero {
-        width: 100%;
-        justify-content: center;
-        padding: 18px 30px;
-        font-size: 18px;
-    }
-    
-    .btn-hero .btn-icon {
-        font-size: 24px;
+        padding: 20px 48px;
+        font-size: 22px;
+        letter-spacing: 2px;
     }
 }
 
 @media (max-width: 480px) {
     .btn-hero {
-        padding: 16px 24px;
-        font-size: 16px;
-    }
-    
-    .btn-hero .btn-icon {
-        font-size: 22px;
+        padding: 16px 36px;
+        font-size: 18px;
+        letter-spacing: 1.5px;
     }
 }
 
