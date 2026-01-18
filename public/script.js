@@ -27,18 +27,12 @@ document.addEventListener('DOMContentLoaded', function() {
         let originalItemsCount;
         
         if (commentIndex !== -1 && allItems.length > 2) {
-            // Count items before comment (original items)
-            let itemsBeforeComment = 0;
-            for (let i = 0; i < commentIndex; i++) {
-                if (allNodes[i].nodeType === 1 && allNodes[i].classList.contains('testimonial-item')) {
-                    itemsBeforeComment++;
-                }
-            }
+            // Count original items before comment
+            const itemsBeforeComment = allNodes.slice(0, commentIndex)
+                .filter(node => node.nodeType === 1 && node.classList.contains('testimonial-item')).length;
             
             const originalItemsArray = allItems.slice(0, itemsBeforeComment);
             const firstTwoItems = originalItemsArray.slice(0, 2);
-            
-            // Store the count before rebuilding
             originalItemsCount = originalItemsArray.length;
             
             // Shuffle original items using Fisher-Yates algorithm
@@ -51,17 +45,12 @@ document.addEventListener('DOMContentLoaded', function() {
             testimonialsTrack.innerHTML = '';
             originalItemsArray.forEach(item => testimonialsTrack.appendChild(item));
             
-            // Add comment
-            const comment = document.createComment(' Duplicate items for seamless loop ');
-            testimonialsTrack.appendChild(comment);
+            // Add comment marker
+            testimonialsTrack.appendChild(document.createComment(' Duplicate items for seamless loop '));
             
             // Add first 2 items as duplicates for seamless loop
-            firstTwoItems.forEach(item => {
-                const clone = item.cloneNode(true);
-                testimonialsTrack.appendChild(clone);
-            });
+            firstTwoItems.forEach(item => testimonialsTrack.appendChild(item.cloneNode(true)));
         } else {
-            // If no comment found or not enough items, count all items (fallback)
             originalItemsCount = allItems.length;
         }
         

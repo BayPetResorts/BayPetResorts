@@ -58,8 +58,6 @@ if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET && process.
       ? 'https://baypetresorts.com/oauth2callback' 
       : 'http://localhost:3000/oauth2callback');
     
-    console.log('🔗 Using redirect URI:', redirectUri);
-    
     // OAuth 2.0 setup
     oauth2Client = new google.auth.OAuth2(
       process.env.GOOGLE_CLIENT_ID,
@@ -96,12 +94,9 @@ app.post('/api/contact', async (req, res) => {
       return res.status(400).json({ error: 'Invalid email format' });
     }
 
-    // Vaccination files are optional - not storing files for now
-
     // If Google Sheets is configured, save to sheet
     const sheetId = process.env.GOOGLE_SHEET_ID;
     if (sheets && sheetId) {
-      console.log(`📊 Attempting to save to Google Sheets (Sheet ID: ${sheetId.substring(0, 10)}...)`);
       // Use simple range without sheet name - defaults to first sheet
       const range = 'A:I'; // Timestamp, First Name, Last Name, Email, Phone, Dog Name, Breed, Notes, Services
 
@@ -111,7 +106,6 @@ app.post('/api/contact', async (req, res) => {
           const { credentials } = await oauth2Client.refreshAccessToken();
           oauth2Client.setCredentials(credentials);
         } catch (refreshError) {
-          console.error('⚠️  Failed to refresh OAuth token:', refreshError.message);
           // Continue anyway - might still work with existing token
         }
       }
@@ -165,8 +159,6 @@ app.post('/api/contact', async (req, res) => {
               }]
             }
           });
-          
-          console.log('✅ Updated Google Sheets headers to include Services column');
         }
       } catch (headerError) {
         console.warn('Could not check/add headers:', headerError.message);
@@ -264,7 +256,6 @@ app.listen(PORT, () => {
   console.log(`🚀 Bay Pet Resorts server running on ${serverUrl}`);
   if (!sheets) {
     console.log('ℹ️  Google Sheets not configured. Form submissions will be logged to console only.');
-    console.log('   See SETUP.md for instructions on setting up Google Sheets integration.');
   }
 });
 
