@@ -51,16 +51,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 let sheets;
 let oauth2Client;
 
-// Debug: Log which env vars are present (without revealing values)
-console.log('🔍 Environment check:', {
-  NODE_ENV: process.env.NODE_ENV || 'not set',
-  GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID ? '✓ set' : '✗ missing',
-  GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET ? '✓ set' : '✗ missing',
-  GOOGLE_REFRESH_TOKEN: process.env.GOOGLE_REFRESH_TOKEN ? '✓ set' : '✗ missing',
-  GOOGLE_SHEET_ID: process.env.GOOGLE_SHEET_ID ? '✓ set' : '✗ missing',
-  GOOGLE_REDIRECT_URI: process.env.GOOGLE_REDIRECT_URI || 'not set (will use default)'
-});
-
 // Check if using OAuth 2.0 (preferred) or Service Account
 if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET && process.env.GOOGLE_REFRESH_TOKEN) {
   try {
@@ -272,7 +262,6 @@ app.listen(PORT, () => {
     ? 'https://baypetresorts.com' 
     : `http://localhost:${PORT}`;
   console.log(`🚀 Bay Pet Resorts server running on ${serverUrl}`);
-  console.log(`📋 Environment: ${process.env.NODE_ENV || 'development'}`);
   if (!sheets) {
     console.log('ℹ️  Google Sheets not configured. Form submissions will be logged to console only.');
     console.log('   See SETUP.md for instructions on setting up Google Sheets integration.');
