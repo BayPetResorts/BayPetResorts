@@ -42,6 +42,7 @@ function initializeHamburgerMenu() {
             if (navOverlay) {
                 navOverlay.classList.toggle('active');
             }
+            document.body.classList.toggle('menu-open', !isActive);
             document.body.style.overflow = !isActive ? 'hidden' : '';
         }
 
@@ -50,6 +51,7 @@ function initializeHamburgerMenu() {
             if (navOverlay) {
                 navOverlay.classList.remove('active');
             }
+            document.body.classList.remove('menu-open');
             document.body.style.overflow = '';
         }
 

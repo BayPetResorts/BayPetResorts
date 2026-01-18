@@ -751,6 +751,11 @@ body.banner-visible .main-header {
         display: flex;
     }
 
+    /* Hide hamburger when menu is open */
+    body.menu-open .hamburger-menu {
+        display: none;
+    }
+
     .main-nav {
         position: fixed;
         top: 0;
