@@ -136,7 +136,8 @@ app.post('/api/contact', async (req, res) => {
     const sheetId = process.env.GOOGLE_SHEET_ID;
     if (sheets && sheetId) {
       console.log(`📊 Attempting to save to Google Sheets (Sheet ID: ${sheetId.substring(0, 10)}...)`);
-      const range = 'Sheet1!A:I'; // Timestamp, First Name, Last Name, Email, Phone, Dog Name, Breed, Notes, Services
+      // Use simple range without sheet name - defaults to first sheet
+      const range = 'A:I'; // Timestamp, First Name, Last Name, Email, Phone, Dog Name, Breed, Notes, Services
 
       // Refresh OAuth token if using OAuth 2.0
       if (oauth2Client) {
@@ -153,7 +154,7 @@ app.post('/api/contact', async (req, res) => {
       try {
         const headerResponse = await sheets.spreadsheets.values.get({
           spreadsheetId: sheetId,
-          range: 'Sheet1!A1:I1'
+          range: 'A1:I1'
         });
 
         const expectedHeaders = ['Timestamp', 'First Name', 'Last Name', 'Email', 'Phone', 'Dog Name', 'Breed', 'Notes', 'Services'];
@@ -166,7 +167,7 @@ app.post('/api/contact', async (req, res) => {
           // Update headers
           await sheets.spreadsheets.values.update({
             spreadsheetId: sheetId,
-            range: 'Sheet1!A1:I1',
+            range: 'A1:I1',
             valueInputOption: 'RAW',
             resource: {
               values: [expectedHeaders]
