@@ -603,26 +603,22 @@ document.addEventListener('DOMContentLoaded', function() {
     initializeBreedDropdown();
     initializeVaccinationCards();
     
-    // Scroll to center the form when page loads
-    function scrollToForm() {
-        const form = document.getElementById('contactForm');
-        if (form) {
-            // Use setTimeout to ensure all content is loaded
+    // Scroll to show the top of the form container
+    function scrollToContainer() {
+        const container = document.querySelector('.register-page');
+        if (container) {
             setTimeout(() => {
-                form.scrollIntoView({ 
+                container.scrollIntoView({ 
                     behavior: 'instant', 
-                    block: 'center' 
+                    block: 'start' 
                 });
             }, 100);
         }
     }
     
-    // Scroll on page load
-    scrollToForm();
+    scrollToContainer();
     
-    // Also scroll if page is already loaded (for cases where DOMContentLoaded fires late)
     if (document.readyState === 'complete') {
-        scrollToForm();
+        scrollToContainer();
     }
 });
-
