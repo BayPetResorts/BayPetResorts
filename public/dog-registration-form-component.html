@@ -1463,6 +1463,12 @@
                 
                 function showStep(step) {
                     const validStep = Math.max(1, Math.min(parseInt(step) || 1, TOTAL_STEPS));
+                    const stepNames = ['Phone', 'Contact', 'Dog Info', 'Services'];
+                    
+                    // Track step completion if moving forward
+                    if (validStep > currentStep && window.metaPixelTracking) {
+                        window.metaPixelTracking.trackFormStep(currentStep, stepNames[currentStep - 1], 'completed');
+                    }
                     
                     document.querySelectorAll('#dogRegFormComponent .form-step').forEach(stepEl => {
                         const stepNum = parseInt(stepEl.dataset.step);
@@ -1492,6 +1498,11 @@
                     }
                     
                     currentStep = validStep;
+                    
+                    // Track new step started
+                    if (window.metaPixelTracking) {
+                        window.metaPixelTracking.trackFormStep(validStep, stepNames[validStep - 1], 'started');
+                    }
                     
                     // Update iframe height after step change
                     setTimeout(sendHeightToParent, 50);
@@ -1640,6 +1651,12 @@
                         }
                         
                         if (response.ok) {
+                            // Track form submission with Meta Pixel
+                            if (window.metaPixelTracking) {
+                                window.metaPixelTracking.trackFormStep(4, 'Services', 'completed');
+                                window.metaPixelTracking.trackFormSubmission(formData.services);
+                            }
+                            
                             showSuccessScreen();
                             setTimeout(() => {
                                 if (successScreen) {
@@ -2041,14 +2058,107 @@
                 }
             }
 
+            // ============================================
+            // META PIXEL TRACKING INTEGRATION
+            // ============================================
+            const formStartTime = Date.now();
+            let fieldsInteracted = new Set();
+            let lastCompletedStep = 0;
+
+            function sendTrackingEvent(type, data) {
+                if (window.parent !== window) {
+                    window.parent.postMessage({ type: type, ...data }, '*');
+                }
+            }
+
+            function trackFormStep(step, stepName, action) {
+                if (action === 'started') {
+                    sendTrackingEvent('formStepStarted', { step: step, stepName: stepName });
+                } else if (action === 'completed') {
+                    lastCompletedStep = step;
+                    sendTrackingEvent('formStepCompleted', { step: step, stepName: stepName });
+                }
+            }
+
+            function trackFieldFocus(fieldName, step) {
+                if (!fieldsInteracted.has(fieldName)) {
+                    fieldsInteracted.add(fieldName);
+                    sendTrackingEvent('formFieldFocused', { field: fieldName, step: step });
+                }
+            }
+
+            function trackFormSubmission(services) {
+                sendTrackingEvent('formSubmitted', { 
+                    services: services,
+                    timeSpent: Math.round((Date.now() - formStartTime) / 1000)
+                });
+            }
+
+            function trackFormAbandonment() {
+                const stepNames = ['Phone', 'Contact', 'Dog Info', 'Services'];
+                sendTrackingEvent('formAbandoned', {
+                    lastStep: lastCompletedStep,
+                    lastStepName: stepNames[lastCompletedStep - 1] || 'None',
+                    fieldsFilled: fieldsInteracted.size,
+                    timeSpent: Math.round((Date.now() - formStartTime) / 1000)
+                });
+            }
+
+            // Track form abandonment on page unload
+            window.addEventListener('beforeunload', function() {
+                const successScreen = document.getElementById('successScreen');
+                const isFormCompleted = successScreen && successScreen.classList.contains('show');
+                if (!isFormCompleted && fieldsInteracted.size > 0) {
+                    trackFormAbandonment();
+                }
+            });
+
+            // Initialize field tracking after component loads
+            function initializeFieldTracking() {
+                const component = document.getElementById('dogRegFormComponent');
+                if (!component) return;
+
+                // Track initial step
+                trackFormStep(1, 'Phone', 'started');
+
+                // Track field focus events
+                const fieldsToTrack = ['phone', 'firstName', 'lastName', 'email', 'dogName', 'breedSearch', 'notes'];
+                fieldsToTrack.forEach(function(fieldId) {
+                    const field = component.querySelector('#' + fieldId);
+                    if (field) {
+                        field.addEventListener('focus', function() {
+                            const stepEl = field.closest('.form-step');
+                            const step = stepEl ? parseInt(stepEl.dataset.step) : 0;
+                            trackFieldFocus(fieldId, step);
+                        });
+                    }
+                });
+
+                // Track service checkbox interactions
+                const serviceCheckboxes = component.querySelectorAll('input[name="services"]');
+                serviceCheckboxes.forEach(function(checkbox) {
+                    checkbox.addEventListener('change', function() {
+                        trackFieldFocus('service_' + checkbox.value, 4);
+                    });
+                });
+            }
+
+            // Expose tracking functions globally for form script to use
+            window.metaPixelTracking = {
+                trackFormStep: trackFormStep,
+                trackFormSubmission: trackFormSubmission
+            };
+
             // Initialize when DOM is ready
             if (document.readyState === 'loading') {
                 document.addEventListener('DOMContentLoaded', function() {
                     initComponent();
+                    initializeFieldTracking();
                     setTimeout(sendHeightToParent, 100);
                 });
             } else {
                 initComponent();
+                initializeFieldTracking();
                 setTimeout(sendHeightToParent, 100);
             }
 
