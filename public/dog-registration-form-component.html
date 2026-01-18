@@ -80,6 +80,7 @@
             transform: translateY(-50%);
             border-radius: 2px;
             transition: background 0.5s ease;
+            z-index: 1;
         }
 
         .dog-reg-form-component .dog-walker {
@@ -94,8 +95,9 @@
         }
 
         .dog-reg-form-component .dog-walker.step-1 { left: 0%; }
-        .dog-reg-form-component .dog-walker.step-2 { left: 50%; }
-        .dog-reg-form-component .dog-walker.step-3 { left: 100%; }
+        .dog-reg-form-component .dog-walker.step-2 { left: 33.33%; }
+        .dog-reg-form-component .dog-walker.step-3 { left: 66.66%; }
+        .dog-reg-form-component .dog-walker.step-4 { left: 100%; }
 
         .dog-reg-form-component .dog-icon {
             width: 120px;
@@ -183,6 +185,10 @@
         }
 
         .dog-reg-form-component .progress-track.step-3::before {
+            background: linear-gradient(to right, var(--primary-blue) 66.66%, var(--beige-light) 66.66%);
+        }
+
+        .dog-reg-form-component .progress-track.step-4::before {
             background: linear-gradient(to right, var(--primary-blue) 100%, var(--primary-blue) 100%);
         }
 
@@ -634,6 +640,77 @@
             display: block;
         }
 
+        /* Services Selection */
+        .dog-reg-form-component .services-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-top: 16px;
+        }
+
+        .dog-reg-form-component .service-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 16px;
+            border: 2px solid var(--beige-light);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            background-color: var(--white);
+        }
+
+        .dog-reg-form-component .service-item:hover {
+            border-color: var(--primary-blue);
+            box-shadow: 0 2px 8px rgba(30, 58, 95, 0.1);
+            transform: translateY(-1px);
+        }
+
+        .dog-reg-form-component .service-item input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            margin: 0;
+            cursor: pointer;
+            flex-shrink: 0;
+            accent-color: var(--primary-blue);
+        }
+
+        .dog-reg-form-component .service-item.selected {
+            border-color: var(--primary-blue);
+            background-color: rgba(30, 58, 95, 0.02);
+        }
+
+        .dog-reg-form-component .service-item.selected .service-icon {
+            background-color: var(--primary-blue);
+            color: var(--white);
+        }
+
+        .dog-reg-form-component .service-icon {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--beige-bg);
+            border-radius: 6px;
+            flex-shrink: 0;
+            color: var(--text-dark);
+            transition: all 0.2s;
+        }
+
+        .dog-reg-form-component .service-name {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-dark);
+            flex: 1;
+        }
+
+        @media (max-width: 768px) {
+            .dog-reg-form-component .services-list {
+                grid-template-columns: 1fr;
+            }
+        }
+
         /* Success Screen */
         .dog-reg-form-component .success-screen {
             padding: 8px 20px 40px 20px;
@@ -658,16 +735,6 @@
             animation: scaleIn 0.5s ease-out;
         }
 
-        .dog-reg-form-component .success-text {
-            text-align: center;
-        }
-
-        .dog-reg-form-component .success-action {
-            width: 100%;
-            display: flex;
-            justify-content: center;
-        }
-
         @keyframes scaleIn {
             from {
                 opacity: 0;
@@ -680,6 +747,7 @@
         }
 
         .dog-reg-form-component .success-text {
+            text-align: center;
             flex: 1;
             min-width: 200px;
         }
@@ -707,6 +775,9 @@
         }
 
         .dog-reg-form-component .success-action {
+            width: 100%;
+            display: flex;
+            justify-content: center;
             flex-shrink: 0;
         }
 
@@ -863,6 +934,10 @@
                         <div class="milestone" data-step="3">
                             <div class="milestone-dot"></div>
                             <div class="milestone-label">Dog Info</div>
+                        </div>
+                        <div class="milestone" data-step="4">
+                            <div class="milestone-dot"></div>
+                            <div class="milestone-label">Services</div>
                         </div>
                     </div>
                 </div>
@@ -1034,6 +1109,67 @@
                             </div>
                         </div>
                     </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn-back">Back</button>
+                        <button type="button" class="btn-next">Next</button>
+                    </div>
+                </div>
+
+                <!-- Step 4: Services -->
+                <div class="form-step" data-step="4">
+                    <p class="modal-subtitle">Select Services</p>
+                    <div class="form-group">
+                        <div class="services-list">
+                            <label class="service-item" for="service-boarding">
+                                <input type="checkbox" id="service-boarding" name="services" value="boarding">
+                                <div class="service-icon">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                                        <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                                    </svg>
+                                </div>
+                                <span class="service-name">Boarding</span>
+                            </label>
+                            <label class="service-item" for="service-daycare">
+                                <input type="checkbox" id="service-daycare" name="services" value="daycare">
+                                <div class="service-icon">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <circle cx="7" cy="6" r="2.5"></circle>
+                                        <circle cx="17" cy="6" r="2.5"></circle>
+                                        <circle cx="5" cy="15" r="2.5"></circle>
+                                        <circle cx="19" cy="15" r="2.5"></circle>
+                                        <ellipse cx="12" cy="12" rx="4" ry="5"></ellipse>
+                                    </svg>
+                                </div>
+                                <span class="service-name">Daycare</span>
+                            </label>
+                            <label class="service-item" for="service-grooming">
+                                <input type="checkbox" id="service-grooming" name="services" value="grooming">
+                                <div class="service-icon">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M4 12h16a2 2 0 0 1 2 2v2a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2v-2a2 2 0 0 1 2-2z"></path>
+                                        <path d="M6 12V8a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v4"></path>
+                                        <line x1="12" y1="18" x2="12" y2="22"></line>
+                                        <circle cx="8" cy="8" r="1"></circle>
+                                    </svg>
+                                </div>
+                                <span class="service-name">Grooming</span>
+                            </label>
+                            <label class="service-item" for="service-training">
+                                <input type="checkbox" id="service-training" name="services" value="training">
+                                <div class="service-icon">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M5 12h14"></path>
+                                        <circle cx="4" cy="10" r="2"></circle>
+                                        <circle cx="4" cy="14" r="2"></circle>
+                                        <circle cx="20" cy="10" r="2"></circle>
+                                        <circle cx="20" cy="14" r="2"></circle>
+                                    </svg>
+                                </div>
+                                <span class="service-name">Training</span>
+                            </label>
+                        </div>
+                    </div>
                     <div id="formMessage" class="form-message"></div>
                     <div class="form-actions">
                         <button type="button" class="btn-back">Back</button>
@@ -1154,9 +1290,9 @@
                 initForm(config);
             }
 
-            // Form initialization (same logic as register.js but scoped)
+            // Form initialization
             function initForm(config) {
-                const TOTAL_STEPS = 3;
+                const TOTAL_STEPS = 4;
                 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
                 const MIN_PHONE_LENGTH = 10;
                 
@@ -1289,14 +1425,7 @@
                         successScreen.style.display = 'flex';
                     }
                     // Update iframe height after success screen shows
-                    setTimeout(function() {
-                        if (window.parent !== window) {
-                            const comp = document.getElementById('dogRegFormComponent');
-                            if (comp) {
-                                window.parent.postMessage({ type: 'resize', height: comp.offsetHeight + 40 }, '*');
-                            }
-                        }
-                    }, 100);
+                    setTimeout(sendHeightToParent, 100);
                 }
                 
                 function showStep(step) {
@@ -1330,14 +1459,7 @@
                     currentStep = validStep;
                     
                     // Update iframe height after step change
-                    setTimeout(function() {
-                        if (window.parent !== window) {
-                            const comp = document.getElementById('dogRegFormComponent');
-                            if (comp) {
-                                window.parent.postMessage({ type: 'resize', height: comp.offsetHeight + 40 }, '*');
-                            }
-                        }
-                    }, 50);
+                    setTimeout(sendHeightToParent, 50);
                 }
                 
                 function initializeFormFields() {
@@ -1373,6 +1495,10 @@
                 
                 function collectFormData() {
                     const notesEl = getElement('notes');
+                    // Collect selected services
+                    const serviceCheckboxes = component.querySelectorAll('input[name="services"]:checked');
+                    const services = Array.from(serviceCheckboxes).map(cb => cb.value);
+                    
                     return {
                         phone: getFieldValue('phone'),
                         firstName: getFieldValue('firstName'),
@@ -1380,7 +1506,8 @@
                         email: getFieldValue('email'),
                         dogName: getFieldValue('dogName'),
                         breed: getFieldValue('breed'),
-                        notes: notesEl ? notesEl.value.trim() : ''
+                        notes: notesEl ? notesEl.value.trim() : '',
+                        services: services
                     };
                 }
                 
@@ -1684,14 +1811,7 @@
                             e.stopPropagation();
                             vaccinationAccordion.classList.toggle('active');
                             // Update iframe height after accordion toggle
-                            setTimeout(function() {
-                                if (window.parent !== window) {
-                                    const comp = document.getElementById('dogRegFormComponent');
-                                    if (comp) {
-                                        window.parent.postMessage({ type: 'resize', height: comp.offsetHeight + 40 }, '*');
-                                    }
-                                }
-                            }, 350); // Wait for CSS transition
+                            setTimeout(sendHeightToParent, 350);
                         });
                         
                         vaccinationItems.forEach(item => {
@@ -1749,6 +1869,31 @@
                         }
                     });
                 }
+
+                // Initialize services checkboxes
+                function initializeServices() {
+                    const serviceCheckboxes = component.querySelectorAll('input[name="services"]');
+                    serviceCheckboxes.forEach(checkbox => {
+                        // Update on load
+                        updateServiceItem(checkbox);
+                        
+                        // Update on change
+                        checkbox.addEventListener('change', function() {
+                            updateServiceItem(this);
+                        });
+                    });
+                }
+
+                function updateServiceItem(checkbox) {
+                    const serviceItem = checkbox.closest('.service-item');
+                    if (serviceItem) {
+                        if (checkbox.checked) {
+                            serviceItem.classList.add('selected');
+                        } else {
+                            serviceItem.classList.remove('selected');
+                        }
+                    }
+                }
                 
                 // Event listeners - scoped to component
                 
@@ -1782,6 +1927,7 @@
                 initializeFormFields();
                 initializeBreedDropdown();
                 initializeVaccinationCards();
+                initializeServices();
                 
                 // Scroll to top of component on initial load
                 scrollToTopOnLoad();

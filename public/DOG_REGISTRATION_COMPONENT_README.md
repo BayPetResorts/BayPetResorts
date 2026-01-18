@@ -4,7 +4,7 @@ A standalone, reusable registration form component that can be embedded into any
 
 ## Features
 
-- ✅ 3-step multi-step form with progress indicator
+- ✅ 4-step multi-step form with progress indicator (Phone, Contact, Dog Info, Services)
 - ✅ Animated dog walking progress indicator
 - ✅ Phone number auto-formatting
 - ✅ Searchable breed dropdown (200+ breeds)
@@ -71,7 +71,7 @@ You can also configure callbacks via global functions:
     // Called when form is successfully submitted
     window.dogRegFormOnSuccess = function(formData) {
         console.log('Form submitted:', formData);
-        // formData contains: phone, firstName, lastName, email, dogName, breed, notes
+        // formData contains: phone, firstName, lastName, email, dogName, breed, notes, services
     };
 
     // Called when form submission fails
@@ -106,9 +106,12 @@ Your API endpoint should accept POST requests with the following JSON body:
     "email": "john@example.com",
     "dogName": "Buddy",
     "breed": "Golden Retriever",
-    "notes": "Optional notes here"
+    "notes": "Optional notes here",
+    "services": ["boarding", "daycare", "grooming", "training"]
 }
 ```
+
+Note: `services` is an array of selected service values (can be empty if none selected).
 
 **Response format** (success):
 ```json

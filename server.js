@@ -117,7 +117,7 @@ app.get('/api/locations', (req, res) => {
 // API route for contact form submission
 app.post('/api/contact', async (req, res) => {
   try {
-    const { phone, firstName, lastName, email, dogName, breed, notes } = req.body;
+    const { phone, firstName, lastName, email, dogName, breed, notes, services } = req.body;
 
     // Validate required fields
     if (!phone || !firstName || !lastName || !email || !dogName || !breed) {
@@ -136,7 +136,7 @@ app.post('/api/contact', async (req, res) => {
     const sheetId = process.env.GOOGLE_SHEET_ID;
     if (sheets && sheetId) {
       console.log(`📊 Attempting to save to Google Sheets (Sheet ID: ${sheetId.substring(0, 10)}...)`);
-      const range = 'Sheet1!A:H'; // Timestamp, First Name, Last Name, Email, Phone, Dog Name, Breed, Notes
+      const range = 'Sheet1!A:I'; // Timestamp, First Name, Last Name, Email, Phone, Dog Name, Breed, Notes, Services
 
       // Refresh OAuth token if using OAuth 2.0
       if (oauth2Client) {
@@ -149,21 +149,27 @@ app.post('/api/contact', async (req, res) => {
         }
       }
 
-      // Check if headers exist, if not, add them
+      // Check if headers exist and are correct, update if needed
       try {
         const headerResponse = await sheets.spreadsheets.values.get({
           spreadsheetId: sheetId,
-          range: 'Sheet1!A1:H1'
+          range: 'Sheet1!A1:I1'
         });
 
-        if (!headerResponse.data.values || headerResponse.data.values.length === 0) {
-          // Add headers
+        const expectedHeaders = ['Timestamp', 'First Name', 'Last Name', 'Email', 'Phone', 'Dog Name', 'Breed', 'Notes', 'Services'];
+        const needsUpdate = !headerResponse.data.values || 
+                           headerResponse.data.values.length === 0 || 
+                           !headerResponse.data.values[0] ||
+                           JSON.stringify(headerResponse.data.values[0]) !== JSON.stringify(expectedHeaders);
+
+        if (needsUpdate) {
+          // Update headers
           await sheets.spreadsheets.values.update({
             spreadsheetId: sheetId,
-            range: 'Sheet1!A1:H1',
+            range: 'Sheet1!A1:I1',
             valueInputOption: 'RAW',
             resource: {
-              values: [['Timestamp', 'First Name', 'Last Name', 'Email', 'Phone', 'Dog Name', 'Breed', 'Notes']]
+              values: [expectedHeaders]
             }
           });
           
@@ -178,7 +184,7 @@ app.post('/api/contact', async (req, res) => {
                     startRowIndex: 0,
                     endRowIndex: 1,
                     startColumnIndex: 0,
-                    endColumnIndex: 8
+                    endColumnIndex: 9
                   },
                   cell: {
                     userEnteredFormat: {
@@ -192,6 +198,8 @@ app.post('/api/contact', async (req, res) => {
               }]
             }
           });
+          
+          console.log('✅ Updated Google Sheets headers to include Services column');
         }
       } catch (headerError) {
         console.warn('Could not check/add headers:', headerError.message);
@@ -199,6 +207,11 @@ app.post('/api/contact', async (req, res) => {
 
       // Generate PST timestamp
       const pstTimestamp = formatInTimeZone(new Date(), 'America/Los_Angeles', 'yyyy-MM-dd HH:mm:ss zzz');
+
+      // Format services array as comma-separated string
+      const servicesString = Array.isArray(services) && services.length > 0 
+        ? services.join(', ') 
+        : '';
 
       // Append the new row
       await sheets.spreadsheets.values.append({
@@ -214,7 +227,8 @@ app.post('/api/contact', async (req, res) => {
             phone,
             dogName,
             breed,
-            notes || ''
+            notes || '',
+            servicesString
           ]]
         }
       });
@@ -223,6 +237,9 @@ app.post('/api/contact', async (req, res) => {
     } else {
       // Log to console if Google Sheets is not configured
       const pstTimestamp = formatInTimeZone(new Date(), 'America/Los_Angeles', 'yyyy-MM-dd HH:mm:ss zzz');
+      const servicesString = Array.isArray(services) && services.length > 0 
+        ? services.join(', ') 
+        : '(none)';
       console.log('📝 Contact Form Submission (not saved to Sheets):', {
         firstName,
         lastName,
@@ -231,6 +248,7 @@ app.post('/api/contact', async (req, res) => {
         dogName,
         breed,
         notes: notes || '(none)',
+        services: servicesString,
         timestamp: pstTimestamp
       });
     }
