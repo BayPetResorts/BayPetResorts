@@ -30,11 +30,6 @@ app.get('/meet-the-owners', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'meet-the-owners.html'));
 });
 
-// Serve FAQ page
-app.get('/faq', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'faq.html'));
-});
-
 // Serve contact page
 app.get('/contact', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'contact.html'));
