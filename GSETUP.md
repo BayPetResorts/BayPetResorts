@@ -198,32 +198,6 @@ This setup is optimized for **~100 submissions per week** (~400/month). Google S
 - Dedicated form service (Typeform, Google Forms)
 - CRM integration (HubSpot, Salesforce)
 
-## Alternative: Email Instead of Google Sheets
-
-If you prefer to receive submissions via email instead of Google Sheets, you can use the email alternative:
-
-1. **Install nodemailer:**
-   ```bash
-   npm install nodemailer
-   ```
-
-2. **Use the email alternative server:**
-   - A file `server-email-alternative.js` is included in the project
-   - Rename your current `server.js` to `server-sheets.js` (backup)
-   - Rename `server-email-alternative.js` to `server.js`
-
-3. **Configure email settings in `.env`:**
-   ```env
-   SMTP_HOST=smtp.gmail.com
-   SMTP_PORT=587
-   SMTP_USER=your-email@gmail.com
-   SMTP_PASS=your-app-password
-   CONTACT_EMAIL=where-to-receive-submissions@example.com
-   ```
-
-**Pros:** Simple, no Google Cloud setup needed, works immediately  
-**Cons:** Submissions go to email instead of a spreadsheet
-
 ## Production Deployment (baypetresorts.com)
 
 ### Step 1: Update Google Cloud Console

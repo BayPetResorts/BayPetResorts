@@ -88,45 +88,7 @@ if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET && process.
   } catch (error) {
     console.warn('⚠️  OAuth 2.0 credentials not properly configured:', error.message);
   }
-} else if (process.env.GOOGLE_SHEETS_CREDENTIALS && process.env.GOOGLE_SHEET_ID) {
-  try {
-    // Fallback to Service Account (if available)
-    const credentials = JSON.parse(process.env.GOOGLE_SHEETS_CREDENTIALS);
-    const auth = new google.auth.GoogleAuth({
-      credentials: credentials,
-      scopes: ['https://www.googleapis.com/auth/spreadsheets']
-    });
-    sheets = google.sheets({ version: 'v4', auth });
-    console.log('✅ Google Sheets integration enabled (Service Account)');
-  } catch (error) {
-    console.warn('⚠️  Google Sheets credentials not properly configured:', error.message);
-  }
 }
-
-// API route for zip code search (example)
-app.get('/api/locations', (req, res) => {
-  const zipCode = req.query.zip;
-  
-  if (!zipCode || zipCode.length !== 5) {
-    return res.status(400).json({ error: 'Invalid zip code' });
-  }
-
-  // Mock location data - replace with actual database/API call
-  const mockLocations = [
-    {
-      id: 1,
-      name: 'Bay Pet Resorts - Main Location',
-      address: '123 Pet Care Blvd',
-      city: 'San Francisco',
-      state: 'CA',
-      zip: zipCode,
-      phone: '(908) 889-7387',
-      distance: '2.5 miles'
-    }
-  ];
-
-  res.json({ locations: mockLocations });
-});
 
 // API route for contact form submission
 app.post('/api/contact', async (req, res) => {

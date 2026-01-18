@@ -688,12 +688,8 @@ body {
         margin-bottom: 30px;
     }
 
-    /* Responsive Design */
+/* Responsive Design */
 @media (max-width: 1024px) {
-    .hero-headline {
-        font-size: 48px;
-    }
-
     .main-nav {
         gap: 20px;
     }
@@ -838,24 +834,6 @@ body {
         font-size: 13px;
     }
 
-    .hero-content {
-        padding: 0 20px;
-        gap: 30px;
-    }
-
-    .hero-headline {
-        font-size: 36px;
-    }
-
-
-    .search-box {
-        flex-direction: column;
-    }
-
-    .btn-search {
-        width: 100%;
-    }
-
     .top-bar-content {
         flex-direction: column;
         gap: 8px;
@@ -871,14 +849,6 @@ body {
 @media (max-width: 480px) {
     .logo-text {
         font-size: 16px;
-    }
-
-    .hero-headline {
-        font-size: 28px;
-    }
-
-    .hero-content {
-        padding: 0 15px;
     }
 
     .btn-register-dog {

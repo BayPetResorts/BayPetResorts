@@ -1,33 +1,5 @@
 // Bay Pet Resorts - Homepage Script
 document.addEventListener('DOMContentLoaded', function() {
-    // Scroll to top of hero video container on initial page load only
-    function scrollToHero() {
-        const heroSection = document.querySelector('.hero');
-        if (heroSection) {
-            // Check if this is the initial load in this session
-            const hasScrolledBefore = sessionStorage.getItem('bayPetResorts_initialScroll');
-            
-            if (!hasScrolledBefore) {
-                // Mark that we've done the initial scroll for this session
-                sessionStorage.setItem('bayPetResorts_initialScroll', 'true');
-                
-                // Use setTimeout to ensure page is fully rendered, then scroll to hero section
-                setTimeout(() => {
-                    heroSection.scrollIntoView({ 
-                        behavior: 'instant', 
-                        block: 'start' 
-                    });
-                }, 100);
-            }
-        }
-    }
-    
-    scrollToHero();
-    
-    if (document.readyState === 'complete') {
-        scrollToHero();
-    }
-    
     // Smooth scrolling for anchor links
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function(e) {
@@ -38,51 +10,6 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     });
-    
-    // Ensure video autoplays on mobile
-    const heroVideo = document.querySelector('.hero-video');
-    if (heroVideo) {
-        // Set video properties for mobile compatibility
-        heroVideo.setAttribute('playsinline', '');
-        heroVideo.setAttribute('webkit-playsinline', '');
-        heroVideo.muted = true;
-        
-        // Function to attempt video playback
-        const attemptPlay = () => {
-            const playPromise = heroVideo.play();
-            if (playPromise !== undefined) {
-                playPromise.catch(() => {
-                    // Autoplay was prevented, try again after user interaction
-                    const playOnInteraction = () => {
-                        heroVideo.play().catch(() => {});
-                        document.removeEventListener('touchstart', playOnInteraction);
-                        document.removeEventListener('click', playOnInteraction);
-                    };
-                    document.addEventListener('touchstart', playOnInteraction, { once: true });
-                    document.addEventListener('click', playOnInteraction, { once: true });
-                });
-            }
-        };
-        
-        // Try to play immediately
-        if (heroVideo.readyState >= 2) {
-            attemptPlay();
-        } else {
-            heroVideo.addEventListener('loadeddata', attemptPlay, { once: true });
-            heroVideo.addEventListener('canplay', attemptPlay, { once: true });
-        }
-        
-        // Ensure video plays when it becomes visible
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting && heroVideo.paused) {
-                    attemptPlay();
-                }
-            });
-        }, { threshold: 0.1 });
-        
-        observer.observe(heroVideo);
-    }
     
     // Testimonials Auto-Scroll
     const testimonialsTrack = document.getElementById('testimonialsTrack');
