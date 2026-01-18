@@ -14,6 +14,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // State
     let currentStep = 1;
+    let isSubmitting = false;
     
     // Breed list
     const BREED_LIST = [
@@ -244,6 +245,13 @@ document.addEventListener('DOMContentLoaded', function() {
     async function submitForm() {
         if (!contactForm) return;
         
+        // Prevent double submission
+        if (isSubmitting) {
+            return;
+        }
+        
+        isSubmitting = true;
+        
         const submitBtn = contactForm.querySelector('.btn-submit');
         const originalBtnText = submitBtn?.textContent || 'Submit';
         
@@ -252,6 +260,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (!validateStep(currentStep)) {
             showError('Please complete the current step.');
             resetSubmitButton(submitBtn, originalBtnText);
+            isSubmitting = false;
             return;
         }
         
@@ -268,6 +277,7 @@ document.addEventListener('DOMContentLoaded', function() {
             
             showError(firstError.message);
             resetSubmitButton(submitBtn, originalBtnText);
+            isSubmitting = false;
             return;
         }
         
@@ -285,17 +295,41 @@ document.addEventListener('DOMContentLoaded', function() {
                 body: JSON.stringify(formData)
             });
             
-            const data = await response.json();
+            let data = {};
+            try {
+                data = await response.json();
+            } catch (jsonError) {
+                // If response is not valid JSON, treat as error unless response is ok
+                if (!response.ok) {
+                    showError('Something went wrong. Please try again.');
+                    resetSubmitButton(submitBtn, originalBtnText);
+                    isSubmitting = false;
+                    return;
+                }
+                // If response.ok but not JSON, assume success (unlikely but handle gracefully)
+                data = { success: true };
+            }
             
             if (response.ok) {
                 showSuccessScreen();
+                // Scroll instantly to center of success screen
+                setTimeout(() => {
+                    if (successScreen) {
+                        successScreen.scrollIntoView({ 
+                            behavior: 'instant', 
+                            block: 'center' 
+                        });
+                    }
+                }, 0);
             } else {
                 showError(data.error || 'Something went wrong. Please try again.');
                 resetSubmitButton(submitBtn, originalBtnText);
+                isSubmitting = false;
             }
         } catch (error) {
             showError('Network error. Please check your connection and try again.');
             resetSubmitButton(submitBtn, originalBtnText);
+            isSubmitting = false;
         }
     }
     
@@ -536,8 +570,8 @@ document.addEventListener('DOMContentLoaded', function() {
     function initializeVaccinationCards() {
         const vaccinationItems = document.querySelectorAll('.vaccination-item');
         
+        // Initialize vaccination item click handlers
         vaccinationItems.forEach(item => {
-            const vaccinationType = item.dataset.vaccination;
             const fileInput = item.querySelector('input[type="file"]');
             const fileNameSpan = item.querySelector('.vaccination-file-name');
             
@@ -545,7 +579,6 @@ document.addEventListener('DOMContentLoaded', function() {
             
             // Click on card to trigger file input
             item.addEventListener('click', (e) => {
-                // Don't trigger if clicking on the file name (for potential future remove functionality)
                 if (e.target.classList.contains('vaccination-file-name')) {
                     return;
                 }
@@ -569,5 +602,27 @@ document.addEventListener('DOMContentLoaded', function() {
     initializeFormFields();
     initializeBreedDropdown();
     initializeVaccinationCards();
+    
+    // Scroll to center the form when page loads
+    function scrollToForm() {
+        const form = document.getElementById('contactForm');
+        if (form) {
+            // Use setTimeout to ensure all content is loaded
+            setTimeout(() => {
+                form.scrollIntoView({ 
+                    behavior: 'instant', 
+                    block: 'center' 
+                });
+            }, 100);
+        }
+    }
+    
+    // Scroll on page load
+    scrollToForm();
+    
+    // Also scroll if page is already loaded (for cases where DOMContentLoaded fires late)
+    if (document.readyState === 'complete') {
+        scrollToForm();
+    }
 });
 

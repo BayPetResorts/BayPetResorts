@@ -69,6 +69,8 @@ document.addEventListener('DOMContentLoaded', function() {
         const commentIndex = allNodes.findIndex(node => 
             node.nodeType === 8 && node.textContent.includes('Duplicate'));
         
+        let originalItemsCount;
+        
         if (commentIndex !== -1 && allItems.length > 2) {
             // Count items before comment (original items)
             let itemsBeforeComment = 0;
@@ -80,6 +82,9 @@ document.addEventListener('DOMContentLoaded', function() {
             
             const originalItemsArray = allItems.slice(0, itemsBeforeComment);
             const firstTwoItems = originalItemsArray.slice(0, 2);
+            
+            // Store the count before rebuilding
+            originalItemsCount = originalItemsArray.length;
             
             // Shuffle original items using Fisher-Yates algorithm
             for (let i = originalItemsArray.length - 1; i > 0; i--) {
@@ -100,14 +105,15 @@ document.addEventListener('DOMContentLoaded', function() {
                 const clone = item.cloneNode(true);
                 testimonialsTrack.appendChild(clone);
             });
+        } else {
+            // If no comment found or not enough items, count all items (fallback)
+            originalItemsCount = allItems.length;
         }
         
         let scrollPosition = 0;
         let isPaused = false;
         const scrollSpeed = 1.5; // pixels per frame
         const itemWidth = 350; // width of each testimonial item including gap (320px + 30px gap)
-        const totalItems = testimonialsTrack.querySelectorAll('.testimonial-item').length;
-        const originalItemsCount = 30; // Number of original testimonials (before duplicates)
         const resetPoint = originalItemsCount * itemWidth;
         
         // Pause on hover (desktop)
