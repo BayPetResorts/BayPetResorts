@@ -1457,6 +1457,17 @@
                         successScreen.classList.add('show');
                         successScreen.style.display = 'flex';
                     }
+                    
+                    // Update parent URL to /thank-you for Facebook Custom Conversion tracking
+                    if (window.parent !== window) {
+                        window.parent.postMessage({ type: 'updateUrl', url: '/thank-you' }, '*');
+                    } else {
+                        // If not in iframe, update URL directly
+                        if (window.history && window.history.pushState) {
+                            window.history.pushState({ formCompleted: true }, 'Thank You', '/thank-you');
+                        }
+                    }
+                    
                     // Update iframe height after success screen shows
                     setTimeout(sendHeightToParent, 100);
                 }
