@@ -36,10 +36,8 @@ body {
     background-color: var(--beige-bg);
     padding: 10px 0;
     border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-    position: sticky;
-    top: 0;
+    position: relative;
     z-index: 99;
-    transition: top 0.3s ease;
 }
 
 .top-bar-content {
@@ -87,10 +85,8 @@ body {
     background-color: var(--beige-bg);
     padding: 10px 0;
     border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-    position: sticky;
-    top: 0;
+    position: relative;
     z-index: 99;
-    transition: top 0.3s ease;
 }
 
 /* Main Header */
@@ -98,19 +94,13 @@ body {
     background-color: var(--white);
     padding: 20px 0;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-    position: sticky;
-    top: 0;
+    position: relative;
     z-index: 100;
-    transition: top 0.3s ease;
 }
 
-/* Adjust top bar and header position when banner is visible */
-body.banner-visible .top-bar {
-    top: 56px;
-}
-
-body.banner-visible .main-header {
-    top: 96px;
+/* Hide menu close button on desktop */
+.menu-close-btn {
+    display: none;
 }
 
 .header-content {
@@ -1839,7 +1829,7 @@ body.banner-visible .main-header {
 
 .footer-logo-container {
     background-color: var(--beige-bg);
-    border-radius: 0 0 12px 12px;
+    border-radius: 12px;
     padding: 20px 24px;
     display: flex;
     flex-direction: column;
