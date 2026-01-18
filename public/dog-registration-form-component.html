@@ -51,7 +51,7 @@
             color: var(--primary-blue);
             font-size: 36px;
             font-weight: 700;
-            margin-bottom: 40px;
+            margin-bottom: 8px;
             text-align: center;
             letter-spacing: -0.5px;
         }
@@ -350,7 +350,7 @@
         .dog-reg-form-component .sms-checkbox-label {
             display: flex;
             align-items: flex-start;
-            gap: 12px;
+            gap: 8px;
             cursor: pointer;
             margin-bottom: 12px;
         }
@@ -636,7 +636,7 @@
 
         /* Success Screen */
         .dog-reg-form-component .success-screen {
-            padding: 40px 20px;
+            padding: 8px 20px 40px 20px;
             animation: fadeIn 0.5s ease-out;
             display: none;
         }
@@ -647,15 +647,25 @@
 
         .dog-reg-form-component .success-content {
             display: flex;
+            flex-direction: column;
             align-items: center;
-            gap: 24px;
-            flex-wrap: wrap;
+            gap: 12px;
             width: 100%;
         }
 
         .dog-reg-form-component .success-icon {
             flex-shrink: 0;
             animation: scaleIn 0.5s ease-out;
+        }
+
+        .dog-reg-form-component .success-text {
+            text-align: center;
+        }
+
+        .dog-reg-form-component .success-action {
+            width: 100%;
+            display: flex;
+            justify-content: center;
         }
 
         @keyframes scaleIn {
@@ -724,15 +734,18 @@
 
         .dog-reg-form-component .success-image {
             width: 100%;
-            margin-top: 24px;
+            margin-top: 0;
+            display: block;
+            order: 3;
         }
 
         .dog-reg-form-component .success-beach-image {
             width: 100%;
-            max-width: 400px;
             height: auto;
             border-radius: 8px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            display: block;
+            object-fit: cover;
         }
 
         /* Responsive */
@@ -1039,8 +1052,8 @@
             // Component Configuration
             const DEFAULT_CONFIG = {
                 apiEndpoint: '/api/contact',
-                dogIconUrl: '',
-                successImageUrl: '',
+                dogIconUrl: '/assets/images/ChatGPT Image Jan 11, 2026, 02_38_42 AM.png',
+                successImageUrl: '/assets/images/dog-beach.jpg',
                 companyName: '',
                 smsPolicyUrl: 'https://www.quo.com/policies/OR8BM50QQV',
                 closeUrl: '/',
@@ -1123,10 +1136,18 @@
                     smsPolicyLink.href = config.smsPolicyUrl;
                 }
 
-                // Update close button URL
+                // Update close button URL and handle navigation
                 const closeBtn = component.querySelector('[data-close-url]');
                 if (closeBtn) {
                     closeBtn.href = config.closeUrl;
+                    
+                    // If in an iframe, navigate parent window instead
+                    closeBtn.addEventListener('click', function(e) {
+                        if (window.parent !== window) {
+                            e.preventDefault();
+                            window.parent.location.href = config.closeUrl;
+                        }
+                    });
                 }
 
                 // Initialize form functionality
@@ -1255,6 +1276,12 @@
                 }
                 
                 function showSuccessScreen() {
+                    // Hide the h1 title
+                    const h1Title = component.querySelector('h1');
+                    if (h1Title) {
+                        h1Title.style.display = 'none';
+                    }
+                    
                     if (contactForm) contactForm.style.display = 'none';
                     if (progressTrack) progressTrack.style.display = 'none';
                     if (successScreen) {
