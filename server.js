@@ -259,28 +259,28 @@ app.post('/api/contact', async (req, res) => {
     });
 
   } catch (error) {
-    console.error('❌ Error processing contact form:', error);
-    console.error('Error details:', {
-      message: error.message,
-      code: error.code,
-      status: error.status,
-      statusText: error.statusText,
-      errors: error.errors
-    });
+    console.error('❌ Error processing contact form:', error.message);
     
-    // If it's a Google Sheets error, still return success to user
-    // but log the error for debugging
+    // Log specific error types for debugging
     if (error.code === 'ENOTFOUND' || error.code === 'ECONNREFUSED') {
-      console.error('⚠️  Could not connect to Google Sheets API. Check your credentials.');
-    } else if (error.status === 403) {
-      console.error('⚠️  Permission denied. Check that:');
-      console.error('   1. Google Sheets API is enabled in your project');
-      console.error('   2. The OAuth redirect URI matches: ' + (process.env.GOOGLE_REDIRECT_URI || (process.env.NODE_ENV === 'production' ? 'https://baypetresorts.com/oauth2callback' : 'http://localhost:3000/oauth2callback')));
-      console.error('   3. Your refresh token is valid');
+      console.error('⚠️  Could not connect to Google Sheets API.');
+    } else if (error.status === 403 || error.status === 401) {
+      console.error('⚠️  Google Sheets auth failed. Check OAuth credentials.');
     }
 
-    res.status(500).json({ 
-      error: 'An error occurred while processing your submission. Please try again later.' 
+    // Log form data to console so it's not lost
+    const { phone, firstName, lastName, email, dogName, breed, notes, services } = req.body;
+    console.log('📝 Form submission (failed to save to Sheets):', {
+      firstName, lastName, email, phone, dogName, breed,
+      notes: notes || '(none)',
+      services: Array.isArray(services) ? services.join(', ') : '(none)',
+      timestamp: new Date().toISOString()
+    });
+
+    // Still return success to user - don't block registration due to logging issues
+    res.json({ 
+      success: true, 
+      message: 'Thank you for your submission! We\'ll be in touch soon.' 
     });
   }
 });
