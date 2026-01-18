@@ -51,16 +51,30 @@ app.use(express.static(path.join(__dirname, 'public')));
 let sheets;
 let oauth2Client;
 
+// Debug: Log which env vars are present (without revealing values)
+console.log('🔍 Environment check:', {
+  NODE_ENV: process.env.NODE_ENV || 'not set',
+  GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID ? '✓ set' : '✗ missing',
+  GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET ? '✓ set' : '✗ missing',
+  GOOGLE_REFRESH_TOKEN: process.env.GOOGLE_REFRESH_TOKEN ? '✓ set' : '✗ missing',
+  GOOGLE_SHEET_ID: process.env.GOOGLE_SHEET_ID ? '✓ set' : '✗ missing',
+  GOOGLE_REDIRECT_URI: process.env.GOOGLE_REDIRECT_URI || 'not set (will use default)'
+});
+
 // Check if using OAuth 2.0 (preferred) or Service Account
 if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET && process.env.GOOGLE_REFRESH_TOKEN) {
   try {
+    const redirectUri = process.env.GOOGLE_REDIRECT_URI || (process.env.NODE_ENV === 'production' 
+      ? 'https://baypetresorts.com/oauth2callback' 
+      : 'http://localhost:3000/oauth2callback');
+    
+    console.log('🔗 Using redirect URI:', redirectUri);
+    
     // OAuth 2.0 setup
     oauth2Client = new google.auth.OAuth2(
       process.env.GOOGLE_CLIENT_ID,
       process.env.GOOGLE_CLIENT_SECRET,
-      process.env.GOOGLE_REDIRECT_URI || (process.env.NODE_ENV === 'production' 
-        ? 'https://baypetresorts.com/oauth2callback' 
-        : 'http://localhost:3000/oauth2callback')
+      redirectUri
     );
 
     // Set the refresh token
