@@ -773,7 +773,7 @@ body.banner-visible .main-header {
     .menu-close-btn {
         display: flex;
         align-items: center;
-        justify-content: center;
+        justify-content: flex-start;
         width: 100%;
         padding: 20px;
         background: none;
@@ -782,6 +782,10 @@ body.banner-visible .main-header {
         cursor: pointer;
         color: var(--primary-blue);
         transition: background-color 0.2s;
+        position: sticky;
+        top: 0;
+        background-color: var(--white);
+        z-index: 1;
     }
 
     .menu-close-btn:hover {
@@ -789,8 +793,9 @@ body.banner-visible .main-header {
     }
 
     .menu-close-btn svg {
-        width: 24px;
-        height: 24px;
+        width: 28px;
+        height: 28px;
+        stroke-width: 2.5;
     }
 
     .main-nav.active {
