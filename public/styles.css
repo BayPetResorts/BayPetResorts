@@ -187,29 +187,6 @@ body {
     color: var(--primary-blue);
 }
 
-.btn-find-resort {
-    background-color: var(--primary-blue);
-    color: var(--white);
-    border: none;
-    padding: 12px 24px;
-    font-size: 14px;
-    font-weight: 600;
-    letter-spacing: 0.5px;
-    cursor: pointer;
-    border-radius: 4px;
-    transition: background-color 0.2s, transform 0.1s;
-    white-space: nowrap;
-}
-
-.btn-find-resort:hover {
-    background-color: #152A47;
-    transform: translateY(-1px);
-}
-
-.btn-find-resort:active {
-    transform: translateY(0);
-}
-
 /* Hero Split Section */
 .hero-split {
     display: flex;
@@ -386,12 +363,6 @@ body {
     }
 }
 
-    /* Doggie Daycare Section */
-    .daycare-section {
-        padding: 80px 0;
-        background-color: var(--white);
-    }
-
     .daycare-title {
         text-align: center;
         color: var(--primary-blue);
@@ -399,11 +370,6 @@ body {
         font-weight: 700;
         margin-bottom: 40px;
         letter-spacing: -0.5px;
-    }
-
-    .daycare-content {
-        max-width: 800px;
-        margin: 0 auto;
     }
 
     .package-title {
@@ -688,6 +654,33 @@ body {
         margin-bottom: 30px;
     }
 
+    .btn-register-dog {
+        display: inline-block;
+        background-color: var(--primary-blue);
+        color: var(--white);
+        padding: 18px 48px;
+        font-size: 18px;
+        font-weight: 600;
+        text-decoration: none;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+        letter-spacing: 0.5px;
+        box-shadow: 0 4px 15px rgba(30, 58, 95, 0.3);
+        border: none;
+        cursor: pointer;
+    }
+
+    .btn-register-dog:hover {
+        background-color: #152A47;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(30, 58, 95, 0.4);
+    }
+
+    .btn-register-dog:active {
+        transform: translateY(0);
+        box-shadow: 0 2px 10px rgba(30, 58, 95, 0.3);
+    }
+
 /* Responsive Design */
 @media (max-width: 1024px) {
     .main-nav {
@@ -829,11 +822,6 @@ body {
         font-size: 15px;
     }
 
-    .btn-find-resort {
-        padding: 10px 20px;
-        font-size: 13px;
-    }
-
     .top-bar-content {
         flex-direction: column;
         gap: 8px;
@@ -852,12 +840,10 @@ body {
     }
 
     .btn-register-dog {
-        padding: 16px 35px;
-        font-size: 16px;
-    }
-
-    .daycare-section {
-        padding: 60px 0;
+        padding: 16px 40px;
+        font-size: 17px;
+        width: 100%;
+        max-width: 320px;
     }
 
     .daycare-title {
@@ -1050,6 +1036,15 @@ body {
     color: var(--text-dark);
     margin-bottom: 12px;
     line-height: 1.6;
+}
+
+.capacity-message .discount-highlight {
+    font-weight: 700;
+    font-size: 22px;
+    color: var(--primary-blue);
+    background: linear-gradient(135deg, rgba(30, 58, 95, 0.1) 0%, rgba(30, 58, 95, 0.05) 100%);
+    padding: 2px 6px;
+    border-radius: 4px;
 }
 
 .capacity-submessage {
@@ -1384,17 +1379,13 @@ body {
 /* Doggie Daycare Page */
 .daycare-page {
     min-height: calc(100vh - 200px);
-    padding: 60px 0;
+    padding: 60px 24px;
     background-color: var(--beige-bg);
 }
 
-.daycare-page .daycare-content {
-    max-width: 800px;
-    margin: 0 auto;
-    background-color: var(--white);
-    border-radius: 12px;
-    padding: 50px 40px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+.daycare-page .container {
+    max-width: 100%;
+    padding: 0;
 }
 
 .daycare-page .daycare-title {
@@ -1406,17 +1397,99 @@ body {
     letter-spacing: -0.5px;
 }
 
-.daycare-page .package-section {
-    margin-top: 20px;
+.daycare-packages-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    width: 100%;
+    align-items: stretch;
+}
+
+.daycare-page .package-card {
+    background-color: #ffffff;
+    border-radius: 16px;
+    padding: 40px 30px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #e0e0e0;
+    position: relative;
+    overflow: hidden;
+}
+
+.daycare-page .package-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 16px 50px rgba(0, 0, 0, 0.2);
+}
+
+.daycare-page .package-card.premium {
+    border: 2px solid var(--primary-blue);
+}
+
+.daycare-page .premium-header {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    background: var(--primary-blue);
+    color: #ffffff;
+    text-align: center;
+    padding: 10px 20px;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}
+
+.daycare-page .package-card.premium {
+    padding-top: 70px;
+}
+
+
+.daycare-page .package-price-tag {
+    text-align: center;
+    font-size: 48px;
+    font-weight: 700;
+    color: var(--primary-blue);
+    margin-bottom: 8px;
+}
+
+.daycare-page .package-price-tag span {
+    font-size: 20px;
+    font-weight: 500;
+    color: #6B7280;
 }
 
 .daycare-page .package-title {
     text-align: center;
-    color: var(--primary-blue);
-    font-size: 28px;
+    color: var(--text-dark);
+    font-size: 20px;
     font-weight: 600;
-    margin-bottom: 40px;
-    letter-spacing: -0.3px;
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--beige-light);
+}
+
+.daycare-page .package-list {
+    flex: 1;
+}
+
+.daycare-register-cta {
+    text-align: center;
+    margin-top: 50px;
+    padding: 20px 0;
+}
+
+.daycare-register-cta .btn-register-dog {
+    padding: 20px 60px;
+    font-size: 20px;
+}
+
+@media (max-width: 1024px) {
+    .daycare-packages-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
 }
 
 @media (max-width: 768px) {
@@ -1424,19 +1497,42 @@ body {
         padding: 40px 0;
     }
 
-    .daycare-page .daycare-content {
+    .daycare-packages-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    .daycare-page .package-card {
         padding: 30px 20px;
-        margin: 0 20px;
+    }
+
+    .daycare-page .package-card.premium {
+        padding-top: 60px;
+    }
+
+    .daycare-page .premium-header {
+        padding: 8px 16px;
+        font-size: 12px;
     }
 
     .daycare-page .daycare-title {
         font-size: 28px;
         margin-bottom: 30px;
+        padding: 0 20px;
+    }
+
+    .daycare-page .package-price-tag {
+        font-size: 40px;
+    }
+
+    .daycare-page .package-price-tag span {
+        font-size: 16px;
     }
 
     .daycare-page .package-title {
-        font-size: 24px;
-        margin-bottom: 30px;
+        font-size: 18px;
+        margin-bottom: 20px;
+        padding-bottom: 16px;
     }
 
     .daycare-page .package-header {
@@ -1465,6 +1561,17 @@ body {
 
     .daycare-page .package-details p {
         font-size: 15px;
+    }
+
+    .daycare-register-cta {
+        margin-top: 30px;
+    }
+
+    .daycare-register-cta .btn-register-dog {
+        padding: 18px 50px;
+        font-size: 18px;
+        max-width: none;
+        width: auto;
     }
 
     .meet-owners-page {
