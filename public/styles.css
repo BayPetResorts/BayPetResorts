@@ -229,7 +229,7 @@ body {
     cursor: pointer;
 }
 
-.hero-gif {
+.hero-bg {
     position: absolute;
     top: 0;
     left: 0;
@@ -237,12 +237,11 @@ body {
     height: 100%;
     object-fit: cover;
     z-index: 0;
-    filter: grayscale(100%);
-    transition: filter 0.4s ease;
+    transition: transform 0.4s ease;
 }
 
-.hero-section:hover .hero-gif {
-    filter: grayscale(0%);
+.hero-section:hover .hero-bg {
+    transform: scale(1.05);
 }
 
 .hero-section-overlay {
@@ -274,6 +273,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
+    gap: 16px;
     padding: 24px 60px;
     font-size: 28px;
     font-weight: 700;
@@ -286,6 +286,18 @@ body {
     border: none;
     outline: none;
     text-transform: uppercase;
+}
+
+.btn-hero .btn-icon {
+    width: 40px;
+    height: 40px;
+    position: relative;
+    z-index: 2;
+    transition: transform 0.3s ease;
+}
+
+.hero-section:hover .btn-icon {
+    transform: scale(1.15);
 }
 
 .btn-hero .btn-text {
