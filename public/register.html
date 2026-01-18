@@ -107,9 +107,13 @@
             if (event.data && event.data.type === 'updateUrl' && event.data.url) {
                 if (window.history && window.history.pushState) {
                     window.history.pushState({ formCompleted: true }, 'Thank You', event.data.url);
-                    // Fire a PageView for the new URL so Facebook sees it
+                    // Fire events AFTER URL change so Facebook sees the /thank-you URL
                     if (typeof fbq !== 'undefined') {
                         fbq('track', 'PageView');
+                        fbq('track', 'CompleteRegistration', {
+                            content_name: 'Dog Registration',
+                            status: 'completed'
+                        });
                     }
                 }
             }

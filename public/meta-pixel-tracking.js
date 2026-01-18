@@ -244,10 +244,7 @@
                     content_category: 'Registration',
                     services: data.services || []
                 });
-                fbq('track', 'CompleteRegistration', {
-                    content_name: 'Dog Registration',
-                    status: 'completed'
-                });
+                // Note: CompleteRegistration fires from register.html AFTER URL changes to /thank-you
                 break;
 
             case 'formAbandoned':
