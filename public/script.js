@@ -1,5 +1,33 @@
 // Bay Pet Resorts - Homepage Script
 document.addEventListener('DOMContentLoaded', function() {
+    // Scroll to top of hero video container on initial page load only
+    function scrollToHero() {
+        const heroSection = document.querySelector('.hero');
+        if (heroSection) {
+            // Check if this is the initial load in this session
+            const hasScrolledBefore = sessionStorage.getItem('bayPetResorts_initialScroll');
+            
+            if (!hasScrolledBefore) {
+                // Mark that we've done the initial scroll for this session
+                sessionStorage.setItem('bayPetResorts_initialScroll', 'true');
+                
+                // Use setTimeout to ensure page is fully rendered, then scroll to hero section
+                setTimeout(() => {
+                    heroSection.scrollIntoView({ 
+                        behavior: 'instant', 
+                        block: 'start' 
+                    });
+                }, 100);
+            }
+        }
+    }
+    
+    scrollToHero();
+    
+    if (document.readyState === 'complete') {
+        scrollToHero();
+    }
+    
     // Smooth scrolling for anchor links
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function(e) {

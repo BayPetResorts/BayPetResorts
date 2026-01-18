@@ -1,0 +1,1784 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dog Registration Form Component</title>
+    <style>
+        /* Component Styles - Scoped to avoid conflicts */
+        .dog-reg-form-component {
+            --primary-blue: #1E3A5F;
+            --beige-bg: #F5F0E8;
+            --beige-light: #E8E0D6;
+            --white: #FFFFFF;
+            --text-dark: #2C2C2C;
+            
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            color: var(--text-dark);
+            line-height: 1.6;
+            box-sizing: border-box;
+        }
+
+        .dog-reg-form-component *,
+        .dog-reg-form-component *::before,
+        .dog-reg-form-component *::after {
+            box-sizing: border-box;
+        }
+
+        .dog-reg-form-component .register-content {
+            max-width: 700px;
+            margin: 0 auto;
+            background-color: var(--white);
+            border-radius: 12px;
+            padding: 50px 40px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .dog-reg-form-component h1 {
+            color: var(--primary-blue);
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 40px;
+            text-align: center;
+            letter-spacing: -0.5px;
+        }
+
+        .dog-reg-form-component .form-progress {
+            margin-bottom: 40px;
+            padding: 0 10px;
+        }
+
+        .dog-reg-form-component .progress-track {
+            position: relative;
+            height: 80px;
+            display: flex;
+            align-items: center;
+        }
+
+        .dog-reg-form-component .progress-track::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(to right, var(--primary-blue) 0%, var(--primary-blue) 0%, var(--beige-light) 0%);
+            background-size: 100% 100%;
+            transform: translateY(-50%);
+            border-radius: 2px;
+            transition: background 0.5s ease;
+        }
+
+        .dog-reg-form-component .dog-walker {
+            position: absolute;
+            top: calc(50% + 20px);
+            left: 0;
+            transform: translate(-50%, -100%);
+            z-index: 10;
+            transition: left 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            animation: dogWalk 0.8s ease-in-out infinite;
+            transform-origin: center bottom;
+        }
+
+        .dog-reg-form-component .dog-walker.step-1 { left: 0%; }
+        .dog-reg-form-component .dog-walker.step-2 { left: 50%; }
+        .dog-reg-form-component .dog-walker.step-3 { left: 100%; }
+
+        .dog-reg-form-component .dog-icon {
+            width: 120px;
+            height: auto;
+            object-fit: contain;
+            filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.3));
+            display: block;
+        }
+
+        @keyframes dogWalk {
+            0%, 100% {
+                transform: translate(-50%, -100%) rotate(0deg) translateY(0);
+            }
+            25% {
+                transform: translate(-50%, calc(-100% - 2px)) rotate(-2deg) translateY(-2px);
+            }
+            50% {
+                transform: translate(-50%, -100%) rotate(0deg) translateY(-3px);
+            }
+            75% {
+                transform: translate(-50%, calc(-100% + 2px)) rotate(2deg) translateY(-2px);
+            }
+        }
+
+        .dog-reg-form-component .progress-milestones {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            height: 100%;
+            z-index: 5;
+        }
+
+        .dog-reg-form-component .milestone {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            flex: 1;
+            position: relative;
+        }
+
+        .dog-reg-form-component .milestone-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: var(--beige-light);
+            border: 2px solid var(--beige-light);
+            transition: all 0.3s ease;
+            margin-top: 34px;
+        }
+
+        .dog-reg-form-component .milestone.active .milestone-dot {
+            background-color: var(--primary-blue);
+            border-color: var(--primary-blue);
+            box-shadow: 0 0 0 4px rgba(30, 58, 95, 0.1);
+            transform: scale(1.2);
+        }
+
+        .dog-reg-form-component .milestone-label {
+            font-size: 11px;
+            font-weight: 500;
+            color: var(--text-dark);
+            opacity: 0.5;
+            text-align: center;
+            transition: all 0.3s ease;
+            margin-top: 4px;
+        }
+
+        .dog-reg-form-component .milestone.active .milestone-label {
+            opacity: 1;
+            color: var(--primary-blue);
+            font-weight: 600;
+        }
+
+        .dog-reg-form-component .progress-track.step-1::before {
+            background: linear-gradient(to right, var(--primary-blue) 0%, var(--beige-light) 0%);
+        }
+
+        .dog-reg-form-component .progress-track.step-2::before {
+            background: linear-gradient(to right, var(--primary-blue) 50%, var(--beige-light) 50%);
+        }
+
+        .dog-reg-form-component .progress-track.step-3::before {
+            background: linear-gradient(to right, var(--primary-blue) 100%, var(--primary-blue) 100%);
+        }
+
+        .dog-reg-form-component .form-step {
+            display: none;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        .dog-reg-form-component .form-step.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateX(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .dog-reg-form-component .contact-form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .dog-reg-form-component .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .dog-reg-form-component .form-group label {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-dark);
+            letter-spacing: 0.3px;
+        }
+
+        .dog-reg-form-component .form-group input,
+        .dog-reg-form-component .form-group textarea {
+            padding: 12px 16px;
+            font-size: 16px;
+            font-family: inherit;
+            border: 2px solid var(--beige-light);
+            border-radius: 6px;
+            background-color: var(--white);
+            color: var(--text-dark);
+            transition: border-color 0.2s, box-shadow 0.2s;
+            width: 100%;
+        }
+
+        .dog-reg-form-component .form-group input:focus,
+        .dog-reg-form-component .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary-blue);
+            box-shadow: 0 0 0 3px rgba(30, 58, 95, 0.1);
+        }
+
+        .dog-reg-form-component .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .dog-reg-form-component .form-group input.error {
+            border-color: #dc3545;
+            box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.1);
+        }
+
+        .dog-reg-form-component .form-message {
+            padding: 12px 16px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            text-align: center;
+            display: none;
+        }
+
+        .dog-reg-form-component .form-message.error {
+            display: block;
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .dog-reg-form-component .form-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+            align-items: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid var(--beige-light);
+        }
+
+        .dog-reg-form-component .btn-next,
+        .dog-reg-form-component .btn-back,
+        .dog-reg-form-component .btn-submit {
+            padding: 16px 24px;
+            font-size: 16px;
+            font-weight: 600;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+            letter-spacing: 0.3px;
+            box-sizing: border-box;
+            height: 48px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            line-height: 1;
+            margin: 0;
+            vertical-align: top;
+        }
+
+        .dog-reg-form-component .btn-next,
+        .dog-reg-form-component .btn-submit {
+            background-color: var(--primary-blue);
+            color: var(--white);
+        }
+
+        .dog-reg-form-component .btn-next:hover:not(:disabled),
+        .dog-reg-form-component .btn-submit:hover:not(:disabled) {
+            background-color: #152A47;
+            transform: translateY(-1px);
+        }
+
+        .dog-reg-form-component .btn-back {
+            background-color: transparent;
+            color: var(--text-dark);
+            border: 2px solid var(--beige-light);
+            padding: 14px 24px;
+        }
+
+        .dog-reg-form-component .btn-back:hover {
+            border-color: var(--primary-blue);
+            color: var(--primary-blue);
+        }
+
+        .dog-reg-form-component .btn-submit:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .dog-reg-form-component .modal-subtitle {
+            color: var(--text-dark);
+            font-size: 16px;
+            margin-bottom: 30px;
+            opacity: 0.8;
+        }
+
+        /* SMS Opt-in */
+        .dog-reg-form-component .sms-opt-in {
+            background-color: var(--white);
+            border: 2px solid var(--beige-light);
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 8px;
+        }
+
+        .dog-reg-form-component .sms-checkbox-label {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            cursor: pointer;
+            margin-bottom: 12px;
+        }
+
+        .dog-reg-form-component .sms-checkbox-label input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            margin: 0;
+            cursor: pointer;
+            flex-shrink: 0;
+            margin-top: 2px;
+            accent-color: var(--primary-blue);
+        }
+
+        .dog-reg-form-component .sms-checkbox-text {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-dark);
+            line-height: 1.5;
+            flex: 1;
+        }
+
+        .dog-reg-form-component .sms-disclaimer {
+            font-size: 11px;
+            color: #6c757d;
+            line-height: 1.6;
+            margin: 0;
+            padding-left: 32px;
+        }
+
+        .dog-reg-form-component .sms-policy-link {
+            color: var(--primary-blue);
+            text-decoration: underline;
+            font-weight: 500;
+        }
+
+        .dog-reg-form-component .sms-checkbox-label.error .sms-checkbox-text {
+            color: #dc3545;
+        }
+
+        .dog-reg-form-component .sms-opt-in.error {
+            border-color: #dc3545;
+            background-color: rgba(220, 53, 69, 0.05);
+        }
+
+        /* Breed Dropdown */
+        .dog-reg-form-component .breed-dropdown {
+            position: relative;
+        }
+
+        .dog-reg-form-component .breed-search {
+            width: 100%;
+            padding-right: 40px;
+            cursor: text;
+        }
+
+        .dog-reg-form-component .breed-search.error {
+            border-color: #dc3545;
+            box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.1);
+        }
+
+        .dog-reg-form-component .breed-dropdown-arrow {
+            position: absolute;
+            right: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            pointer-events: none;
+            color: var(--text-dark);
+            font-size: 12px;
+            opacity: 0.5;
+            transition: transform 0.2s, opacity 0.2s;
+        }
+
+        .dog-reg-form-component .breed-search:focus ~ .breed-dropdown-arrow {
+            opacity: 1;
+            transform: translateY(-50%) rotate(180deg);
+        }
+
+        .dog-reg-form-component .breed-dropdown-list {
+            position: absolute;
+            top: calc(100% + 4px);
+            left: 0;
+            right: 0;
+            background-color: var(--white);
+            border: 2px solid var(--beige-light);
+            border-radius: 6px;
+            max-height: 300px;
+            overflow-y: auto;
+            z-index: 1000;
+            display: none;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .dog-reg-form-component .breed-dropdown-item {
+            padding: 12px 16px;
+            cursor: pointer;
+            transition: background-color 0.15s;
+            border-bottom: 1px solid var(--beige-light);
+            font-size: 16px;
+            color: var(--text-dark);
+        }
+
+        .dog-reg-form-component .breed-dropdown-item:last-child {
+            border-bottom: none;
+        }
+
+        .dog-reg-form-component .breed-dropdown-item:hover,
+        .dog-reg-form-component .breed-dropdown-item.highlighted {
+            background-color: rgba(30, 58, 95, 0.1);
+            color: var(--primary-blue);
+        }
+
+        .dog-reg-form-component .breed-dropdown-item.no-results {
+            color: #6c757d;
+            cursor: default;
+            font-style: italic;
+        }
+
+        /* Vaccination Accordion */
+        .dog-reg-form-component .vaccination-accordion {
+            background-color: var(--white);
+            border: 2px solid var(--beige-light);
+            border-radius: 8px;
+            overflow: hidden;
+            transition: border-color 0.2s;
+        }
+
+        .dog-reg-form-component .vaccination-accordion.active {
+            border-color: var(--primary-blue);
+        }
+
+        .dog-reg-form-component .vaccination-accordion-header {
+            width: 100%;
+            padding: 16px 20px;
+            font-size: 16px;
+            font-family: inherit;
+            font-weight: 600;
+            border: none;
+            background-color: transparent;
+            color: var(--text-dark);
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            text-align: left;
+        }
+
+        .dog-reg-form-component .vaccination-accordion-title {
+            flex: 1;
+            color: var(--primary-blue);
+        }
+
+        .dog-reg-form-component .vaccination-accordion-icon {
+            position: relative;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            margin-left: 12px;
+        }
+
+        .dog-reg-form-component .vaccination-accordion-plus,
+        .dog-reg-form-component .vaccination-accordion-minus {
+            position: absolute;
+            color: var(--primary-blue);
+            font-size: 20px;
+            font-weight: 400;
+            line-height: 1;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+
+        .dog-reg-form-component .vaccination-accordion-plus {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .dog-reg-form-component .vaccination-accordion-minus {
+            opacity: 0;
+            transform: scale(0);
+        }
+
+        .dog-reg-form-component .vaccination-accordion.active .vaccination-accordion-plus {
+            opacity: 0;
+            transform: scale(0);
+        }
+
+        .dog-reg-form-component .vaccination-accordion.active .vaccination-accordion-minus {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .dog-reg-form-component .vaccination-accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease, padding 0.3s ease;
+            padding: 0 20px;
+        }
+
+        .dog-reg-form-component .vaccination-accordion.active .vaccination-accordion-content {
+            max-height: 1000px;
+            padding: 20px;
+        }
+
+        .dog-reg-form-component .vaccination-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 0;
+        }
+
+        .dog-reg-form-component .vaccination-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 16px 20px;
+            background-color: var(--white);
+            border: 2px solid var(--beige-light);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+
+        .dog-reg-form-component .vaccination-item:hover {
+            border-color: var(--primary-blue);
+            box-shadow: 0 2px 8px rgba(30, 58, 95, 0.1);
+            transform: translateY(-1px);
+        }
+
+        .dog-reg-form-component .vaccination-item.has-file {
+            border-color: var(--primary-blue);
+            background-color: rgba(30, 58, 95, 0.02);
+        }
+
+        .dog-reg-form-component .vaccination-icon {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--beige-bg);
+            border-radius: 6px;
+            flex-shrink: 0;
+            color: var(--text-dark);
+        }
+
+        .dog-reg-form-component .vaccination-item.has-file .vaccination-icon {
+            background-color: var(--primary-blue);
+            color: var(--white);
+        }
+
+        .dog-reg-form-component .vaccination-plus {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-dark);
+            flex-shrink: 0;
+        }
+
+        .dog-reg-form-component .vaccination-item.has-file .vaccination-plus {
+            display: none;
+        }
+
+        .dog-reg-form-component .vaccination-name {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-dark);
+            flex: 1;
+        }
+
+        .dog-reg-form-component .vaccination-file-name {
+            font-size: 14px;
+            color: var(--primary-blue);
+            font-weight: 500;
+            margin-left: auto;
+            display: none;
+        }
+
+        .dog-reg-form-component .vaccination-item.has-file .vaccination-file-name {
+            display: block;
+        }
+
+        /* Success Screen */
+        .dog-reg-form-component .success-screen {
+            padding: 40px 20px;
+            animation: fadeIn 0.5s ease-out;
+            display: none;
+        }
+
+        .dog-reg-form-component .success-screen.show {
+            display: flex;
+        }
+
+        .dog-reg-form-component .success-content {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            flex-wrap: wrap;
+            width: 100%;
+        }
+
+        .dog-reg-form-component .success-icon {
+            flex-shrink: 0;
+            animation: scaleIn 0.5s ease-out;
+        }
+
+        @keyframes scaleIn {
+            from {
+                opacity: 0;
+                transform: scale(0.5);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .dog-reg-form-component .success-text {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .dog-reg-form-component .success-screen h2 {
+            color: var(--primary-blue);
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            letter-spacing: -0.5px;
+        }
+
+        .dog-reg-form-component .success-message {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 8px;
+        }
+
+        .dog-reg-form-component .success-submessage {
+            font-size: 16px;
+            color: #6c757d;
+            line-height: 1.6;
+            margin: 0;
+        }
+
+        .dog-reg-form-component .success-action {
+            flex-shrink: 0;
+        }
+
+        .dog-reg-form-component .btn-close-success {
+            background-color: var(--primary-blue);
+            color: var(--white);
+            border: none;
+            padding: 14px 32px;
+            font-size: 16px;
+            font-weight: 600;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+            letter-spacing: 0.3px;
+            display: inline-block;
+            text-decoration: none;
+            white-space: nowrap;
+        }
+
+        .dog-reg-form-component .btn-close-success:hover {
+            background-color: #152A47;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(30, 58, 95, 0.3);
+        }
+
+        .dog-reg-form-component .success-image {
+            width: 100%;
+            margin-top: 24px;
+        }
+
+        .dog-reg-form-component .success-beach-image {
+            width: 100%;
+            max-width: 400px;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .dog-reg-form-component .register-content {
+                padding: 30px 20px;
+                margin: 0 20px;
+            }
+
+            .dog-reg-form-component h1 {
+                font-size: 28px;
+                margin-bottom: 30px;
+            }
+
+            .dog-reg-form-component .form-progress {
+                padding: 0 5px;
+                margin-bottom: 30px;
+            }
+
+            .dog-reg-form-component .progress-track {
+                height: 70px;
+            }
+
+            .dog-reg-form-component .dog-icon {
+                width: 90px;
+            }
+
+            .dog-reg-form-component .milestone-dot {
+                width: 10px;
+                height: 10px;
+                margin-top: 30px;
+            }
+
+            .dog-reg-form-component .milestone-label {
+                font-size: 9px;
+            }
+
+            .dog-reg-form-component .form-actions {
+                flex-direction: column-reverse;
+            }
+
+            .dog-reg-form-component .btn-next,
+            .dog-reg-form-component .btn-back,
+            .dog-reg-form-component .btn-submit {
+                width: 100%;
+            }
+
+            .dog-reg-form-component .success-content {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .dog-reg-form-component .success-text {
+                min-width: auto;
+            }
+
+            .dog-reg-form-component .success-action {
+                width: 100%;
+            }
+
+            .dog-reg-form-component .btn-close-success {
+                width: 100%;
+            }
+
+            .dog-reg-form-component .sms-opt-in {
+                padding: 16px;
+            }
+
+            .dog-reg-form-component .sms-disclaimer {
+                font-size: 11px;
+                padding-left: 30px;
+            }
+
+            .dog-reg-form-component .vaccination-accordion-header {
+                padding: 14px 16px;
+                font-size: 16px;
+            }
+
+            .dog-reg-form-component .vaccination-accordion.active .vaccination-accordion-content {
+                padding: 16px;
+            }
+
+            .dog-reg-form-component .breed-dropdown-list {
+                max-height: 250px;
+                font-size: 16px;
+            }
+
+            .dog-reg-form-component .breed-dropdown-item {
+                padding: 14px 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Dog Registration Form Component -->
+    <div class="dog-reg-form-component" id="dogRegFormComponent">
+        <div class="register-content">
+            <h1 data-title="Register Your Dog">Register Your Dog</h1>
+            
+            <!-- Progress Indicator -->
+            <div class="form-progress">
+                <div class="progress-track" id="progressTrack">
+                    <div class="dog-walker" id="dogWalker">
+                        <img src="" alt="Dog walking" class="dog-icon" id="dogIcon" style="display: none;">
+                    </div>
+                    <div class="progress-milestones">
+                        <div class="milestone" data-step="1">
+                            <div class="milestone-dot"></div>
+                            <div class="milestone-label">Phone</div>
+                        </div>
+                        <div class="milestone" data-step="2">
+                            <div class="milestone-dot"></div>
+                            <div class="milestone-label">Contact</div>
+                        </div>
+                        <div class="milestone" data-step="3">
+                            <div class="milestone-dot"></div>
+                            <div class="milestone-label">Dog Info</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Success Screen -->
+            <div id="successScreen" class="success-screen">
+                <div class="success-content">
+                    <div class="success-icon">
+                        <svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="32" cy="32" r="32" fill="#10B981"/>
+                            <path d="M20 32L28 40L44 24" stroke="white" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                    <div class="success-text">
+                        <h2 data-success-title="Thank You!">Thank You!</h2>
+                        <p class="success-message" data-success-message="Your registration has been submitted successfully.">Your registration has been submitted successfully.</p>
+                        <p class="success-submessage" data-success-submessage="We'll be in touch with you soon.">We'll be in touch with you soon.</p>
+                    </div>
+                    <div class="success-action">
+                        <a href="#" class="btn-close-success" data-close-text="Return to Home" data-close-url="/">Return to Home</a>
+                    </div>
+                    <div class="success-image" id="successImageContainer" style="display: none;">
+                        <img src="" alt="Success" class="success-beach-image" id="successImage">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Registration Form -->
+            <form id="contactForm" class="contact-form" novalidate>
+                <!-- Step 1: Phone Number -->
+                <div class="form-step active" data-step="1">
+                    <div class="form-group">
+                        <label for="phone">Phone Number *</label>
+                        <input type="tel" id="phone" name="phone" placeholder="(555) 123-4567" required>
+                    </div>
+                    <div class="form-group">
+                        <div class="sms-opt-in">
+                            <label class="sms-checkbox-label">
+                                <input type="checkbox" id="smsOptIn" name="smsOptIn" required>
+                                <span class="sms-checkbox-text" data-sms-text="I would like to receive updates by text *">I would like to receive updates by text *</span>
+                            </label>
+                            <p class="sms-disclaimer" data-sms-disclaimer="">
+                                We'll be sending you booking reminders.
+                                Message and data rates may apply. Message frequency varies. 
+                                At any time you can text <strong>HELP</strong> for help or <strong>STOP</strong> to opt out.
+                                <a href="https://www.quo.com/policies/OR8BM50QQV" target="_blank" rel="noopener noreferrer" class="sms-policy-link" data-sms-policy-url="https://www.quo.com/policies/OR8BM50QQV">Privacy Policy</a>
+                            </p>
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn-next">Next</button>
+                    </div>
+                </div>
+
+                <!-- Step 2: Contact Information -->
+                <div class="form-step" data-step="2">
+                    <p class="modal-subtitle">Tell us about yourself</p>
+                    <div class="form-group">
+                        <label for="firstName">First Name *</label>
+                        <input type="text" id="firstName" name="firstName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="lastName">Last Name *</label>
+                        <input type="text" id="lastName" name="lastName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email Address *</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn-back">Back</button>
+                        <button type="button" class="btn-next">Next</button>
+                    </div>
+                </div>
+
+                <!-- Step 3: Dog Information -->
+                <div class="form-step" data-step="3">
+                    <p class="modal-subtitle">Tell us about your dog</p>
+                    <div class="form-group">
+                        <label for="dogName">Dog's Name *</label>
+                        <input type="text" id="dogName" name="dogName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="breed">Breed *</label>
+                        <div class="breed-dropdown">
+                            <input type="hidden" id="breed" name="breed" required>
+                            <input type="text" id="breedSearch" class="breed-search" placeholder="Search or select a breed" autocomplete="off">
+                            <div class="breed-dropdown-arrow">▼</div>
+                            <div class="breed-dropdown-list" id="breedDropdownList"></div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="notes">Important Notes (Optional)</label>
+                        <textarea id="notes" name="notes" rows="4" placeholder="Dietary habits, temperament, health issues, special care instructions, etc."></textarea>
+                    </div>
+                    <div class="form-group" style="margin-top: 30px;">
+                        <div class="vaccination-accordion">
+                            <button type="button" class="vaccination-accordion-header" id="vaccinationAccordion">
+                                <span class="vaccination-accordion-title">Vaccinations (Optional)</span>
+                                <span class="vaccination-accordion-icon">
+                                    <span class="vaccination-accordion-plus">+</span>
+                                    <span class="vaccination-accordion-minus">−</span>
+                                </span>
+                            </button>
+                            <div class="vaccination-accordion-content" id="vaccinationAccordionContent">
+                                <div class="vaccination-list">
+                                    <div class="vaccination-item" data-vaccination="bordetella">
+                                        <input type="file" id="bordetella" name="bordetella" accept=".pdf,.jpg,.jpeg,.png,.doc,.docx" style="display: none;">
+                                        <div class="vaccination-icon">
+                                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                <rect x="9" y="2" width="6" height="14" rx="1"></rect>
+                                                <path d="M12 2v4"></path>
+                                                <path d="M12 16v6"></path>
+                                                <line x1="10" y1="22" x2="14" y2="22"></line>
+                                                <line x1="9" y1="6" x2="15" y2="6"></line>
+                                            </svg>
+                                        </div>
+                                        <span class="vaccination-plus">+</span>
+                                        <span class="vaccination-name">Bordetella record</span>
+                                        <span class="vaccination-file-name"></span>
+                                    </div>
+                                    <div class="vaccination-item" data-vaccination="rabies">
+                                        <input type="file" id="rabies" name="rabies" accept=".pdf,.jpg,.jpeg,.png,.doc,.docx" style="display: none;">
+                                        <div class="vaccination-icon">
+                                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                <rect x="9" y="2" width="6" height="14" rx="1"></rect>
+                                                <path d="M12 2v4"></path>
+                                                <path d="M12 16v6"></path>
+                                                <line x1="10" y1="22" x2="14" y2="22"></line>
+                                                <line x1="9" y1="6" x2="15" y2="6"></line>
+                                            </svg>
+                                        </div>
+                                        <span class="vaccination-plus">+</span>
+                                        <span class="vaccination-name">Rabies record</span>
+                                        <span class="vaccination-file-name"></span>
+                                    </div>
+                                    <div class="vaccination-item" data-vaccination="dhlpp">
+                                        <input type="file" id="dhlpp" name="dhlpp" accept=".pdf,.jpg,.jpeg,.png,.doc,.docx" style="display: none;">
+                                        <div class="vaccination-icon">
+                                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                <rect x="9" y="2" width="6" height="14" rx="1"></rect>
+                                                <path d="M12 2v4"></path>
+                                                <path d="M12 16v6"></path>
+                                                <line x1="10" y1="22" x2="14" y2="22"></line>
+                                                <line x1="9" y1="6" x2="15" y2="6"></line>
+                                            </svg>
+                                        </div>
+                                        <span class="vaccination-plus">+</span>
+                                        <span class="vaccination-name">DHLPP record</span>
+                                        <span class="vaccination-file-name"></span>
+                                    </div>
+                                    <div class="vaccination-item" data-vaccination="canineInfluenza">
+                                        <input type="file" id="canineInfluenza" name="canineInfluenza" accept=".pdf,.jpg,.jpeg,.png,.doc,.docx" style="display: none;">
+                                        <div class="vaccination-icon">
+                                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                <rect x="9" y="2" width="6" height="14" rx="1"></rect>
+                                                <path d="M12 2v4"></path>
+                                                <path d="M12 16v6"></path>
+                                                <line x1="10" y1="22" x2="14" y2="22"></line>
+                                                <line x1="9" y1="6" x2="15" y2="6"></line>
+                                            </svg>
+                                        </div>
+                                        <span class="vaccination-plus">+</span>
+                                        <span class="vaccination-name">Canine Influenza (H3N8 - H3N2) record</span>
+                                        <span class="vaccination-file-name"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="formMessage" class="form-message"></div>
+                    <div class="form-actions">
+                        <button type="button" class="btn-back">Back</button>
+                        <button type="submit" class="btn-submit">Submit</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Dog Registration Form Component
+        (function() {
+            'use strict';
+
+            // Component Configuration
+            const DEFAULT_CONFIG = {
+                apiEndpoint: '/api/contact',
+                dogIconUrl: '',
+                successImageUrl: '',
+                companyName: '',
+                smsPolicyUrl: 'https://www.quo.com/policies/OR8BM50QQV',
+                closeUrl: '/',
+                onSuccess: null,
+                onError: null
+            };
+
+            // Get config from data attributes, URL params, or use defaults
+            function getConfig() {
+                const component = document.getElementById('dogRegFormComponent');
+                if (!component) {
+                    // Try URL params (for iframe usage)
+                    const urlParams = new URLSearchParams(window.location.search);
+                    return {
+                        apiEndpoint: urlParams.get('api-endpoint') || DEFAULT_CONFIG.apiEndpoint,
+                        dogIconUrl: urlParams.get('dog-icon-url') || DEFAULT_CONFIG.dogIconUrl,
+                        successImageUrl: urlParams.get('success-image-url') || DEFAULT_CONFIG.successImageUrl,
+                        companyName: urlParams.get('company-name') || DEFAULT_CONFIG.companyName,
+                        smsPolicyUrl: urlParams.get('sms-policy-url') || DEFAULT_CONFIG.smsPolicyUrl,
+                        closeUrl: urlParams.get('close-url') || DEFAULT_CONFIG.closeUrl,
+                        onSuccess: window.dogRegFormOnSuccess || DEFAULT_CONFIG.onSuccess,
+                        onError: window.dogRegFormOnError || DEFAULT_CONFIG.onError
+                    };
+                }
+
+                // Try data attributes first, then URL params, then defaults
+                const urlParams = new URLSearchParams(window.location.search);
+                return {
+                    apiEndpoint: component.dataset.apiEndpoint || urlParams.get('api-endpoint') || DEFAULT_CONFIG.apiEndpoint,
+                    dogIconUrl: component.dataset.dogIconUrl || urlParams.get('dog-icon-url') || DEFAULT_CONFIG.dogIconUrl,
+                    successImageUrl: component.dataset.successImageUrl || urlParams.get('success-image-url') || DEFAULT_CONFIG.successImageUrl,
+                    companyName: component.dataset.companyName || urlParams.get('company-name') || DEFAULT_CONFIG.companyName,
+                    smsPolicyUrl: component.dataset.smsPolicyUrl || urlParams.get('sms-policy-url') || DEFAULT_CONFIG.smsPolicyUrl,
+                    closeUrl: component.dataset.closeUrl || urlParams.get('close-url') || DEFAULT_CONFIG.closeUrl,
+                    onSuccess: window.dogRegFormOnSuccess || DEFAULT_CONFIG.onSuccess,
+                    onError: window.dogRegFormOnError || DEFAULT_CONFIG.onError
+                };
+            }
+
+            // Initialize component when DOM is ready
+            function initComponent() {
+                const config = getConfig();
+                const component = document.getElementById('dogRegFormComponent');
+                if (!component) return;
+
+                // Update text content based on config
+                if (config.companyName) {
+                    const title = component.querySelector('[data-title]');
+                    if (title) {
+                        title.textContent = `Register Your Dog - ${config.companyName}`;
+                    }
+                    
+                    const smsDisclaimer = component.querySelector('[data-sms-disclaimer]');
+                    if (smsDisclaimer) {
+                        smsDisclaimer.textContent = `We'll be sending you booking reminders from ${config.companyName}. Message and data rates may apply. Message frequency varies. At any time you can text HELP for help or STOP to opt out.`;
+                    }
+                }
+
+                // Set images if provided
+                if (config.dogIconUrl) {
+                    const dogIcon = component.querySelector('#dogIcon');
+                    if (dogIcon) {
+                        dogIcon.src = config.dogIconUrl;
+                        dogIcon.style.display = 'block';
+                    }
+                }
+
+                if (config.successImageUrl) {
+                    const successImage = component.querySelector('#successImage');
+                    const successImageContainer = component.querySelector('#successImageContainer');
+                    if (successImage && successImageContainer) {
+                        successImage.src = config.successImageUrl;
+                        successImageContainer.style.display = 'block';
+                    }
+                }
+
+                // Update SMS policy link
+                const smsPolicyLink = component.querySelector('[data-sms-policy-url]');
+                if (smsPolicyLink && config.smsPolicyUrl) {
+                    smsPolicyLink.href = config.smsPolicyUrl;
+                }
+
+                // Update close button URL
+                const closeBtn = component.querySelector('[data-close-url]');
+                if (closeBtn) {
+                    closeBtn.href = config.closeUrl;
+                }
+
+                // Initialize form functionality
+                initForm(config);
+            }
+
+            // Form initialization (same logic as register.js but scoped)
+            function initForm(config) {
+                const TOTAL_STEPS = 3;
+                const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                const MIN_PHONE_LENGTH = 10;
+                
+                // Get form elements - scoped to component
+                const component = document.getElementById('dogRegFormComponent');
+                if (!component) return;
+                
+                const contactForm = component.querySelector('#contactForm');
+                const formMessage = component.querySelector('#formMessage');
+                const successScreen = component.querySelector('#successScreen');
+                const progressTrack = component.querySelector('#progressTrack');
+                
+                // Validate required elements exist
+                if (!contactForm || !formMessage || !successScreen || !progressTrack) {
+                    console.error('Dog Registration Form: Required elements not found');
+                    return;
+                }
+                
+                let currentStep = 1;
+                let isSubmitting = false;
+                
+                const BREED_LIST = [
+                    'Mixed Breed (Mutt)',
+                    'Affenpinscher', 'Afghan Hound', 'Akita', 'Alaskan Malamute',
+                    'American English Coonhound', 'American Eskimo Dog', 'American Hairless Terrier',
+                    'American Staffordshire Terrier', 'American Water Spaniel', 'Anatolian Shepherd Dog',
+                    'Australian Cattle Dog', 'Australian Shepherd', 'Australian Terrier', 'Azawakh',
+                    'Barbet', 'Basset Hound', 'Beagle', 'Bearded Collie', 'Beauceron', 'Bedlington Terrier',
+                    'Belgian Laekenois', 'Belgian Malinois', 'Belgian Sheepdog', 'Belgian Tervuren',
+                    'Bergamasco Sheepdog', 'Bernedoodle', 'Bernese Mountain Dog', 'Bichon Frise',
+                    'Biewer Terrier', 'Black and Tan Coonhound', 'Black Russian Terrier', 'Bloodhound',
+                    'Bluetick Coonhound', 'Boerboel', 'Border Collie', 'Border Terrier', 'Borzoi',
+                    'Boston Terrier', 'Bouvier des Flandres', 'Boxer', 'Boykin Spaniel', 'Bracco Italiano',
+                    'Briard', 'Brittany', 'Brussels Griffon', 'Bulldog', 'Bullmastiff', 'Bull Terrier',
+                    'Cairn Terrier', 'Cane Corso', 'Canaan Dog', 'Cardigan Welsh Corgi',
+                    'Cavalier King Charles Spaniel', 'Cesky Terrier', 'Chesapeake Bay Retriever',
+                    'Chihuahua', 'Chinese Crested', 'Chinese Shar-Pei', 'Chinook', 'Chow Chow',
+                    'Cirneco dell\'Etna', 'Clumber Spaniel', 'Cockapoo', 'Cocker Spaniel', 'Coton de Tulear',
+                    'Dachshund', 'Dalmation', 'Dandie Dinmont Terrier', 'Doberman Pinscher',
+                    'Dogues de Bordeaux', 'English Cocker Spaniel', 'English Foxhound',
+                    'English Springer Spaniel', 'English Toy Spaniel', 'Entlebucher Mountain Dog',
+                    'Estrela Mountain Dog', 'Field Spaniel', 'Finnish Lapphund', 'Finnish Spitz',
+                    'Flat-Coated Retriever', 'Fox Terrier (Smooth)', 'Fox Terrier (Wire)', 'French Bulldog',
+                    'German Pinscher', 'German Shepherd Dog', 'German Shorthaired Pointer', 'Giant Schnauzer',
+                    'Glen of Imaal Terrier', 'Golden Retriever', 'Goldendoodle', 'Gordon Setter',
+                    'Grand Basset Griffon Vendéen', 'Great Dane', 'Great Pyrenees', 'Greater Swiss Mountain Dog',
+                    'Greyhound', 'Harrier', 'Havanese', 'Hokkaido', 'Ibizan Hound', 'Iceland Sheepdog',
+                    'Irish Red and White Setter', 'Irish Setter', 'Irish Terrier', 'Irish Wolfhound',
+                    'Italian Greyhound', 'Japanese Chin', 'Keeshond', 'Kerry Blue Terrier', 'Komondor', 'Kuvasz',
+                    'Labradoodle', 'Labrador Retriever', 'Lagotto Romagnolo', 'Lakeland Terrier',
+                    'Lancashire Heeler', 'Leonberger', 'Lhasa Apso', 'Lowchen', 'Maltipoo', 'Manchester Terrier',
+                    'Mastiff', 'Miniature American Shepherd', 'Miniature Pinscher', 'Miniature Schnauzer', 'Mudi',
+                    'Neapolitan Mastiff', 'Nederlandse Kooikerhondje', 'Newfoundland', 'Norfolk Terrier',
+                    'Norwegian Buhund', 'Norwegian Elkhound', 'Norwegian Lundehund',
+                    'Nova Scotia Duck Tolling Retriever', 'Old English Sheepdog', 'Otterhound',
+                    'Papillon', 'Parson Russell Terrier', 'Pekingese', 'Pembroke Welsh Corgi',
+                    'Peruvian Inca Orchid', 'Petit Basset Griffon Vendéen', 'Pharaoh Hound', 'Plott Hound',
+                    'Pointer', 'Polish Lowland Sheepdog', 'Pomeranian', 'Poodle', 'Portuguese Water Dog',
+                    'Pug', 'Puli', 'Pumi', 'Pyrenean Shepherd', 'Rat Terrier', 'Redbone Coonhound',
+                    'Rhodesian Ridgeback', 'Rottweiler', 'Russell Terrier', 'Russian Toy', 'Saluki', 'Samoyed',
+                    'Schipperke', 'Scottish Deerhound', 'Scottish Terrier', 'Sealyham Terrier',
+                    'Shetland Sheepdog', 'Shiba Inu', 'Shih Tzu', 'Siberian Husky', 'Silky Terrier',
+                    'Skye Terrier', 'Sloughi', 'Soft Coated Wheaten Terrier', 'Spanish Water Dog',
+                    'Spinone Italiano', 'Staffordshire Bull Terrier', 'Standard Schnauzer', 'St. Bernard',
+                    'Sussex Spaniel', 'Swedish Vallhund', 'Tibetan Mastiff', 'Tibetan Spaniel',
+                    'Tibetan Terrier', 'Toy Fox Terrier', 'Treeing Walker Coonhound', 'Vizsla', 'Weimaraner',
+                    'Welsh Springer Spaniel', 'Welsh Terrier', 'West Highland White Terrier', 'Whippet',
+                    'Wirehaired Pointing Griffon', 'Wirehaired Vizsla', 'Xoloitzcuintli', 'Yorkshire Terrier',
+                    'Other'
+                ];
+                
+                function getElement(id) {
+                    // Scope element lookup to component to avoid conflicts
+                    return component ? component.querySelector('#' + id) : null;
+                }
+                
+                function getFieldValue(id) {
+                    const el = getElement(id);
+                    return el ? el.value.trim() : '';
+                }
+                
+                function showError(message) {
+                    if (formMessage) {
+                        formMessage.textContent = message;
+                        formMessage.className = 'form-message error';
+                    }
+                }
+                
+                function clearErrors() {
+                    // Clear input errors
+                    document.querySelectorAll('#dogRegFormComponent .form-step input').forEach(input => {
+                        input.classList.remove('error');
+                    });
+                    // Clear checkbox label errors
+                    document.querySelectorAll('#dogRegFormComponent .sms-checkbox-label').forEach(label => {
+                        label.classList.remove('error');
+                    });
+                    // Clear SMS opt-in container errors
+                    document.querySelectorAll('#dogRegFormComponent .sms-opt-in').forEach(container => {
+                        container.classList.remove('error');
+                    });
+                    // Clear breed search errors
+                    const breedSearch = getElement('breedSearch');
+                    if (breedSearch) breedSearch.classList.remove('error');
+                    // Clear form message
+                    if (formMessage) {
+                        formMessage.textContent = '';
+                        formMessage.className = 'form-message';
+                    }
+                }
+                
+                function resetSubmitButton(btn, originalText) {
+                    if (btn) {
+                        btn.disabled = false;
+                        btn.textContent = originalText;
+                    }
+                }
+                
+                function showSuccessScreen() {
+                    if (contactForm) contactForm.style.display = 'none';
+                    if (progressTrack) progressTrack.style.display = 'none';
+                    if (successScreen) {
+                        successScreen.classList.add('show');
+                        successScreen.style.display = 'flex';
+                    }
+                    // Update iframe height after success screen shows
+                    setTimeout(function() {
+                        if (window.parent !== window) {
+                            const comp = document.getElementById('dogRegFormComponent');
+                            if (comp) {
+                                window.parent.postMessage({ type: 'resize', height: comp.offsetHeight + 40 }, '*');
+                            }
+                        }
+                    }, 100);
+                }
+                
+                function showStep(step) {
+                    const validStep = Math.max(1, Math.min(parseInt(step) || 1, TOTAL_STEPS));
+                    
+                    document.querySelectorAll('#dogRegFormComponent .form-step').forEach(stepEl => {
+                        const stepNum = parseInt(stepEl.dataset.step);
+                        const isActive = stepNum === validStep;
+                        stepEl.classList.toggle('active', isActive);
+                        
+                        stepEl.querySelectorAll('input').forEach(input => {
+                            if (isActive && input.hasAttribute('data-originally-required')) {
+                                input.required = true;
+                            } else if (!isActive && input.required) {
+                                input.removeAttribute('required');
+                            }
+                        });
+                    });
+                    
+                    document.querySelectorAll('#dogRegFormComponent .milestone').forEach(milestone => {
+                        const milestoneStep = parseInt(milestone.dataset.step);
+                        milestone.classList.toggle('active', milestoneStep <= validStep);
+                    });
+                    
+                    const dogWalker = getElement('dogWalker');
+                    if (dogWalker && progressTrack) {
+                        dogWalker.className = 'dog-walker step-' + validStep;
+                        progressTrack.className = 'progress-track step-' + validStep;
+                    }
+                    
+                    currentStep = validStep;
+                    
+                    // Update iframe height after step change
+                    setTimeout(function() {
+                        if (window.parent !== window) {
+                            const comp = document.getElementById('dogRegFormComponent');
+                            if (comp) {
+                                window.parent.postMessage({ type: 'resize', height: comp.offsetHeight + 40 }, '*');
+                            }
+                        }
+                    }, 50);
+                }
+                
+                function initializeFormFields() {
+                    document.querySelectorAll('#dogRegFormComponent .form-step input[required]').forEach(input => {
+                        input.setAttribute('data-originally-required', 'true');
+                    });
+                    showStep(1);
+                }
+                
+                function formatPhoneNumber(value) {
+                    const phoneNumber = value.replace(/\D/g, '');
+                    const phoneNumberDigits = phoneNumber.slice(0, 10);
+                    
+                    if (phoneNumberDigits.length === 0) {
+                        return '';
+                    } else if (phoneNumberDigits.length <= 3) {
+                        return `(${phoneNumberDigits}`;
+                    } else if (phoneNumberDigits.length <= 6) {
+                        return `(${phoneNumberDigits.slice(0, 3)}) ${phoneNumberDigits.slice(3)}`;
+                    } else {
+                        return `(${phoneNumberDigits.slice(0, 3)}) ${phoneNumberDigits.slice(3, 6)}-${phoneNumberDigits.slice(6)}`;
+                    }
+                }
+                
+                function validatePhone(phone) {
+                    const digitsOnly = phone.replace(/\D/g, '');
+                    return digitsOnly.length >= MIN_PHONE_LENGTH;
+                }
+                
+                function validateEmail(email) {
+                    return EMAIL_REGEX.test(email);
+                }
+                
+                function collectFormData() {
+                    const notesEl = getElement('notes');
+                    return {
+                        phone: getFieldValue('phone'),
+                        firstName: getFieldValue('firstName'),
+                        lastName: getFieldValue('lastName'),
+                        email: getFieldValue('email'),
+                        dogName: getFieldValue('dogName'),
+                        breed: getFieldValue('breed'),
+                        notes: notesEl ? notesEl.value.trim() : ''
+                    };
+                }
+                
+                function validateFormData() {
+                    const errors = [];
+                    const phone = getFieldValue('phone');
+                    const firstName = getFieldValue('firstName');
+                    const lastName = getFieldValue('lastName');
+                    const email = getFieldValue('email');
+                    const dogName = getFieldValue('dogName');
+                    const breed = getFieldValue('breed');
+                    
+                    if (!phone) {
+                        errors.push({ field: 'phone', step: 1, message: 'Phone number is required' });
+                    } else if (!validatePhone(phone)) {
+                        errors.push({ field: 'phone', step: 1, message: 'Please enter a valid phone number' });
+                    }
+                    
+                    if (!firstName) errors.push({ field: 'firstName', step: 2, message: 'First name is required' });
+                    if (!lastName) errors.push({ field: 'lastName', step: 2, message: 'Last name is required' });
+                    
+                    if (!email) {
+                        errors.push({ field: 'email', step: 2, message: 'Email address is required' });
+                    } else if (!validateEmail(email)) {
+                        errors.push({ field: 'email', step: 2, message: 'Please enter a valid email address' });
+                    }
+                    
+                    if (!dogName) errors.push({ field: 'dogName', step: 3, message: 'Dog name is required' });
+                    if (!breed) errors.push({ field: 'breed', step: 3, message: 'Breed is required' });
+                    
+                    return errors;
+                }
+                
+                async function submitForm() {
+                    if (!contactForm) return;
+                    
+                    if (isSubmitting) return;
+                    isSubmitting = true;
+                    
+                    const submitBtn = contactForm.querySelector('.btn-submit');
+                    const originalBtnText = submitBtn?.textContent || 'Submit';
+                    
+                    clearErrors();
+                    
+                    if (!validateStep(currentStep)) {
+                        showError('Please complete the current step.');
+                        resetSubmitButton(submitBtn, originalBtnText);
+                        isSubmitting = false;
+                        return;
+                    }
+                    
+                    const validationErrors = validateFormData();
+                    
+                    if (validationErrors.length > 0) {
+                        const firstError = validationErrors[0];
+                        showStep(firstError.step);
+                        
+                        validationErrors.forEach(err => {
+                            const errorField = getElement(err.field);
+                            if (errorField) errorField.classList.add('error');
+                        });
+                        
+                        showError(firstError.message);
+                        resetSubmitButton(submitBtn, originalBtnText);
+                        isSubmitting = false;
+                        return;
+                    }
+                    
+                    if (submitBtn) {
+                        submitBtn.disabled = true;
+                        submitBtn.textContent = 'Submitting...';
+                    }
+                    
+                    try {
+                        const formData = collectFormData();
+                        
+                        const response = await fetch(config.apiEndpoint, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(formData)
+                        });
+                        
+                        let data = {};
+                        try {
+                            data = await response.json();
+                        } catch (jsonError) {
+                            if (!response.ok) {
+                                showError('Something went wrong. Please try again.');
+                                resetSubmitButton(submitBtn, originalBtnText);
+                                isSubmitting = false;
+                                if (config.onError) config.onError(new Error('Invalid response'));
+                                return;
+                            }
+                            data = { success: true };
+                        }
+                        
+                        if (response.ok) {
+                            showSuccessScreen();
+                            setTimeout(() => {
+                                if (successScreen) {
+                                    successScreen.scrollIntoView({ 
+                                        behavior: 'instant', 
+                                        block: 'center' 
+                                    });
+                                }
+                            }, 0);
+                            
+                            if (config.onSuccess) {
+                                config.onSuccess(formData);
+                            }
+                        } else {
+                            showError(data.error || 'Something went wrong. Please try again.');
+                            resetSubmitButton(submitBtn, originalBtnText);
+                            isSubmitting = false;
+                            if (config.onError) config.onError(new Error(data.error || 'Submission failed'));
+                        }
+                    } catch (error) {
+                        showError('Network error. Please check your connection and try again.');
+                        resetSubmitButton(submitBtn, originalBtnText);
+                        isSubmitting = false;
+                        if (config.onError) config.onError(error);
+                    }
+                }
+                
+                function validateStep(step) {
+                    const stepEl = document.querySelector(`#dogRegFormComponent .form-step[data-step="${step}"]`);
+                    if (!stepEl) return false;
+                    
+                    let isValid = true;
+                    const requiredInputs = stepEl.querySelectorAll('input[required]');
+                    
+                    requiredInputs.forEach(input => {
+                        if (input.type === 'checkbox') {
+                            if (!input.checked) {
+                                isValid = false;
+                                input.classList.add('error');
+                                const label = input.closest('.sms-checkbox-label');
+                                if (label) label.classList.add('error');
+                            } else {
+                                input.classList.remove('error');
+                                const label = input.closest('.sms-checkbox-label');
+                                if (label) label.classList.remove('error');
+                            }
+                            return;
+                        }
+                        
+                        if (input.type === 'file') {
+                            return; // File inputs are optional
+                        }
+                        
+                        const value = input.value.trim();
+                        
+                        if (!value) {
+                            isValid = false;
+                            input.classList.add('error');
+                            if (input.id === 'breed') {
+                                const breedSearch = getElement('breedSearch');
+                                if (breedSearch) breedSearch.classList.add('error');
+                            }
+                        } else {
+                            input.classList.remove('error');
+                            if (input.id === 'breed') {
+                                const breedSearch = getElement('breedSearch');
+                                if (breedSearch) breedSearch.classList.remove('error');
+                            }
+                            
+                            if (step === 1 && input.id === 'phone' && !validatePhone(value)) {
+                                isValid = false;
+                                input.classList.add('error');
+                            } else if (step === 2 && input.id === 'email' && !validateEmail(value)) {
+                                isValid = false;
+                                input.classList.add('error');
+                            }
+                        }
+                    });
+                    
+                    return isValid;
+                }
+                
+                function initializeBreedDropdown() {
+                    const breedSearch = getElement('breedSearch');
+                    const breedHidden = getElement('breed');
+                    const breedDropdownList = getElement('breedDropdownList');
+                    
+                    if (!breedSearch || !breedHidden || !breedDropdownList) {
+                        console.warn('Dog Registration Form: Breed dropdown elements not found');
+                        return;
+                    }
+                    
+                    let isOpen = false;
+                    
+                    function filterBreeds(searchTerm) {
+                        const term = searchTerm.toLowerCase().trim();
+                        if (!term) return BREED_LIST;
+                        return BREED_LIST.filter(breed => breed.toLowerCase().includes(term));
+                    }
+                    
+                    function renderDropdown(filteredBreeds) {
+                        breedDropdownList.innerHTML = '';
+                        
+                        if (filteredBreeds.length === 0) {
+                            breedDropdownList.innerHTML = '<div class="breed-dropdown-item no-results">No breeds found</div>';
+                            return;
+                        }
+                        
+                        filteredBreeds.forEach(breed => {
+                            const item = document.createElement('div');
+                            item.className = 'breed-dropdown-item';
+                            item.textContent = breed;
+                            item.addEventListener('click', () => {
+                                breedSearch.value = breed;
+                                breedHidden.value = breed;
+                                breedSearch.classList.remove('error');
+                                closeDropdown();
+                            });
+                            breedDropdownList.appendChild(item);
+                        });
+                    }
+                    
+                    function openDropdown() {
+                        isOpen = true;
+                        breedDropdownList.style.display = 'block';
+                        const filtered = filterBreeds(breedSearch.value);
+                        renderDropdown(filtered);
+                    }
+                    
+                    function closeDropdown() {
+                        isOpen = false;
+                        breedDropdownList.style.display = 'none';
+                    }
+                    
+                    breedSearch.addEventListener('focus', openDropdown);
+                    breedSearch.addEventListener('input', (e) => {
+                        const filtered = filterBreeds(e.target.value);
+                        renderDropdown(filtered);
+                        if (!isOpen) openDropdown();
+                    });
+                    
+                    breedSearch.addEventListener('blur', () => {
+                        setTimeout(() => {
+                            closeDropdown();
+                            if (breedSearch.value && !BREED_LIST.includes(breedSearch.value)) {
+                                breedSearch.value = '';
+                                breedHidden.value = '';
+                            }
+                        }, 200);
+                    });
+                    
+                    breedSearch.addEventListener('keydown', (e) => {
+                        if (e.key === 'ArrowDown' || e.key === 'ArrowUp' || e.key === 'Enter' || e.key === 'Escape') {
+                            const items = breedDropdownList.querySelectorAll('.breed-dropdown-item:not(.no-results)');
+                            if (items.length === 0) return;
+                            
+                            if (e.key === 'Escape') {
+                                closeDropdown();
+                                breedSearch.blur();
+                                return;
+                            }
+                            
+                            if (e.key === 'Enter') {
+                                e.preventDefault();
+                                if (items[0]) {
+                                    items[0].click();
+                                }
+                                return;
+                            }
+                            
+                            e.preventDefault();
+                            const currentIndex = Array.from(items).findIndex(item => item.classList.contains('highlighted'));
+                            let nextIndex = 0;
+                            
+                            if (e.key === 'ArrowDown') {
+                                nextIndex = currentIndex < items.length - 1 ? currentIndex + 1 : 0;
+                            } else if (e.key === 'ArrowUp') {
+                                nextIndex = currentIndex > 0 ? currentIndex - 1 : items.length - 1;
+                            }
+                            
+                            items.forEach(item => item.classList.remove('highlighted'));
+                            if (items[nextIndex]) {
+                                items[nextIndex].classList.add('highlighted');
+                                items[nextIndex].scrollIntoView({ block: 'nearest' });
+                            }
+                        }
+                    });
+                }
+                
+                function initializeVaccinationCards() {
+                    const component = document.getElementById('dogRegFormComponent');
+                    if (!component) return;
+                    
+                    const vaccinationAccordion = component.querySelector('.vaccination-accordion');
+                    const vaccinationHeader = getElement('vaccinationAccordion');
+                    const vaccinationItems = component.querySelectorAll('.vaccination-item');
+                    
+                    if (!vaccinationHeader || !vaccinationAccordion) {
+                        console.warn('Dog Registration Form: Vaccination accordion elements not found');
+                        return;
+                    }
+                        vaccinationHeader.addEventListener('click', (e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            vaccinationAccordion.classList.toggle('active');
+                            // Update iframe height after accordion toggle
+                            setTimeout(function() {
+                                if (window.parent !== window) {
+                                    const comp = document.getElementById('dogRegFormComponent');
+                                    if (comp) {
+                                        window.parent.postMessage({ type: 'resize', height: comp.offsetHeight + 40 }, '*');
+                                    }
+                                }
+                            }, 350); // Wait for CSS transition
+                        });
+                        
+                        vaccinationItems.forEach(item => {
+                            const fileInput = item.querySelector('input[type="file"]');
+                            const fileNameSpan = item.querySelector('.vaccination-file-name');
+                            
+                            if (!fileInput) return;
+                            
+                            item.addEventListener('click', (e) => {
+                                if (e.target.classList.contains('vaccination-file-name')) {
+                                    return;
+                                }
+                                fileInput.click();
+                            });
+                            
+                            fileInput.addEventListener('change', (e) => {
+                                const file = e.target.files[0];
+                                if (file) {
+                                    item.classList.add('has-file');
+                                    fileNameSpan.textContent = file.name;
+                                } else {
+                                    item.classList.remove('has-file');
+                                    fileNameSpan.textContent = '';
+                                }
+                            });
+                        });
+                }
+                
+                // Phone number formatting
+                const phoneInput = getElement('phone');
+                if (!phoneInput) {
+                    console.warn('Dog Registration Form: Phone input not found');
+                } else {
+                    phoneInput.addEventListener('input', (e) => {
+                        const cursorPosition = e.target.selectionStart;
+                        const oldValue = e.target.value;
+                        const formatted = formatPhoneNumber(e.target.value);
+                        
+                        e.target.value = formatted;
+                        
+                        const newCursorPosition = formatted.length - (oldValue.length - cursorPosition);
+                        e.target.setSelectionRange(newCursorPosition, newCursorPosition);
+                    });
+                    
+                    phoneInput.addEventListener('keydown', (e) => {
+                        if ([8, 9, 27, 13, 46, 37, 38, 39, 40].indexOf(e.keyCode) !== -1 ||
+                            (e.keyCode === 65 && e.ctrlKey === true) ||
+                            (e.keyCode === 67 && e.ctrlKey === true) ||
+                            (e.keyCode === 86 && e.ctrlKey === true) ||
+                            (e.keyCode === 88 && e.ctrlKey === true)) {
+                            return;
+                        }
+                        if ((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) && (e.keyCode < 96 || e.keyCode > 105)) {
+                            e.preventDefault();
+                        }
+                    });
+                }
+                
+                // Event listeners - scoped to component
+                
+                component.querySelectorAll('.btn-next').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        if (validateStep(currentStep) && currentStep < TOTAL_STEPS) {
+                            currentStep++;
+                            showStep(currentStep);
+                        }
+                    });
+                });
+                
+                component.querySelectorAll('.btn-back').forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        if (currentStep > 1) {
+                            currentStep--;
+                            showStep(currentStep);
+                        }
+                    });
+                });
+                
+                contactForm.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    if (currentStep === TOTAL_STEPS) {
+                        submitForm();
+                    }
+                });
+                
+                // Initialize form
+                initializeFormFields();
+                initializeBreedDropdown();
+                initializeVaccinationCards();
+                
+                // Scroll to form on load
+                setTimeout(() => {
+                    if (contactForm) {
+                        contactForm.scrollIntoView({ 
+                            behavior: 'instant', 
+                            block: 'center' 
+                        });
+                    }
+                }, 100);
+            }
+
+            // Send height to parent for iframe resizing
+            function sendHeightToParent() {
+                if (window.parent !== window) {
+                    const component = document.getElementById('dogRegFormComponent');
+                    if (component) {
+                        const height = component.offsetHeight + 40; // Add padding
+                        window.parent.postMessage({ type: 'resize', height: height }, '*');
+                    }
+                }
+            }
+
+            // Initialize when DOM is ready
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', function() {
+                    initComponent();
+                    setTimeout(sendHeightToParent, 100);
+                });
+            } else {
+                initComponent();
+                setTimeout(sendHeightToParent, 100);
+            }
+
+            // Re-send height on window resize
+            window.addEventListener('resize', sendHeightToParent);
+        })();
+    </script>
+</body>
+</html>
