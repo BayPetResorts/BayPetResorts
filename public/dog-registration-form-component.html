@@ -1458,14 +1458,13 @@
                         successScreen.style.display = 'flex';
                     }
                     
-                    // Update parent URL to /thank-you for Facebook Custom Conversion tracking
+                    // Redirect to /thank-you page for Facebook Custom Conversion tracking
                     if (window.parent !== window) {
                         window.parent.postMessage({ type: 'updateUrl', url: '/thank-you' }, '*');
                     } else {
-                        // If not in iframe, update URL directly
-                        if (window.history && window.history.pushState) {
-                            window.history.pushState({ formCompleted: true }, 'Thank You', '/thank-you');
-                        }
+                        // If not in iframe, redirect directly
+                        sessionStorage.setItem('formSubmitted', 'true');
+                        window.location.href = '/thank-you';
                     }
                     
                     // Update iframe height after success screen shows

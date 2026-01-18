@@ -40,6 +40,11 @@ app.get('/why-we-are-better', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'why-we-are-better.html'));
 });
 
+// Serve thank you page
+app.get('/thank-you', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'thank-you.html'));
+});
+
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Google Sheets setup with OAuth 2.0

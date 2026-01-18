@@ -105,17 +105,10 @@
             
             // Handle URL update for Facebook Custom Conversion tracking
             if (event.data && event.data.type === 'updateUrl' && event.data.url) {
-                if (window.history && window.history.pushState) {
-                    window.history.pushState({ formCompleted: true }, 'Thank You', event.data.url);
-                    // Fire events AFTER URL change so Facebook sees the /thank-you URL
-                    if (typeof fbq !== 'undefined') {
-                        fbq('track', 'PageView');
-                        fbq('track', 'CompleteRegistration', {
-                            content_name: 'Dog Registration',
-                            status: 'completed'
-                        });
-                    }
-                }
+                // Set flag so thank-you page knows form was legitimately submitted
+                sessionStorage.setItem('formSubmitted', 'true');
+                // Redirect to actual thank-you page (triggers real page load for Facebook tracking)
+                window.location.href = event.data.url;
             }
         });
     </script>
