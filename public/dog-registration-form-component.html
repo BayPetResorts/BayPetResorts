@@ -2064,6 +2064,7 @@
             const formStartTime = Date.now();
             let fieldsInteracted = new Set();
             let lastCompletedStep = 0;
+            let formWasViewed = false;
 
             function sendTrackingEvent(type, data) {
                 if (window.parent !== window) {
@@ -2073,6 +2074,7 @@
 
             function trackFormStep(step, stepName, action) {
                 if (action === 'started') {
+                    formWasViewed = true;
                     sendTrackingEvent('formStepStarted', { step: step, stepName: stepName });
                 } else if (action === 'completed') {
                     lastCompletedStep = step;
@@ -2097,8 +2099,8 @@
             function trackFormAbandonment() {
                 const stepNames = ['Phone', 'Contact', 'Dog Info', 'Services'];
                 sendTrackingEvent('formAbandoned', {
-                    lastStep: lastCompletedStep,
-                    lastStepName: stepNames[lastCompletedStep - 1] || 'None',
+                    lastStep: lastCompletedStep || 1,
+                    lastStepName: lastCompletedStep > 0 ? stepNames[lastCompletedStep - 1] : 'Phone (not started)',
                     fieldsFilled: fieldsInteracted.size,
                     timeSpent: Math.round((Date.now() - formStartTime) / 1000)
                 });
@@ -2108,7 +2110,8 @@
             window.addEventListener('beforeunload', function() {
                 const successScreen = document.getElementById('successScreen');
                 const isFormCompleted = successScreen && successScreen.classList.contains('show');
-                if (!isFormCompleted && fieldsInteracted.size > 0) {
+                // Fire abandonment if form was viewed but not completed
+                if (!isFormCompleted && formWasViewed) {
                     trackFormAbandonment();
                 }
             });

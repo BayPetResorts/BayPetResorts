@@ -205,14 +205,6 @@
     // ============================================
     // 4. FORM INTERACTION TRACKING (Registration Form)
     // ============================================
-    // Track when registration page is viewed
-    if (window.location.pathname.includes('register')) {
-        fbq('track', 'InitiateCheckout', {
-            content_name: 'Dog Registration',
-            content_category: 'Registration'
-        });
-    }
-
     // Listen for messages from the registration form iframe
     window.addEventListener('message', function(event) {
         // Only process messages from our domain
