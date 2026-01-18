@@ -12,6 +12,14 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
+    <!-- Promotional Banner -->
+    <div class="promo-banner" id="promoBanner">
+        <div class="promo-banner-content">
+            <span class="promo-banner-text">Note: we are offering <strong>50% off</strong> your first boarding for <span id="currentMonth"></span></span>
+            <button class="promo-banner-close" id="promoBannerClose" aria-label="Close banner">×</button>
+        </div>
+    </div>
+
     <div id="header-placeholder"></div>
 
     <!-- Hero Split Sections -->
@@ -312,6 +320,41 @@
 
     <script src="/components.js"></script>
     <script src="/script.js"></script>
+    <script>
+        // Promotional Banner Functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const promoBanner = document.getElementById('promoBanner');
+            const promoBannerClose = document.getElementById('promoBannerClose');
+            const currentMonthSpan = document.getElementById('currentMonth');
+            
+            // Set current month
+            const months = ['January', 'February', 'March', 'April', 'May', 'June', 
+                          'July', 'August', 'September', 'October', 'November', 'December'];
+            const currentDate = new Date();
+            const monthName = months[currentDate.getMonth()];
+            currentMonthSpan.textContent = monthName;
+            
+            // Show banner by default, check if it was previously closed
+            const bannerClosed = localStorage.getItem('promoBannerClosed');
+            if (bannerClosed === 'true') {
+                promoBanner.classList.add('hidden');
+                document.body.classList.remove('banner-visible');
+            } else {
+                // Ensure banner is visible
+                promoBanner.classList.remove('hidden');
+                document.body.classList.add('banner-visible');
+            }
+            
+            // Close banner on button click
+            if (promoBannerClose) {
+                promoBannerClose.addEventListener('click', function() {
+                    promoBanner.classList.add('hidden');
+                    document.body.classList.remove('banner-visible');
+                    localStorage.setItem('promoBannerClosed', 'true');
+                });
+            }
+        });
+    </script>
 </body>
 </html>
 
