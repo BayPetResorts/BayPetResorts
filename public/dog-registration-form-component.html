@@ -5,6 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dog Registration Form Component</title>
     <style>
+        /* Reset body/html for iframe embedding */
+        html, body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: auto;
+            overflow-x: hidden;
+        }
+        
+        body {
+            background-color: transparent;
+        }
+        
         /* Component Styles - Scoped to avoid conflicts */
         .dog-reg-form-component {
             --primary-blue: #1E3A5F;
@@ -1743,13 +1756,16 @@
                 initializeBreedDropdown();
                 initializeVaccinationCards();
                 
-                // Scroll to form on load
+                // Scroll to top of component on initial load
+                scrollToTopOnLoad();
+            }
+
+            // Scroll to top on every load
+            function scrollToTopOnLoad() {
                 setTimeout(() => {
-                    if (contactForm) {
-                        contactForm.scrollIntoView({ 
-                            behavior: 'instant', 
-                            block: 'center' 
-                        });
+                    // Scroll parent page to show the top of the iframe container
+                    if (window.parent !== window) {
+                        window.parent.postMessage({ type: 'scrollToContainer' }, '*');
                     }
                 }, 100);
             }
