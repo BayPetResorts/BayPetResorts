@@ -218,22 +218,9 @@ body {
     overflow: hidden;
     margin: 0;
     padding: 0;
-}
-
-.hero-video-container {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 1;
-}
-
-.hero-video {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
 }
 
 .hero-overlay {
@@ -354,9 +341,234 @@ body {
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
 }
 
-    .btn-register-dog:active {
-        transform: translateY(0) scale(1);
+.btn-register-dog:active {
+    transform: translateY(0) scale(1);
+}
+
+/* Hero Buttons Container */
+.hero-buttons {
+    display: flex;
+    gap: 24px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+/* Base Hero Button Style */
+.btn-hero {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 20px 40px;
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-decoration: none;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    overflow: hidden;
+    border: 3px solid transparent;
+}
+
+.btn-hero .btn-icon {
+    font-size: 28px;
+    transition: transform 0.3s ease;
+}
+
+.btn-hero .btn-text {
+    position: relative;
+    z-index: 2;
+}
+
+/* Boarding Button - Cozy Home Theme */
+.btn-boarding {
+    background: linear-gradient(135deg, #1E3A5F 0%, #2D5A87 100%);
+    color: #fff;
+    box-shadow: 0 4px 15px rgba(30, 58, 95, 0.4);
+}
+
+.btn-boarding::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    transition: left 0.5s ease;
+}
+
+.btn-boarding:hover {
+    transform: translateY(-4px) scale(1.05);
+    box-shadow: 0 8px 30px rgba(30, 58, 95, 0.6);
+    background: linear-gradient(135deg, #2D5A87 0%, #3D7AB7 100%);
+}
+
+.btn-boarding:hover::before {
+    left: 100%;
+}
+
+.btn-boarding:hover .btn-icon {
+    animation: houseWiggle 0.5s ease-in-out;
+}
+
+/* Paw prints animation for Boarding */
+.btn-paw {
+    position: absolute;
+    font-size: 28px;
+    opacity: 0;
+    pointer-events: none;
+    z-index: 10;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+}
+
+.btn-paw-1 { top: -20px; left: 10%; transform: rotate(-15deg); }
+.btn-paw-2 { top: -15px; right: 15%; transform: rotate(20deg); }
+.btn-paw-3 { bottom: -18px; left: 50%; transform: rotate(-5deg); }
+
+.btn-boarding:hover .btn-paw {
+    animation: pawBounce 0.5s ease-out forwards;
+}
+
+.btn-boarding:hover .btn-paw-1 { animation-delay: 0s; }
+.btn-boarding:hover .btn-paw-2 { animation-delay: 0.1s; }
+.btn-boarding:hover .btn-paw-3 { animation-delay: 0.2s; }
+
+@keyframes houseWiggle {
+    0%, 100% { transform: rotate(0deg); }
+    25% { transform: rotate(-10deg); }
+    75% { transform: rotate(10deg); }
+}
+
+@keyframes pawBounce {
+    0% { 
+        opacity: 0; 
+        transform: scale(0) translateY(10px); 
     }
+    60% { 
+        opacity: 1; 
+        transform: scale(1.2) translateY(-5px); 
+    }
+    100% { 
+        opacity: 1; 
+        transform: scale(1) translateY(0); 
+    }
+}
+
+/* Daycare Button - Sunny Fun Theme */
+.btn-daycare {
+    background: linear-gradient(135deg, #F59E0B 0%, #FBBF24 100%);
+    color: #1E3A5F;
+    box-shadow: 0 4px 15px rgba(245, 158, 11, 0.4);
+}
+
+.btn-daycare::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, transparent 70%);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    transition: width 0.5s ease, height 0.5s ease;
+}
+
+.btn-daycare:hover {
+    transform: translateY(-4px) scale(1.05);
+    box-shadow: 0 8px 30px rgba(245, 158, 11, 0.6);
+    background: linear-gradient(135deg, #FBBF24 0%, #FCD34D 100%);
+}
+
+.btn-daycare:hover::before {
+    width: 300px;
+    height: 300px;
+}
+
+.btn-daycare:hover .btn-icon {
+    animation: sunPulse 0.6s ease-in-out infinite;
+}
+
+/* Sparkle animation for Daycare */
+.btn-sparkle {
+    position: absolute;
+    font-size: 14px;
+    opacity: 0;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.btn-sparkle-1 { top: -8px; left: 15%; }
+.btn-sparkle-2 { top: 10%; right: 10%; }
+.btn-sparkle-3 { bottom: -8px; left: 40%; }
+.btn-sparkle-4 { bottom: 20%; left: -5px; }
+
+.btn-daycare:hover .btn-sparkle {
+    animation: sparkleFloat 1s ease-out infinite;
+}
+
+.btn-daycare:hover .btn-sparkle-1 { animation-delay: 0s; }
+.btn-daycare:hover .btn-sparkle-2 { animation-delay: 0.2s; }
+.btn-daycare:hover .btn-sparkle-3 { animation-delay: 0.4s; }
+.btn-daycare:hover .btn-sparkle-4 { animation-delay: 0.6s; }
+
+@keyframes sunPulse {
+    0%, 100% { transform: scale(1) rotate(0deg); }
+    50% { transform: scale(1.2) rotate(15deg); }
+}
+
+@keyframes sparkleFloat {
+    0% { 
+        opacity: 0; 
+        transform: translateY(0) scale(0); 
+    }
+    25% { 
+        opacity: 1; 
+        transform: translateY(-5px) scale(1); 
+    }
+    50% { 
+        opacity: 1; 
+        transform: translateY(-10px) scale(1.2); 
+    }
+    100% { 
+        opacity: 0; 
+        transform: translateY(-20px) scale(0); 
+    }
+}
+
+/* Hero Buttons Responsive */
+@media (max-width: 768px) {
+    .hero-buttons {
+        flex-direction: column;
+        gap: 16px;
+        width: 100%;
+        padding: 0 20px;
+    }
+    
+    .btn-hero {
+        width: 100%;
+        justify-content: center;
+        padding: 18px 30px;
+        font-size: 18px;
+    }
+    
+    .btn-hero .btn-icon {
+        font-size: 24px;
+    }
+}
+
+@media (max-width: 480px) {
+    .btn-hero {
+        padding: 16px 24px;
+        font-size: 16px;
+    }
+    
+    .btn-hero .btn-icon {
+        font-size: 22px;
+    }
+}
 
     /* Doggie Daycare Section */
     .daycare-section {
