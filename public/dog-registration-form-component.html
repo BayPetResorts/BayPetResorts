@@ -57,27 +57,26 @@
         }
 
         .dog-reg-form-component .form-progress {
-            margin-bottom: 40px;
             padding: 0 10px;
         }
 
         .dog-reg-form-component .progress-track {
             position: relative;
-            height: 80px;
+            height: 115px;
             display: flex;
-            align-items: center;
+            align-items: flex-start;
+            padding-bottom: 10px;
         }
 
         .dog-reg-form-component .progress-track::before {
             content: '';
             position: absolute;
-            top: 50%;
+            top: 6px;
             left: 0;
             right: 0;
             height: 3px;
             background: linear-gradient(to right, var(--primary-blue) 0%, var(--primary-blue) 0%, var(--beige-light) 0%);
             background-size: 100% 100%;
-            transform: translateY(-50%);
             border-radius: 2px;
             transition: background 0.5s ease;
             z-index: 1;
@@ -85,19 +84,19 @@
 
         .dog-reg-form-component .dog-walker {
             position: absolute;
-            top: calc(50% + 20px);
-            left: 0;
-            transform: translate(-50%, -100%);
-            z-index: 10;
+            top: 38px;
+            left: 12.5%;
+            transform: translateX(-50%);
+            z-index: 3;
             transition: left 0.6s cubic-bezier(0.4, 0, 0.2, 1);
             animation: dogWalk 0.8s ease-in-out infinite;
             transform-origin: center bottom;
         }
 
-        .dog-reg-form-component .dog-walker.step-1 { left: 0%; }
-        .dog-reg-form-component .dog-walker.step-2 { left: 33.33%; }
-        .dog-reg-form-component .dog-walker.step-3 { left: 66.66%; }
-        .dog-reg-form-component .dog-walker.step-4 { left: 100%; }
+        .dog-reg-form-component .dog-walker.step-1 { left: 12.5%; }
+        .dog-reg-form-component .dog-walker.step-2 { left: 37.5%; }
+        .dog-reg-form-component .dog-walker.step-3 { left: 62.5%; }
+        .dog-reg-form-component .dog-walker.step-4 { left: 87.5%; }
 
         .dog-reg-form-component .dog-icon {
             width: 120px;
@@ -109,16 +108,16 @@
 
         @keyframes dogWalk {
             0%, 100% {
-                transform: translate(-50%, -100%) rotate(0deg) translateY(0);
+                transform: translateX(-50%) rotate(0deg) translateY(0);
             }
             25% {
-                transform: translate(-50%, calc(-100% - 2px)) rotate(-2deg) translateY(-2px);
+                transform: translateX(-50%) rotate(-2deg) translateY(-2px);
             }
             50% {
-                transform: translate(-50%, -100%) rotate(0deg) translateY(-3px);
+                transform: translateX(-50%) rotate(0deg) translateY(-3px);
             }
             75% {
-                transform: translate(-50%, calc(-100% + 2px)) rotate(2deg) translateY(-2px);
+                transform: translateX(-50%) rotate(2deg) translateY(-2px);
             }
         }
 
@@ -130,7 +129,6 @@
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
-            height: 100%;
             z-index: 5;
         }
 
@@ -138,9 +136,10 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
             flex: 1;
             position: relative;
+            cursor: pointer;
         }
 
         .dog-reg-form-component .milestone-dot {
@@ -150,7 +149,7 @@
             background-color: var(--beige-light);
             border: 2px solid var(--beige-light);
             transition: all 0.3s ease;
-            margin-top: 34px;
+            cursor: pointer;
         }
 
         .dog-reg-form-component .milestone.active .milestone-dot {
@@ -168,6 +167,7 @@
             text-align: center;
             transition: all 0.3s ease;
             margin-top: 4px;
+            cursor: pointer;
         }
 
         .dog-reg-form-component .milestone.active .milestone-label {
@@ -176,20 +176,30 @@
             font-weight: 600;
         }
 
+        .dog-reg-form-component .milestone.clickable:hover .milestone-dot {
+            transform: scale(1.1);
+            border-color: var(--primary-blue);
+        }
+
+        .dog-reg-form-component .milestone.clickable:hover .milestone-label {
+            opacity: 0.8;
+            color: var(--primary-blue);
+        }
+
         .dog-reg-form-component .progress-track.step-1::before {
-            background: linear-gradient(to right, var(--primary-blue) 0%, var(--beige-light) 0%);
+            background: linear-gradient(to right, var(--primary-blue) 12.5%, var(--beige-light) 12.5%);
         }
 
         .dog-reg-form-component .progress-track.step-2::before {
-            background: linear-gradient(to right, var(--primary-blue) 50%, var(--beige-light) 50%);
+            background: linear-gradient(to right, var(--primary-blue) 37.5%, var(--beige-light) 37.5%);
         }
 
         .dog-reg-form-component .progress-track.step-3::before {
-            background: linear-gradient(to right, var(--primary-blue) 66.66%, var(--beige-light) 66.66%);
+            background: linear-gradient(to right, var(--primary-blue) 62.5%, var(--beige-light) 62.5%);
         }
 
         .dog-reg-form-component .progress-track.step-4::before {
-            background: linear-gradient(to right, var(--primary-blue) 100%, var(--primary-blue) 100%);
+            background: linear-gradient(to right, var(--primary-blue) 87.5%, var(--beige-light) 87.5%);
         }
 
         .dog-reg-form-component .form-step {
@@ -473,6 +483,21 @@
             color: #6c757d;
             cursor: default;
             font-style: italic;
+        }
+
+        .dog-reg-form-component .breed-dropdown-item.selected {
+            background-color: rgba(30, 58, 95, 0.08);
+            font-weight: 600;
+            color: var(--primary-blue);
+            position: relative;
+        }
+
+        .dog-reg-form-component .breed-dropdown-item.selected::after {
+            content: '✓';
+            position: absolute;
+            right: 16px;
+            color: var(--primary-blue);
+            font-weight: bold;
         }
 
         /* Vaccination Accordion */
@@ -833,21 +858,23 @@
 
             .dog-reg-form-component .form-progress {
                 padding: 0 5px;
-                margin-bottom: 30px;
             }
 
             .dog-reg-form-component .progress-track {
-                height: 70px;
+                min-height: 110px;
+            }
+
+            .dog-reg-form-component .dog-walker {
+                top: 35px;
             }
 
             .dog-reg-form-component .dog-icon {
-                width: 90px;
+                width: 70px;
             }
 
             .dog-reg-form-component .milestone-dot {
                 width: 10px;
                 height: 10px;
-                margin-top: 30px;
             }
 
             .dog-reg-form-component .milestone-label {
@@ -970,6 +997,7 @@
             <form id="contactForm" class="contact-form" novalidate>
                 <!-- Step 1: Phone Number -->
                 <div class="form-step active" data-step="1">
+                    <p class="modal-subtitle">Let's get started</p>
                     <div class="form-group">
                         <label for="phone">Phone Number *</label>
                         <input type="tel" id="phone" name="phone" placeholder="(555) 123-4567" required>
@@ -977,8 +1005,8 @@
                     <div class="form-group">
                         <div class="sms-opt-in">
                             <label class="sms-checkbox-label">
-                                <input type="checkbox" id="smsOptIn" name="smsOptIn" required>
-                                <span class="sms-checkbox-text" data-sms-text="I would like to receive updates by text *">I would like to receive updates by text *</span>
+                                <input type="checkbox" id="smsOptIn" name="smsOptIn">
+                                <span class="sms-checkbox-text" data-sms-text="I would like to receive updates by text (optional)">I would like to receive updates by text (optional)</span>
                             </label>
                             <p class="sms-disclaimer" data-sms-disclaimer="">
                                 We'll be sending you booking reminders.
@@ -1133,12 +1161,17 @@
                             <label class="service-item" for="service-daycare">
                                 <input type="checkbox" id="service-daycare" name="services" value="daycare">
                                 <div class="service-icon">
+                                    <!-- Sun icon for daycare (daytime activity) -->
                                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                        <circle cx="7" cy="6" r="2.5"></circle>
-                                        <circle cx="17" cy="6" r="2.5"></circle>
-                                        <circle cx="5" cy="15" r="2.5"></circle>
-                                        <circle cx="19" cy="15" r="2.5"></circle>
-                                        <ellipse cx="12" cy="12" rx="4" ry="5"></ellipse>
+                                        <circle cx="12" cy="12" r="5"></circle>
+                                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
                                     </svg>
                                 </div>
                                 <span class="service-name">Daycare</span>
@@ -1146,11 +1179,13 @@
                             <label class="service-item" for="service-grooming">
                                 <input type="checkbox" id="service-grooming" name="services" value="grooming">
                                 <div class="service-icon">
+                                    <!-- Scissors icon for grooming -->
                                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                        <path d="M4 12h16a2 2 0 0 1 2 2v2a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2v-2a2 2 0 0 1 2-2z"></path>
-                                        <path d="M6 12V8a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v4"></path>
-                                        <line x1="12" y1="18" x2="12" y2="22"></line>
-                                        <circle cx="8" cy="8" r="1"></circle>
+                                        <circle cx="6" cy="6" r="3"></circle>
+                                        <circle cx="6" cy="18" r="3"></circle>
+                                        <line x1="20" y1="4" x2="8.12" y2="15.88"></line>
+                                        <line x1="14.47" y1="14.48" x2="20" y2="20"></line>
+                                        <line x1="8.12" y1="8.12" x2="12" y2="12"></line>
                                     </svg>
                                 </div>
                                 <span class="service-name">Grooming</span>
@@ -1158,12 +1193,10 @@
                             <label class="service-item" for="service-training">
                                 <input type="checkbox" id="service-training" name="services" value="training">
                                 <div class="service-icon">
+                                    <!-- Graduation cap icon for training -->
                                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                        <path d="M5 12h14"></path>
-                                        <circle cx="4" cy="10" r="2"></circle>
-                                        <circle cx="4" cy="14" r="2"></circle>
-                                        <circle cx="20" cy="10" r="2"></circle>
-                                        <circle cx="20" cy="14" r="2"></circle>
+                                        <path d="M22 10v6M2 10l10-5 10 5-10 5z"></path>
+                                        <path d="M6 12v5c0 2 2 3 6 3s6-1 6-3v-5"></path>
                                     </svg>
                                 </div>
                                 <span class="service-name">Training</span>
@@ -1448,6 +1481,8 @@
                     document.querySelectorAll('#dogRegFormComponent .milestone').forEach(milestone => {
                         const milestoneStep = parseInt(milestone.dataset.step);
                         milestone.classList.toggle('active', milestoneStep <= validStep);
+                        // Mark clickable milestones (previous steps that can be navigated to)
+                        milestone.classList.toggle('clickable', milestoneStep <= validStep);
                     });
                     
                     const dogWalker = getElement('dogWalker');
@@ -1698,6 +1733,7 @@
                     }
                     
                     let isOpen = false;
+                    let isTyping = false;
                     
                     function filterBreeds(searchTerm) {
                         const term = searchTerm.toLowerCase().trim();
@@ -1705,17 +1741,23 @@
                         return BREED_LIST.filter(breed => breed.toLowerCase().includes(term));
                     }
                     
-                    function renderDropdown(filteredBreeds) {
+                    function renderDropdown(breedsToShow, scrollToSelected) {
                         breedDropdownList.innerHTML = '';
+                        const selectedBreed = breedHidden.value;
                         
-                        if (filteredBreeds.length === 0) {
+                        if (breedsToShow.length === 0) {
                             breedDropdownList.innerHTML = '<div class="breed-dropdown-item no-results">No breeds found</div>';
                             return;
                         }
                         
-                        filteredBreeds.forEach(breed => {
+                        let selectedItem = null;
+                        breedsToShow.forEach(breed => {
                             const item = document.createElement('div');
                             item.className = 'breed-dropdown-item';
+                            if (breed === selectedBreed) {
+                                item.classList.add('selected');
+                                selectedItem = item;
+                            }
                             item.textContent = breed;
                             item.addEventListener('click', () => {
                                 breedSearch.value = breed;
@@ -1725,33 +1767,63 @@
                             });
                             breedDropdownList.appendChild(item);
                         });
+                        
+                        // Scroll to selected item if requested
+                        if (scrollToSelected && selectedItem) {
+                            setTimeout(() => {
+                                selectedItem.scrollIntoView({ block: 'center' });
+                            }, 10);
+                        }
                     }
                     
-                    function openDropdown() {
+                    function openDropdown(showAll, scrollToSelected) {
                         isOpen = true;
                         breedDropdownList.style.display = 'block';
-                        const filtered = filterBreeds(breedSearch.value);
-                        renderDropdown(filtered);
+                        
+                        if (showAll) {
+                            // Show all breeds when opening (for changing selection)
+                            renderDropdown(BREED_LIST, scrollToSelected);
+                        } else {
+                            // Filter based on current input
+                            const filtered = filterBreeds(breedSearch.value);
+                            renderDropdown(filtered, scrollToSelected);
+                        }
                     }
                     
                     function closeDropdown() {
                         isOpen = false;
+                        isTyping = false;
                         breedDropdownList.style.display = 'none';
                     }
                     
-                    breedSearch.addEventListener('focus', openDropdown);
+                    breedSearch.addEventListener('focus', () => {
+                        // When focusing, show all breeds and scroll to selected one
+                        // Clear search text to show all options
+                        const previousValue = breedHidden.value;
+                        breedSearch.value = '';
+                        breedSearch.placeholder = previousValue || 'Search or select a breed';
+                        openDropdown(true, true);
+                    });
+                    
                     breedSearch.addEventListener('input', (e) => {
+                        isTyping = true;
                         const filtered = filterBreeds(e.target.value);
-                        renderDropdown(filtered);
-                        if (!isOpen) openDropdown();
+                        renderDropdown(filtered, false);
+                        if (!isOpen) openDropdown(false, false);
                     });
                     
                     breedSearch.addEventListener('blur', () => {
                         setTimeout(() => {
                             closeDropdown();
-                            if (breedSearch.value && !BREED_LIST.includes(breedSearch.value)) {
+                            // Restore the selected value if user didn't type anything valid
+                            const selectedBreed = breedHidden.value;
+                            if (selectedBreed) {
+                                breedSearch.value = selectedBreed;
+                                breedSearch.placeholder = 'Search or select a breed';
+                            } else if (breedSearch.value && !BREED_LIST.includes(breedSearch.value)) {
                                 breedSearch.value = '';
                                 breedHidden.value = '';
+                                breedSearch.placeholder = 'Search or select a breed';
                             }
                         }, 200);
                     });
@@ -1769,7 +1841,10 @@
                             
                             if (e.key === 'Enter') {
                                 e.preventDefault();
-                                if (items[0]) {
+                                const highlighted = breedDropdownList.querySelector('.breed-dropdown-item.highlighted');
+                                if (highlighted) {
+                                    highlighted.click();
+                                } else if (items[0]) {
                                     items[0].click();
                                 }
                                 return;
@@ -1912,6 +1987,18 @@
                         if (currentStep > 1) {
                             currentStep--;
                             showStep(currentStep);
+                        }
+                    });
+                });
+                
+                // Milestone click navigation - allow clicking on completed/active milestones
+                component.querySelectorAll('.milestone').forEach(milestone => {
+                    const milestoneStep = parseInt(milestone.dataset.step);
+                    
+                    milestone.addEventListener('click', () => {
+                        // Only allow navigation to previous steps or current step
+                        if (milestoneStep <= currentStep) {
+                            showStep(milestoneStep);
                         }
                     });
                 });
