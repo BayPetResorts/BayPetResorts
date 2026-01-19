@@ -168,6 +168,28 @@
             fbq('trackCustom', 'SocialClick', eventData);
             logMetaEvent('trackCustom', 'SocialClick', eventData);
         }
+
+        // Review links (Google and Yelp)
+        if (target.classList.contains('review-link') || target.closest('.review-link')) {
+            const reviewLink = target.closest('.review-link') || target;
+            const reviewHref = reviewLink.href || target.href;
+            
+            let platform = null;
+            if (reviewHref && reviewHref.includes('google.com') || reviewHref.includes('share.google')) {
+                platform = 'Google';
+            } else if (reviewHref && reviewHref.includes('yelp.com')) {
+                platform = 'Yelp';
+            }
+            
+            if (platform) {
+                const eventData = {
+                    platform: platform,
+                    source_page: window.location.pathname
+                };
+                fbq('trackCustom', 'ReviewViewed', eventData);
+                logMetaEvent('trackCustom', 'ReviewViewed', eventData);
+            }
+        }
     });
 
     // ============================================
@@ -279,7 +301,7 @@
     }
 
     // ============================================
-    // 6. OUTBOUND LINK TRACKING
+    // 6. PHONE AND EMAIL LINK TRACKING
     // ============================================
     document.addEventListener('click', function(e) {
         const link = e.target.closest('a');
@@ -306,16 +328,6 @@
             };
             fbq('track', 'Contact', eventData);
             logMetaEvent('track', 'Contact', eventData);
-        }
-
-        // Track external links
-        if (href.startsWith('http') && !href.includes(window.location.hostname)) {
-            const eventData = {
-                destination: href,
-                source_page: window.location.pathname
-            };
-            fbq('trackCustom', 'OutboundLink', eventData);
-            logMetaEvent('trackCustom', 'OutboundLink', eventData);
         }
     });
 

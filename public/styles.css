@@ -61,6 +61,29 @@ body {
     color: var(--dark-brown);
 }
 
+.top-bar-reviews {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.review-link {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    transition: opacity 0.2s;
+}
+
+.review-link:hover {
+    opacity: 0.8;
+}
+
+.review-logo {
+    height: 24px;
+    width: auto;
+    display: block;
+}
+
 .top-bar-contact {
     display: flex;
     align-items: center;
@@ -879,9 +902,14 @@ body {
         text-align: center;
     }
     
+    .top-bar-reviews {
+        order: 2;
+    }
+    
     .top-bar-contact {
         flex-direction: column;
         gap: 8px;
+        order: 3;
     }
 }
 

@@ -4,8 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Luxury Boarding - Bay Pet Resorts</title>
-    <link rel="icon" type="image/png" href="/assets/images/BayPetLogo.png">
-    <link rel="apple-touch-icon" href="/assets/images/BayPetLogo.png">
+    <!-- Favicons for better Google search visibility -->
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/images/BayPetLogo.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/images/BayPetLogo.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/assets/images/BayPetLogo.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="/assets/images/BayPetLogo.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/images/BayPetLogo.png">
+    <link rel="manifest" href="/site.webmanifest">
     <link rel="stylesheet" href="styles.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -86,7 +91,7 @@
                         <li class="package-item">
                             <button class="package-header" type="button">
                                 <span class="package-icon">✓</span>
-                                <span class="package-text">Certified Training Session</span>
+                                <span class="package-text">Certified Training Session (Opt-in/out)</span>
                                 <span class="package-arrow">▼</span>
                             </button>
                             <div class="package-details">
@@ -197,73 +202,61 @@
         </div>
     </section>
 
-    <!-- Luxury Boarding Page Content (moved below cards) -->
+    <!-- Capacity Notice -->
     <div class="luxury-boarding-page">
         <div class="container">
-            <div class="luxury-boarding-content">
-                <div class="capacity-notice">
-                    <div class="capacity-icon">
-                        <svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <circle cx="32" cy="32" r="32" fill="#F59E0B" opacity="0.1"/>
-                            <path d="M32 20V32L40 40" stroke="#F59E0B" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-                            <circle cx="32" cy="32" r="24" stroke="#F59E0B" stroke-width="2"/>
-                        </svg>
-                    </div>
-                    <h2 class="capacity-title">Currently Near Capacity</h2>
-                    <p class="capacity-message">
-                        We apologize for the inconvenience and will give <span class="discount-highlight">50%</span> off your dogs first day when you register with us.
-                    </p>
-                    <p class="capacity-submessage">
-                        To ensure the best experience for your pet, we are limiting the number of pets we board. We will notify you when a spot becomes available.
-                    </p>
-                    <div class="capacity-actions">
-                        <a href="/" class="btn-return-home">Return to Home</a>
-                        <a href="/register" class="btn-register-waitlist">Join Waitlist</a>
-                    </div>
+            <div class="capacity-notice">
+                <div class="capacity-icon">
+                    <svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="32" cy="32" r="32" fill="#F59E0B" opacity="0.1"/>
+                        <path d="M32 20V32L40 40" stroke="#F59E0B" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                        <circle cx="32" cy="32" r="24" stroke="#F59E0B" stroke-width="2"/>
+                    </svg>
                 </div>
-
+                <h2 class="capacity-title">Currently Near Capacity</h2>
+                <p class="capacity-message">
+                    We apologize for the inconvenience and will give <span class="discount-highlight">50%</span> off your dogs first day when you register with us.
+                </p>
+                <p class="capacity-submessage">
+                    To ensure the best experience for your pet, we are limiting the number of pets we board. We will notify you when a spot becomes available.
+                </p>
+                <div class="capacity-actions">
+                    <a href="/" class="btn-return-home">Return to Home</a>
+                    <a href="/register" class="btn-register-waitlist">Join Waitlist</a>
+                </div>
             </div>
         </div>
     </div>
 
     <script>
-        // Promotional Banner Functionality
         document.addEventListener('DOMContentLoaded', function() {
+            // Promotional Banner
             const promoBanner = document.getElementById('promoBanner');
             const promoBannerClose = document.getElementById('promoBannerClose');
             
             if (promoBanner && promoBannerClose) {
-                // Show banner by default, check if it was previously closed
                 const bannerClosed = localStorage.getItem('boardingPromoBannerClosed');
                 if (bannerClosed === 'true') {
                     promoBanner.classList.add('hidden');
                     document.body.classList.remove('banner-visible');
                 } else {
-                    // Ensure banner is visible
                     promoBanner.classList.remove('hidden');
                     document.body.classList.add('banner-visible');
                 }
                 
-                // Close banner on button click
                 promoBannerClose.addEventListener('click', function() {
                     promoBanner.classList.add('hidden');
                     document.body.classList.remove('banner-visible');
                     localStorage.setItem('boardingPromoBannerClosed', 'true');
                 });
             }
-        });
 
-        // Package item dropdown functionality (copied from daycare)
-        document.addEventListener('DOMContentLoaded', function() {
-            const packageHeaders = document.querySelectorAll('.package-header');
-            
-            packageHeaders.forEach(header => {
+            // Package item dropdowns
+            document.querySelectorAll('.package-header').forEach(header => {
                 header.addEventListener('click', function() {
                     const packageItem = this.closest('.package-item');
                     const packageDetails = packageItem.querySelector('.package-details');
                     const arrow = this.querySelector('.package-arrow');
-                    
-                    // Toggle active state
                     const isActive = packageItem.classList.contains('active');
                     
                     // Close all other items
@@ -272,12 +265,8 @@
                             item.classList.remove('active');
                             const otherDetails = item.querySelector('.package-details');
                             const otherArrow = item.querySelector('.package-arrow');
-                            if (otherDetails) {
-                                otherDetails.style.maxHeight = null;
-                            }
-                            if (otherArrow) {
-                                otherArrow.style.transform = 'rotate(0deg)';
-                            }
+                            if (otherDetails) otherDetails.style.maxHeight = null;
+                            if (otherArrow) otherArrow.style.transform = 'rotate(0deg)';
                         }
                     });
                     
