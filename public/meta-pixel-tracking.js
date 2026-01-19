@@ -12,6 +12,26 @@
         return;
     }
 
+    // Helper function to log Meta events to terminal (via server)
+    function logMetaEvent(eventType, eventName, eventData) {
+        // Log to browser console
+        console.log(`📊 Meta Event: ${eventType}('${eventName}',`, eventData, ')');
+        // Send to server to log in terminal
+        fetch('/api/meta-event', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                eventType: eventType,
+                eventName: eventName,
+                eventData: eventData
+            })
+        }).catch(() => {
+            // Silently fail if server is not available
+        });
+    }
+
     // ============================================
     // 1. TIME ON SITE TRACKING
     // ============================================
@@ -53,11 +73,13 @@
         timeMilestones.forEach(function(milestone) {
             if (seconds >= milestone && !achievedMilestones.has(milestone)) {
                 achievedMilestones.add(milestone);
-                fbq('trackCustom', 'TimeOnSite', {
+                const eventData = {
                     seconds: milestone,
                     milestone: milestone + 's',
                     page: window.location.pathname
-                });
+                };
+                fbq('trackCustom', 'TimeOnSite', eventData);
+                logMetaEvent('trackCustom', 'TimeOnSite', eventData);
             }
         });
     }, 5000); // Check every 5 seconds
@@ -74,6 +96,7 @@
             };
             // fbq might not work in beforeunload, so we also use navigator.sendBeacon
             fbq('trackCustom', 'TimeOnSiteExit', data);
+            logMetaEvent('trackCustom', 'TimeOnSiteExit', data);
         }
     });
 
@@ -81,12 +104,14 @@
     // 2. BUTTON CLICK TRACKING
     // ============================================
     function trackButtonClick(buttonName, buttonType, destination) {
-        fbq('trackCustom', 'ButtonClick', {
+        const eventData = {
             button_name: buttonName,
             button_type: buttonType,
             destination: destination || 'none',
             page: window.location.pathname
-        });
+        };
+        fbq('trackCustom', 'ButtonClick', eventData);
+        logMetaEvent('trackCustom', 'ButtonClick', eventData);
     }
 
     // Track hero buttons (Boarding & Daycare)
@@ -97,36 +122,44 @@
         // Hero Boarding Button
         if (target.classList.contains('btn-boarding') || target.closest('.btn-boarding')) {
             trackButtonClick('Boarding', 'hero_cta', '/register');
-            fbq('track', 'ViewContent', {
+            const eventData = {
                 content_name: 'Boarding Service',
                 content_category: 'Services',
                 content_type: 'service'
-            });
+            };
+            fbq('track', 'ViewContent', eventData);
+            logMetaEvent('track', 'ViewContent', eventData);
         }
 
         // Hero Daycare Button
         if (target.classList.contains('btn-daycare') || target.closest('.btn-daycare')) {
             trackButtonClick('Daycare', 'hero_cta', '/register');
-            fbq('track', 'ViewContent', {
+            const eventData = {
                 content_name: 'Daycare Service',
                 content_category: 'Services',
                 content_type: 'service'
-            });
+            };
+            fbq('track', 'ViewContent', eventData);
+            logMetaEvent('track', 'ViewContent', eventData);
         }
 
         // Contact buttons
         if (target.classList.contains('contact-btn-phone') || target.closest('.contact-btn-phone')) {
             trackButtonClick('Call Us', 'contact', 'tel');
-            fbq('track', 'Contact', {
+            const eventData = {
                 contact_type: 'phone'
-            });
+            };
+            fbq('track', 'Contact', eventData);
+            logMetaEvent('track', 'Contact', eventData);
         }
 
         if (target.classList.contains('contact-btn-email') || target.closest('.contact-btn-email')) {
             trackButtonClick('Email Us', 'contact', 'mailto');
-            fbq('track', 'Contact', {
+            const eventData = {
                 contact_type: 'email'
-            });
+            };
+            fbq('track', 'Contact', eventData);
+            logMetaEvent('track', 'Contact', eventData);
         }
 
         // Navigation links
@@ -143,11 +176,13 @@
         if (href) {
             Object.keys(navLinks).forEach(function(path) {
                 if (href.includes(path)) {
-                    fbq('trackCustom', 'NavigationClick', {
+                    const eventData = {
                         link_name: navLinks[path],
                         destination: href,
                         source_page: window.location.pathname
-                    });
+                    };
+                    fbq('trackCustom', 'NavigationClick', eventData);
+                    logMetaEvent('trackCustom', 'NavigationClick', eventData);
                 }
             });
         }
@@ -156,19 +191,23 @@
         if (target.closest('.footer-links') || target.closest('.main-footer')) {
             const linkText = target.textContent.trim();
             if (linkText) {
-                fbq('trackCustom', 'FooterClick', {
+                const eventData = {
                     link_name: linkText,
                     destination: href || 'none'
-                });
+                };
+                fbq('trackCustom', 'FooterClick', eventData);
+                logMetaEvent('trackCustom', 'FooterClick', eventData);
             }
         }
 
         // Social media links
         if (href && (href.includes('facebook.com') || href.includes('instagram.com'))) {
-            fbq('trackCustom', 'SocialClick', {
+            const eventData = {
                 platform: href.includes('facebook') ? 'Facebook' : 'Instagram',
                 source_page: window.location.pathname
-            });
+            };
+            fbq('trackCustom', 'SocialClick', eventData);
+            logMetaEvent('trackCustom', 'SocialClick', eventData);
         }
     });
 
@@ -193,17 +232,19 @@
             scrollMilestones.forEach(function(milestone) {
                 if (scrollPercent >= milestone && !achievedScrollMilestones.has(milestone)) {
                     achievedScrollMilestones.add(milestone);
-                    fbq('trackCustom', 'ScrollDepth', {
+                    const eventData = {
                         depth_percent: milestone,
                         page: window.location.pathname
-                    });
+                    };
+                    fbq('trackCustom', 'ScrollDepth', eventData);
+                    logMetaEvent('trackCustom', 'ScrollDepth', eventData);
                 }
             });
         }, 100);
     });
 
     // ============================================
-    // 4. FORM INTERACTION TRACKING (Registration Form)
+    // 4. FORM SUBMISSION TRACKING (Registration Form)
     // ============================================
     // Listen for messages from the registration form iframe
     window.addEventListener('message', function(event) {
@@ -215,46 +256,16 @@
         const data = event.data;
         if (!data || !data.type) return;
 
-        switch (data.type) {
-            case 'formStepStarted':
-                fbq('trackCustom', 'FormStepStarted', {
-                    step: data.step,
-                    step_name: data.stepName || 'Step ' + data.step
-                });
-                break;
-
-            case 'formStepCompleted':
-                fbq('trackCustom', 'FormStepCompleted', {
-                    step: data.step,
-                    step_name: data.stepName || 'Step ' + data.step
-                });
-                break;
-
-            case 'formFieldFocused':
-                fbq('trackCustom', 'FormFieldInteraction', {
-                    field: data.field,
-                    action: 'focus',
-                    step: data.step
-                });
-                break;
-
-            case 'formSubmitted':
-                fbq('track', 'Lead', {
-                    content_name: 'Dog Registration Complete',
-                    content_category: 'Registration',
-                    services: data.services || []
-                });
-                // Note: CompleteRegistration fires from register.html AFTER URL changes to /thank-you
-                break;
-
-            case 'formAbandoned':
-                fbq('trackCustom', 'FormAbandoned', {
-                    last_step: data.lastStep,
-                    last_step_name: data.lastStepName,
-                    fields_filled: data.fieldsFilled || 0,
-                    time_spent: data.timeSpent || 0
-                });
-                break;
+        // Only track form submission
+        if (data.type === 'formSubmitted') {
+            const formSubmittedData = {
+                content_name: 'Dog Registration Complete',
+                content_category: 'Registration',
+                services: data.services || []
+            };
+            fbq('track', 'Lead', formSubmittedData);
+            logMetaEvent('track', 'Lead', formSubmittedData);
+            // Note: CompleteRegistration fires from register.html AFTER URL changes to /thank-you
         }
     });
 
@@ -276,11 +287,13 @@
     Object.keys(pageTracking).forEach(function(path) {
         if (pageName.includes(path.replace('/', ''))) {
             const info = pageTracking[path];
-            fbq('track', 'ViewContent', {
+            const eventData = {
                 content_name: info.name,
                 content_category: info.category,
                 content_type: 'page'
-            });
+            };
+            fbq('track', 'ViewContent', eventData);
+            logMetaEvent('track', 'ViewContent', eventData);
         }
     });
 
@@ -294,9 +307,11 @@
         const testimonialObserver = new IntersectionObserver(function(entries) {
             entries.forEach(function(entry) {
                 if (entry.isIntersecting) {
-                    fbq('trackCustom', 'TestimonialsViewed', {
+                    const eventData = {
                         page: window.location.pathname
-                    });
+                    };
+                    fbq('trackCustom', 'TestimonialsViewed', eventData);
+                    logMetaEvent('trackCustom', 'TestimonialsViewed', eventData);
                     testimonialObserver.disconnect();
                 }
             });
@@ -308,9 +323,11 @@
     const promoBannerClose = document.getElementById('promoBannerClose');
     if (promoBannerClose) {
         promoBannerClose.addEventListener('click', function() {
-            fbq('trackCustom', 'PromoBannerClosed', {
+            const eventData = {
                 page: window.location.pathname
-            });
+            };
+            fbq('trackCustom', 'PromoBannerClosed', eventData);
+            logMetaEvent('trackCustom', 'PromoBannerClosed', eventData);
         });
     }
 
@@ -326,26 +343,32 @@
 
         // Track phone calls
         if (href.startsWith('tel:')) {
-            fbq('track', 'Contact', {
+            const eventData = {
                 contact_type: 'phone_call',
                 phone_number: href.replace('tel:', '')
-            });
+            };
+            fbq('track', 'Contact', eventData);
+            logMetaEvent('track', 'Contact', eventData);
         }
 
         // Track emails
         if (href.startsWith('mailto:')) {
-            fbq('track', 'Contact', {
+            const eventData = {
                 contact_type: 'email',
                 email: href.replace('mailto:', '')
-            });
+            };
+            fbq('track', 'Contact', eventData);
+            logMetaEvent('track', 'Contact', eventData);
         }
 
         // Track external links
         if (href.startsWith('http') && !href.includes(window.location.hostname)) {
-            fbq('trackCustom', 'OutboundLink', {
+            const eventData = {
                 destination: href,
                 source_page: window.location.pathname
-            });
+            };
+            fbq('trackCustom', 'OutboundLink', eventData);
+            logMetaEvent('trackCustom', 'OutboundLink', eventData);
         }
     });
 

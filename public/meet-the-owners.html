@@ -23,6 +23,11 @@
     'https://connect.facebook.net/en_US/fbevents.js');
     fbq('init', '1375484534303889');
     fbq('track', 'PageView');
+    fetch('/api/meta-event', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ eventType: 'track', eventName: 'PageView', eventData: {} })
+    }).catch(() => {});
     </script>
     <noscript><img height="1" width="1" style="display:none"
     src="https://www.facebook.com/tr?id=1375484534303889&ev=PageView&noscript=1"

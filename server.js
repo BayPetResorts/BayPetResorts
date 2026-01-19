@@ -244,6 +244,13 @@ app.post('/api/contact', async (req, res) => {
   }
 });
 
+// API route for Meta Pixel event logging
+app.post('/api/meta-event', (req, res) => {
+  const { eventType, eventName, eventData } = req.body;
+  console.log(`📊 Meta Event: ${eventType}('${eventName}',`, eventData, ')');
+  res.json({ success: true });
+});
+
 // Serve index.html for all other routes (SPA support)
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));

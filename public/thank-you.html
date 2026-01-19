@@ -23,12 +23,23 @@
     'https://connect.facebook.net/en_US/fbevents.js');
     fbq('init', '1375484534303889');
     fbq('track', 'PageView');
+    fetch('/api/meta-event', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ eventType: 'track', eventName: 'PageView', eventData: {} })
+    }).catch(() => {});
     // Only fire CompleteRegistration once per session (prevent duplicates on refresh)
     if (!sessionStorage.getItem('conversionTracked')) {
-        fbq('track', 'CompleteRegistration', {
+        const eventData = {
             content_name: 'Dog Registration',
             status: 'completed'
-        });
+        };
+        fbq('track', 'CompleteRegistration', eventData);
+        fetch('/api/meta-event', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ eventType: 'track', eventName: 'CompleteRegistration', eventData: eventData })
+        }).catch(() => {});
         sessionStorage.setItem('conversionTracked', 'true');
     }
     </script>
