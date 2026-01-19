@@ -1,6 +1,6 @@
 /**
  * Meta Pixel Advanced Event Tracking for Bay Pet Resorts
- * Tracks: Time on site, button clicks, form interactions, navigation, scroll depth
+ * Tracks: Time on page, form submissions, page views, contact events
  */
 
 (function() {
@@ -10,6 +10,21 @@
     if (typeof fbq === 'undefined') {
         console.warn('Meta Pixel (fbq) not loaded. Tracking disabled.');
         return;
+    }
+
+    // Helper function to get readable page name
+    function getPageName(path) {
+        const pageNames = {
+            '/': 'Homepage',
+            '/register': 'Registration',
+            '/doggie-daycare': 'Doggie Daycare',
+            '/luxury-boarding': 'Luxury Boarding',
+            '/meet-the-owners': 'Meet the Owners',
+            '/contact': 'Contact',
+            '/why-we-are-better': 'Why We\'re Better',
+            '/thank-you': 'Thank You'
+        };
+        return pageNames[path] || path;
     }
 
     // Helper function to log Meta events to terminal (via server)
@@ -33,7 +48,7 @@
     }
 
     // ============================================
-    // 1. TIME ON SITE TRACKING
+    // 1. TIME ON PAGE TRACKING
     // ============================================
     const sessionStart = Date.now();
     let lastActiveTime = sessionStart;
@@ -56,7 +71,7 @@
     });
 
     // Send time spent events at intervals and on page unload
-    function getTimeOnSite() {
+    function getTimeOnPage() {
         let currentActive = totalActiveTime;
         if (isActive) {
             currentActive += Date.now() - lastActiveTime;
@@ -69,7 +84,7 @@
     const achievedMilestones = new Set();
 
     setInterval(function() {
-        const seconds = getTimeOnSite();
+        const seconds = getTimeOnPage();
         timeMilestones.forEach(function(milestone) {
             if (seconds >= milestone && !achievedMilestones.has(milestone)) {
                 achievedMilestones.add(milestone);
@@ -78,74 +93,39 @@
                     milestone: milestone + 's',
                     page: window.location.pathname
                 };
-                fbq('trackCustom', 'TimeOnSite', eventData);
-                logMetaEvent('trackCustom', 'TimeOnSite', eventData);
+                fbq('trackCustom', 'TimeOnPage', eventData);
+                logMetaEvent('trackCustom', 'TimeOnPage', eventData);
             }
         });
     }, 5000); // Check every 5 seconds
 
     // Send final time on page unload
     window.addEventListener('beforeunload', function() {
-        const seconds = getTimeOnSite();
+        const seconds = getTimeOnPage();
         if (seconds > 5) { // Only track if they stayed more than 5 seconds
             // Use sendBeacon for reliable delivery
+            const pagePath = window.location.pathname;
             const data = {
-                event: 'TimeOnSiteExit',
+                event: 'TimeOnPageExit',
                 seconds: seconds,
-                page: window.location.pathname
+                page: pagePath,
+                page_name: getPageName(pagePath)
             };
             // fbq might not work in beforeunload, so we also use navigator.sendBeacon
-            fbq('trackCustom', 'TimeOnSiteExit', data);
-            logMetaEvent('trackCustom', 'TimeOnSiteExit', data);
+            fbq('trackCustom', 'TimeOnPageExit', data);
+            logMetaEvent('trackCustom', 'TimeOnPageExit', data);
         }
     });
 
     // ============================================
-    // 2. BUTTON CLICK TRACKING
+    // 2. CONTACT BUTTON TRACKING
     // ============================================
-    function trackButtonClick(buttonName, buttonType, destination) {
-        const eventData = {
-            button_name: buttonName,
-            button_type: buttonType,
-            destination: destination || 'none',
-            page: window.location.pathname
-        };
-        fbq('trackCustom', 'ButtonClick', eventData);
-        logMetaEvent('trackCustom', 'ButtonClick', eventData);
-    }
-
-    // Track hero buttons (Boarding & Daycare)
     document.addEventListener('click', function(e) {
         const target = e.target.closest('a, button');
         if (!target) return;
 
-        // Hero Boarding Button
-        if (target.classList.contains('btn-boarding') || target.closest('.btn-boarding')) {
-            trackButtonClick('Boarding', 'hero_cta', '/register');
-            const eventData = {
-                content_name: 'Boarding Service',
-                content_category: 'Services',
-                content_type: 'service'
-            };
-            fbq('track', 'ViewContent', eventData);
-            logMetaEvent('track', 'ViewContent', eventData);
-        }
-
-        // Hero Daycare Button
-        if (target.classList.contains('btn-daycare') || target.closest('.btn-daycare')) {
-            trackButtonClick('Daycare', 'hero_cta', '/register');
-            const eventData = {
-                content_name: 'Daycare Service',
-                content_category: 'Services',
-                content_type: 'service'
-            };
-            fbq('track', 'ViewContent', eventData);
-            logMetaEvent('track', 'ViewContent', eventData);
-        }
-
         // Contact buttons
         if (target.classList.contains('contact-btn-phone') || target.closest('.contact-btn-phone')) {
-            trackButtonClick('Call Us', 'contact', 'tel');
             const eventData = {
                 contact_type: 'phone'
             };
@@ -154,37 +134,11 @@
         }
 
         if (target.classList.contains('contact-btn-email') || target.closest('.contact-btn-email')) {
-            trackButtonClick('Email Us', 'contact', 'mailto');
             const eventData = {
                 contact_type: 'email'
             };
             fbq('track', 'Contact', eventData);
             logMetaEvent('track', 'Contact', eventData);
-        }
-
-        // Navigation links
-        const navLinks = {
-            'luxury-boarding': 'Luxury Boarding',
-            'doggie-daycare': 'Doggie Daycare', 
-            'why-we-are-better': 'Why We\'re Better',
-            'meet-the-owners': 'Meet the Owners',
-            'contact': 'Contact',
-            'register': 'Register'
-        };
-
-        const href = target.getAttribute('href');
-        if (href) {
-            Object.keys(navLinks).forEach(function(path) {
-                if (href.includes(path)) {
-                    const eventData = {
-                        link_name: navLinks[path],
-                        destination: href,
-                        source_page: window.location.pathname
-                    };
-                    fbq('trackCustom', 'NavigationClick', eventData);
-                    logMetaEvent('trackCustom', 'NavigationClick', eventData);
-                }
-            });
         }
 
         // Footer links
@@ -212,39 +166,7 @@
     });
 
     // ============================================
-    // 3. SCROLL DEPTH TRACKING
-    // ============================================
-    const scrollMilestones = [25, 50, 75, 90, 100];
-    const achievedScrollMilestones = new Set();
-
-    function getScrollPercentage() {
-        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-        const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-        if (scrollHeight === 0) return 100;
-        return Math.round((scrollTop / scrollHeight) * 100);
-    }
-
-    let scrollTimeout;
-    window.addEventListener('scroll', function() {
-        clearTimeout(scrollTimeout);
-        scrollTimeout = setTimeout(function() {
-            const scrollPercent = getScrollPercentage();
-            scrollMilestones.forEach(function(milestone) {
-                if (scrollPercent >= milestone && !achievedScrollMilestones.has(milestone)) {
-                    achievedScrollMilestones.add(milestone);
-                    const eventData = {
-                        depth_percent: milestone,
-                        page: window.location.pathname
-                    };
-                    fbq('trackCustom', 'ScrollDepth', eventData);
-                    logMetaEvent('trackCustom', 'ScrollDepth', eventData);
-                }
-            });
-        }, 100);
-    });
-
-    // ============================================
-    // 4. FORM SUBMISSION TRACKING (Registration Form)
+    // 3. FORM SUBMISSION TRACKING (Registration Form)
     // ============================================
     // Listen for messages from the registration form iframe
     window.addEventListener('message', function(event) {
