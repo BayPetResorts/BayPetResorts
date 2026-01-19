@@ -50,8 +50,7 @@
     // ============================================
     // 1. TIME ON PAGE TRACKING
     // ============================================
-    const sessionStart = Date.now();
-    let lastActiveTime = sessionStart;
+    let lastActiveTime = Date.now();
     let totalActiveTime = 0;
     let isActive = true;
 
@@ -70,7 +69,6 @@
         }
     });
 
-    // Send time spent events at intervals and on page unload
     function getTimeOnPage() {
         let currentActive = totalActiveTime;
         if (isActive) {
@@ -80,27 +78,47 @@
     }
 
     // Send final time on page unload
-    window.addEventListener('beforeunload', function() {
-        const seconds = getTimeOnPage();
+    const unloadProcessedKey = 'metaPixelUnloadProcessed';
+    
+    function handlePageUnload() {
+        // Prevent duplicate firing using sessionStorage with timestamp
+        const now = Date.now();
+        const lastProcessed = sessionStorage.getItem(unloadProcessedKey);
+        
+        // If processed within last 100ms, skip (prevents duplicate pagehide events)
+        if (lastProcessed && (now - parseInt(lastProcessed)) < 100) {
+            return;
+        }
+        
+        sessionStorage.setItem(unloadProcessedKey, now.toString());
+        
+        const pageSeconds = getTimeOnPage();
         const pagePath = window.location.pathname;
-        const data = {
+        
+        // Page exit event
+        const pageData = {
             event: 'TimeOnPageBeforeExiting',
-            seconds: seconds,
+            seconds: pageSeconds,
             page: pagePath,
             page_name: getPageName(pagePath)
         };
         
-        // Use sendBeacon for reliable delivery in beforeunload
-        fbq('trackCustom', 'TimeOnPageBeforeExiting', data);
+        // Use sendBeacon for reliable delivery
+        fbq('trackCustom', 'TimeOnPageBeforeExiting', pageData);
         
-        // Send to server using sendBeacon (more reliable than fetch in beforeunload)
-        const serverData = JSON.stringify({
+        // Send to server using sendBeacon
+        const pageServerData = JSON.stringify({
             eventType: 'trackCustom',
             eventName: 'TimeOnPageBeforeExiting',
-            eventData: data
+            eventData: pageData
         });
-        navigator.sendBeacon('/api/meta-event', new Blob([serverData], { type: 'application/json' }));
-    });
+        navigator.sendBeacon('/api/meta-event', new Blob([pageServerData], { type: 'application/json' }));
+    }
+    
+    window.addEventListener('pagehide', handlePageUnload);
+    
+    // Clear the processed flag on page load to allow new unload events
+    sessionStorage.removeItem(unloadProcessedKey);
 
 
     // ============================================
@@ -133,7 +151,7 @@
             if (linkText) {
                 const eventData = {
                     link_name: linkText,
-                    destination: href || 'none'
+                    destination: target.href || 'none'
                 };
                 fbq('trackCustom', 'FooterClick', eventData);
                 logMetaEvent('trackCustom', 'FooterClick', eventData);
@@ -141,6 +159,7 @@
         }
 
         // Social media links
+        const href = target.href;
         if (href && (href.includes('facebook.com') || href.includes('instagram.com'))) {
             const eventData = {
                 platform: href.includes('facebook') ? 'Facebook' : 'Instagram',
@@ -178,7 +197,7 @@
     });
 
     // ============================================
-    // 5. PAGE-SPECIFIC TRACKING
+    // 4. PAGE-SPECIFIC TRACKING
     // ============================================
     const pageName = window.location.pathname;
 
@@ -206,7 +225,7 @@
     });
 
     // ============================================
-    // 6. ENGAGEMENT TRACKING
+    // 5. ENGAGEMENT TRACKING
     // ============================================
     
     // Track testimonial section visibility
@@ -240,7 +259,7 @@
     }
 
     // ============================================
-    // 7. OUTBOUND LINK TRACKING
+    // 6. OUTBOUND LINK TRACKING
     // ============================================
     document.addEventListener('click', function(e) {
         const link = e.target.closest('a');
