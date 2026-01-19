@@ -23,11 +23,6 @@
     'https://connect.facebook.net/en_US/fbevents.js');
     fbq('init', '1375484534303889');
     fbq('track', 'PageView');
-    fetch('/api/meta-event', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ eventType: 'track', eventName: 'PageView', eventData: {} })
-    }).catch(() => {});
     </script>
     <noscript><img height="1" width="1" style="display:none"
     src="https://www.facebook.com/tr?id=1375484534303889&ev=PageView&noscript=1"
@@ -65,17 +60,197 @@
                     </div>
                 </div>
 
-                <div class="luxury-boarding-info">
-                    <h2>What is Luxury Boarding?</h2>
-                    <p>
-                        Our luxury boarding service provides your pet with a premium experience 
-                        featuring spacious accommodations, personalized care, and premium amenities. 
-                        Each guest receives individual attention and care tailored to their needs.
-                    </p>
-                </div>
             </div>
         </div>
     </div>
+
+    <!-- Boarding Packages (matches daycare card layout) -->
+    <section class="daycare-page boarding-packages-section">
+        <div class="container">
+            <div class="daycare-packages-grid">
+                <!-- Presidential Suite -->
+                <div class="package-card premium">
+                    <div class="premium-header">Presidential Suite</div>
+                    <div class="package-price-tag">$129<span>/day</span></div>
+                    <h2 class="package-title">Presidential Suite</h2>
+                    <ul class="package-list">
+                        <li class="package-item">
+                            <button class="package-header" type="button">
+                                <span class="package-icon">✓</span>
+                                <span class="package-text">Door-to-door pickup & drop-off</span>
+                                <span class="package-arrow">▼</span>
+                            </button>
+                            <div class="package-details">
+                                <p>We offer free pickup and drop-off service in the South Bay area. Your dog will be safely transported to and from our facility, making it convenient for you and stress-free for your pet.</p>
+                            </div>
+                        </li>
+                        <li class="package-item">
+                            <button class="package-header" type="button">
+                                <span class="package-icon">✓</span>
+                                <span class="package-text">Open-Air Spacious Room (72in x 60in)</span>
+                                <span class="package-arrow">▼</span>
+                            </button>
+                            <div class="package-details">
+                                <p>Your pet will enjoy a spacious 72in x 60in open-air room with windows, providing plenty of room to move around comfortably. The room is thoroughly disinfected twice daily to ensure a clean and healthy environment.</p>
+                            </div>
+                        </li>
+                        <li class="package-item">
+                            <button class="package-header" type="button">
+                                <span class="package-icon">✓</span>
+                                <span class="package-text">Remote Webcam Access (Eufy Bot)</span>
+                                <span class="package-arrow">▼</span>
+                            </button>
+                            <div class="package-details">
+                                <p>Stay connected with your pet 24/7 through our remote internet-controlled Eufy Bot. Watch in real time, talk to your dog, remotely interact, and even feed treats through the bot—anytime, from anywhere.</p>
+                            </div>
+                        </li>
+                        <li class="package-item">
+                            <button class="package-header" type="button">
+                                <span class="package-icon">✓</span>
+                                <span class="package-text">Video Report Card</span>
+                                <span class="package-arrow">▼</span>
+                            </button>
+                            <div class="package-details">
+                                <p>Receive a video report card that captures transport, training, playtime, and grooming highlights, so you can see exactly how your dog spent their stay.</p>
+                            </div>
+                        </li>
+                        <li class="package-item">
+                            <button class="package-header" type="button">
+                                <span class="package-icon">✓</span>
+                                <span class="package-text">Certified Training Session (Opt-in/out)</span>
+                                <span class="package-arrow">▼</span>
+                            </button>
+                            <div class="package-details">
+                                <p>All training sessions are led by a CCPDT-Certified Trainer. Our certified trainers use positive reinforcement techniques. You can opt-in or opt-out of this service based on your pet's needs.</p>
+                            </div>
+                        </li>
+                        <li class="package-item">
+                            <button class="package-header" type="button">
+                                <span class="package-icon">✓</span>
+                                <span class="package-text">Outdoor Adventure + Socialization (2x/day)</span>
+                                <span class="package-arrow">▼</span>
+                            </button>
+                            <div class="package-details">
+                                <p>Your dog will enjoy two outdoor adventure and socialization sessions per day. These activities provide exercise, mental stimulation, and positive social interactions with other dogs in a supervised environment.</p>
+                            </div>
+                        </li>
+                        <li class="package-item">
+                            <button class="package-header" type="button">
+                                <span class="package-icon">✓</span>
+                                <span class="package-text">2 Premium Meals</span>
+                                <span class="package-arrow">▼</span>
+                            </button>
+                            <div class="package-details">
+                                <p>Your dog will enjoy two gourmet meals prepared with premium ingredients. Choose from low-fat organic mozzarella with Alaskan salmon bake and wild rice, or grass-fed steak with sweet potato. Additional substitutions available upon request.</p>
+                            </div>
+                        </li>
+                        <li class="package-item">
+                            <button class="package-header" type="button">
+                                <span class="package-icon">✓</span>
+                                <span class="package-text">Bath, Brush & Shampoo</span>
+                                <span class="package-arrow">▼</span>
+                            </button>
+                            <div class="package-details">
+                                <p>Your dog will receive a thorough refresh using Tek Shampoo (originally developed for NASA research) for the best deep clean, and Virbac Epi-Otic Advanced Ear Cleanser to refresh and protect your dog's ears.</p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Standard Kennel -->
+                <div class="package-card">
+                    <div class="package-price-tag">$79<span>/day</span></div>
+                    <h2 class="package-title">Standard Kennel</h2>
+                    <ul class="package-list">
+                        <li class="package-item">
+                            <button class="package-header" type="button">
+                                <span class="package-icon">✓</span>
+                                <span class="package-text">Spacious Kennel (48in x 30in x 33in)</span>
+                                <span class="package-arrow">▼</span>
+                            </button>
+                            <div class="package-details">
+                                <p>Your pet will stay in a comfortable standard kennel measuring 48 inches by 30 inches by 33 inches, providing adequate space for rest and relaxation during their stay.</p>
+                            </div>
+                        </li>
+                        <li class="package-item">
+                            <button class="package-header" type="button">
+                                <span class="package-icon">✓</span>
+                                <span class="package-text">Indoor Structured Socialization</span>
+                                <span class="package-arrow">▼</span>
+                            </button>
+                            <div class="package-details">
+                                <p>Your dog will receive structured socialization tailored to their social ability and temperament. We carefully match playgroups and monitor interactions to ensure safe, positive experiences that build confidence and social skills.</p>
+                            </div>
+                        </li>
+                        <li class="package-item">
+                            <button class="package-header" type="button">
+                                <span class="package-icon">✓</span>
+                                <span class="package-text">2 Standard Meals</span>
+                                <span class="package-arrow">▼</span>
+                            </button>
+                            <div class="package-details">
+                                <p>We provide two nutritious standard meals during your pet's stay, or you can bring your dog's preferred food. We follow your feeding schedule and accommodate any dietary restrictions or special requirements.</p>
+                            </div>
+                        </li>
+                        <li class="package-item">
+                            <button class="package-header" type="button">
+                                <span class="package-icon">✓</span>
+                                <span class="package-text">3 Outdoor Walks (10 min each)</span>
+                                <span class="package-arrow">▼</span>
+                            </button>
+                            <div class="package-details">
+                                <p>Your dog will enjoy three outdoor walks per day, each lasting 10 minutes. This ensures plenty of exercise, fresh air, and mental stimulation in a safe, supervised environment.</p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // Package item dropdown functionality (copied from daycare)
+        document.addEventListener('DOMContentLoaded', function() {
+            const packageHeaders = document.querySelectorAll('.package-header');
+            
+            packageHeaders.forEach(header => {
+                header.addEventListener('click', function() {
+                    const packageItem = this.closest('.package-item');
+                    const packageDetails = packageItem.querySelector('.package-details');
+                    const arrow = this.querySelector('.package-arrow');
+                    
+                    // Toggle active state
+                    const isActive = packageItem.classList.contains('active');
+                    
+                    // Close all other items
+                    document.querySelectorAll('.package-item').forEach(item => {
+                        if (item !== packageItem) {
+                            item.classList.remove('active');
+                            const otherDetails = item.querySelector('.package-details');
+                            const otherArrow = item.querySelector('.package-arrow');
+                            if (otherDetails) {
+                                otherDetails.style.maxHeight = null;
+                            }
+                            if (otherArrow) {
+                                otherArrow.style.transform = 'rotate(0deg)';
+                            }
+                        }
+                    });
+                    
+                    // Toggle current item
+                    if (isActive) {
+                        packageItem.classList.remove('active');
+                        packageDetails.style.maxHeight = null;
+                        arrow.style.transform = 'rotate(0deg)';
+                    } else {
+                        packageItem.classList.add('active');
+                        packageDetails.style.maxHeight = packageDetails.scrollHeight + 'px';
+                        arrow.style.transform = 'rotate(180deg)';
+                    }
+                });
+            });
+        });
+    </script>
 
     <div id="footer-placeholder"></div>
 </body>

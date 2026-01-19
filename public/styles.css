@@ -1412,6 +1412,29 @@ body {
     align-items: stretch;
 }
 
+/* Luxury Boarding packages reuse daycare cards, full width layout */
+.boarding-packages-section {
+    background-color: var(--beige-bg);
+    padding: 60px 24px;
+}
+
+.boarding-packages-section .container {
+    max-width: 100%;
+    width: 100%;
+    padding: 0;
+}
+
+.boarding-packages-section .daycare-packages-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    width: 100%;
+}
+
+@media (max-width: 900px) {
+    .boarding-packages-section .daycare-packages-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
 .daycare-page .package-card {
     background-color: #ffffff;
     border-radius: 16px;
