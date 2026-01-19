@@ -145,49 +145,137 @@
             logMetaEvent('track', 'Contact', eventData);
         }
 
-        // Footer links
-        if (target.closest('.footer-links') || target.closest('.main-footer')) {
-            const linkText = target.textContent.trim();
-            if (linkText) {
-                const eventData = {
-                    link_name: linkText,
-                    destination: target.href || 'none'
-                };
-                fbq('trackCustom', 'FooterClick', eventData);
-                logMetaEvent('trackCustom', 'FooterClick', eventData);
+        // ============================================
+        // HOMEPAGE HERO BUTTON TRACKING
+        // ============================================
+        // Homepage Luxury Boarding button
+        if (target.classList.contains('btn-boarding') || target.closest('.btn-boarding')) {
+            fbq('trackCustom', 'ClickedHomePageLuxuryBoarding', { source_page: window.location.pathname });
+            logMetaEvent('trackCustom', 'ClickedHomePageLuxuryBoarding', { source_page: window.location.pathname });
+        }
+        
+        // Homepage Doggie Daycare button
+        if (target.classList.contains('btn-daycare') || target.closest('.btn-daycare')) {
+            fbq('trackCustom', 'ClickedHomePageDoggieDaycare', { source_page: window.location.pathname });
+            logMetaEvent('trackCustom', 'ClickedHomePageDoggieDaycare', { source_page: window.location.pathname });
+        }
+
+        // Luxury Boarding Join Waitlist button
+        if (target.classList.contains('btn-register-waitlist') || target.closest('.btn-register-waitlist')) {
+            fbq('trackCustom', 'ClickedLuxuryBoardingJoinWaitlist', { source_page: window.location.pathname });
+            logMetaEvent('trackCustom', 'ClickedLuxuryBoardingJoinWaitlist', { source_page: window.location.pathname });
+        }
+
+        // Doggie Daycare Register button (only on doggie daycare page)
+        if ((target.classList.contains('btn-register-dog') || target.closest('.btn-register-dog')) && 
+            window.location.pathname === '/doggie-daycare') {
+            fbq('trackCustom', 'ClickedDoggieDaycareRegister', { source_page: window.location.pathname });
+            logMetaEvent('trackCustom', 'ClickedDoggieDaycareRegister', { source_page: window.location.pathname });
+        }
+
+        // ============================================
+        // HEADER NAVIGATION TRACKING
+        // ============================================
+        const href = target.href || (target.closest('a') ? target.closest('a').href : null);
+        const path = href ? new URL(href, window.location.origin).pathname : null;
+        
+        // Header logo/homepage
+        if (target.closest('.logo') && target.closest('a') && (path === '/' || path === '')) {
+            fbq('trackCustom', 'ClickedHeaderHomePage', { source_page: window.location.pathname });
+            logMetaEvent('trackCustom', 'ClickedHeaderHomePage', { source_page: window.location.pathname });
+        }
+        
+        // Header nav links
+        if (target.classList.contains('nav-link') || target.closest('.nav-link')) {
+            const navLink = target.closest('.nav-link') || target;
+            const navHref = navLink.href;
+            const navPath = navHref ? new URL(navHref, window.location.origin).pathname : null;
+            
+            if (navPath === '/luxury-boarding') {
+                fbq('trackCustom', 'ClickedHeaderLuxuryBoarding', { source_page: window.location.pathname });
+                logMetaEvent('trackCustom', 'ClickedHeaderLuxuryBoarding', { source_page: window.location.pathname });
+            } else if (navPath === '/doggie-daycare') {
+                fbq('trackCustom', 'ClickedHeaderDoggieDaycare', { source_page: window.location.pathname });
+                logMetaEvent('trackCustom', 'ClickedHeaderDoggieDaycare', { source_page: window.location.pathname });
+            } else if (navPath === '/why-we-are-better') {
+                fbq('trackCustom', 'ClickedHeaderWhyWe\'reBetter', { source_page: window.location.pathname });
+                logMetaEvent('trackCustom', 'ClickedHeaderWhyWe\'reBetter', { source_page: window.location.pathname });
+            } else if (navPath === '/meet-the-owners') {
+                fbq('trackCustom', 'ClickedHeaderMeetTheOwners', { source_page: window.location.pathname });
+                logMetaEvent('trackCustom', 'ClickedHeaderMeetTheOwners', { source_page: window.location.pathname });
             }
         }
-
-        // Social media links
-        const href = target.href;
-        if (href && (href.includes('facebook.com') || href.includes('instagram.com'))) {
-            const eventData = {
-                platform: href.includes('facebook') ? 'Facebook' : 'Instagram',
-                source_page: window.location.pathname
-            };
-            fbq('trackCustom', 'SocialClick', eventData);
-            logMetaEvent('trackCustom', 'SocialClick', eventData);
+        
+        // Header dropdown items
+        if (target.classList.contains('dropdown-item') || target.closest('.dropdown-item')) {
+            const dropdownLink = target.closest('.dropdown-item') || target;
+            const dropdownHref = dropdownLink.href;
+            const dropdownPath = dropdownHref ? new URL(dropdownHref, window.location.origin).pathname : null;
+            
+            if (dropdownPath === '/meet-the-owners') {
+                fbq('trackCustom', 'ClickedHeaderMeetTheOwners', { source_page: window.location.pathname });
+                logMetaEvent('trackCustom', 'ClickedHeaderMeetTheOwners', { source_page: window.location.pathname });
+            } else if (dropdownPath === '/contact') {
+                fbq('trackCustom', 'ClickedHeaderContactUs', { source_page: window.location.pathname });
+                logMetaEvent('trackCustom', 'ClickedHeaderContactUs', { source_page: window.location.pathname });
+            }
         }
-
-        // Review links (Google and Yelp)
+        
+        // Header review links
         if (target.classList.contains('review-link') || target.closest('.review-link')) {
             const reviewLink = target.closest('.review-link') || target;
             const reviewHref = reviewLink.href || target.href;
             
-            let platform = null;
-            if (reviewHref && reviewHref.includes('google.com') || reviewHref.includes('share.google')) {
-                platform = 'Google';
+            if (reviewHref && (reviewHref.includes('google.com') || reviewHref.includes('share.google'))) {
+                fbq('trackCustom', 'ClickedHeaderGoogleReview', { source_page: window.location.pathname });
+                logMetaEvent('trackCustom', 'ClickedHeaderGoogleReview', { source_page: window.location.pathname });
             } else if (reviewHref && reviewHref.includes('yelp.com')) {
-                platform = 'Yelp';
+                fbq('trackCustom', 'ClickedHeaderYelpReview', { source_page: window.location.pathname });
+                logMetaEvent('trackCustom', 'ClickedHeaderYelpReview', { source_page: window.location.pathname });
+            }
+        }
+        
+        // ============================================
+        // FOOTER NAVIGATION TRACKING
+        // ============================================
+        if (target.closest('.main-footer')) {
+            const footerLink = target.closest('a');
+            if (!footerLink) return;
+            
+            const footerHref = footerLink.href;
+            const footerPath = footerHref ? new URL(footerHref, window.location.origin).pathname : null;
+            const footerHash = footerHref ? new URL(footerHref, window.location.origin).hash : null;
+            
+            // Footer navigation links
+            if (footerPath === '/luxury-boarding') {
+                fbq('trackCustom', 'ClickedFooterLuxuryBoard', { source_page: window.location.pathname });
+                logMetaEvent('trackCustom', 'ClickedFooterLuxuryBoard', { source_page: window.location.pathname });
+            } else if (footerPath === '/doggie-daycare') {
+                fbq('trackCustom', 'ClickedFooterDoggieDayCare', { source_page: window.location.pathname });
+                logMetaEvent('trackCustom', 'ClickedFooterDoggieDayCare', { source_page: window.location.pathname });
+            } else if (footerPath === '/register') {
+                fbq('trackCustom', 'ClickedFooterYourDog\'sFirstStay', { source_page: window.location.pathname });
+                logMetaEvent('trackCustom', 'ClickedFooterYourDog\'sFirstStay', { source_page: window.location.pathname });
+            } else if (footerPath === '/why-we-are-better') {
+                fbq('trackCustom', 'ClickedFooterWhywe\'reBetter', { source_page: window.location.pathname });
+                logMetaEvent('trackCustom', 'ClickedFooterWhywe\'reBetter', { source_page: window.location.pathname });
+            } else if (footerPath === '/' && footerHash === '#about') {
+                fbq('trackCustom', 'ClickedFooterAboutUs', { source_page: window.location.pathname });
+                logMetaEvent('trackCustom', 'ClickedFooterAboutUs', { source_page: window.location.pathname });
+            } else if (footerPath === '/contact') {
+                fbq('trackCustom', 'ClickedFooterContactUs', { source_page: window.location.pathname });
+                logMetaEvent('trackCustom', 'ClickedFooterContactUs', { source_page: window.location.pathname });
             }
             
-            if (platform) {
-                const eventData = {
-                    platform: platform,
-                    source_page: window.location.pathname
-                };
-                fbq('trackCustom', 'ReviewViewed', eventData);
-                logMetaEvent('trackCustom', 'ReviewViewed', eventData);
+            // Footer social media links
+            if (footerLink.classList.contains('social-icon') || footerLink.closest('.social-icon')) {
+                if (footerLink.getAttribute('aria-label') === 'Facebook' || footerHref.includes('facebook.com')) {
+                    fbq('trackCustom', 'ClickedFooterFacebookProfile', { source_page: window.location.pathname });
+                    logMetaEvent('trackCustom', 'ClickedFooterFacebookProfile', { source_page: window.location.pathname });
+                } else if (footerLink.getAttribute('aria-label') === 'Instagram' || footerHref.includes('instagram.com')) {
+                    fbq('trackCustom', 'ClickedFooterInstagramProfile', { source_page: window.location.pathname });
+                    logMetaEvent('trackCustom', 'ClickedFooterInstagramProfile', { source_page: window.location.pathname });
+                }
             }
         }
     });
