@@ -1404,6 +1404,13 @@ body {
     letter-spacing: -0.5px;
 }
 
+.package-disclaimer {
+    text-align: center;
+    font-size: 14px;
+    color: #6B7280;
+    margin: -12px 0 24px 0;
+}
+
 .daycare-packages-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
