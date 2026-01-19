@@ -1667,15 +1667,16 @@
                                 window.metaPixelTracking.trackFormSubmission(formData.services);
                             }
                             
-                            showSuccessScreen();
+                            // Small delay to ensure message is processed before redirect, then scroll success
                             setTimeout(() => {
+                                showSuccessScreen();
                                 if (successScreen) {
                                     successScreen.scrollIntoView({ 
                                         behavior: 'instant', 
                                         block: 'center' 
                                     });
                                 }
-                            }, 0);
+                            }, 100);
                             
                             if (config.onSuccess) {
                                 config.onSuccess(formData);

@@ -190,8 +190,28 @@
                 content_category: 'Registration',
                 services: data.services || []
             };
+            
+            // Track Lead event
             fbq('track', 'Lead', formSubmittedData);
-            logMetaEvent('track', 'Lead', formSubmittedData);
+            
+            // Log to terminal using sendBeacon for reliability (in case page redirects immediately)
+            const serverData = JSON.stringify({
+                eventType: 'track',
+                eventName: 'Lead',
+                eventData: formSubmittedData
+            });
+            
+            // Use sendBeacon for reliable delivery during navigation
+            if (navigator.sendBeacon) {
+                navigator.sendBeacon('/api/meta-event', new Blob([serverData], { type: 'application/json' }));
+            } else {
+                // Fallback to fetch if sendBeacon not available
+                logMetaEvent('track', 'Lead', formSubmittedData);
+            }
+            
+            // Also log to console
+            console.log(`📊 Meta Event: track('Lead',`, formSubmittedData, ')');
+            
             // Note: CompleteRegistration fires from register.html AFTER URL changes to /thank-you
         }
     });
