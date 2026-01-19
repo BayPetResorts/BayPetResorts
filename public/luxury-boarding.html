@@ -33,6 +33,14 @@
 <body>
     <div id="header-placeholder"></div>
 
+    <!-- Promotional Banner -->
+    <div class="promo-banner" id="promoBanner">
+        <div class="promo-banner-content">
+            <span class="promo-banner-text">50% off boarding for your dog's first day</span>
+            <button class="promo-banner-close" id="promoBannerClose" aria-label="Close banner">×</button>
+        </div>
+    </div>
+
     <!-- Boarding Packages (matches daycare card layout, now above other content) -->
     <section class="daycare-page boarding-packages-section">
         <div class="container">
@@ -68,11 +76,11 @@
                         <li class="package-item">
                             <button class="package-header" type="button">
                                 <span class="package-icon">✓</span>
-                                <span class="package-text">Remote Webcam Access (Eufy Bot)</span>
+                                <span class="package-text">Remote Webcam Access (Rola Bot)</span>
                                 <span class="package-arrow">▼</span>
                             </button>
                             <div class="package-details">
-                                <p>Stay connected with your pet 24/7 through our remote internet-controlled Eufy Bot. Watch in real time, talk to your dog, remotely interact, and even feed treats through the bot—anytime, from anywhere.</p>
+                                <p>Stay connected with your pet 24/7 through our remote internet-controlled Rola Bot. Watch in real time, talk to your dog, remotely interact, and even feed treats through the bot—anytime, from anywhere.</p>
                             </div>
                         </li>
                         <li class="package-item">
@@ -219,6 +227,32 @@
     </div>
 
     <script>
+        // Promotional Banner Functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const promoBanner = document.getElementById('promoBanner');
+            const promoBannerClose = document.getElementById('promoBannerClose');
+            
+            if (promoBanner && promoBannerClose) {
+                // Show banner by default, check if it was previously closed
+                const bannerClosed = localStorage.getItem('boardingPromoBannerClosed');
+                if (bannerClosed === 'true') {
+                    promoBanner.classList.add('hidden');
+                    document.body.classList.remove('banner-visible');
+                } else {
+                    // Ensure banner is visible
+                    promoBanner.classList.remove('hidden');
+                    document.body.classList.add('banner-visible');
+                }
+                
+                // Close banner on button click
+                promoBannerClose.addEventListener('click', function() {
+                    promoBanner.classList.add('hidden');
+                    document.body.classList.remove('banner-visible');
+                    localStorage.setItem('boardingPromoBannerClosed', 'true');
+                });
+            }
+        });
+
         // Package item dropdown functionality (copied from daycare)
         document.addEventListener('DOMContentLoaded', function() {
             const packageHeaders = document.querySelectorAll('.package-header');
