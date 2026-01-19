@@ -33,40 +33,10 @@
 <body>
     <div id="header-placeholder"></div>
 
-    <!-- Luxury Boarding Page Content -->
-    <div class="luxury-boarding-page">
-        <div class="container">
-            <div class="luxury-boarding-content">
-                <h1 class="luxury-boarding-title">Luxury Boarding</h1>
-                
-                <div class="capacity-notice">
-                    <div class="capacity-icon">
-                        <svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <circle cx="32" cy="32" r="32" fill="#F59E0B" opacity="0.1"/>
-                            <path d="M32 20V32L40 40" stroke="#F59E0B" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-                            <circle cx="32" cy="32" r="24" stroke="#F59E0B" stroke-width="2"/>
-                        </svg>
-                    </div>
-                    <h2 class="capacity-title">Currently Near Capacity</h2>
-                    <p class="capacity-message">
-                        We apologize for the inconvenience and will give <span class="discount-highlight">50%</span> off your first day's boarding when you register with us.
-                    </p>
-                    <p class="capacity-submessage">
-                        To ensure the best experience for your pet, we are limiting the number of pets we board. We will notify you when a spot becomes available.
-                    </p>
-                    <div class="capacity-actions">
-                        <a href="/" class="btn-return-home">Return to Home</a>
-                        <a href="/register" class="btn-register-waitlist">Join Waitlist</a>
-                    </div>
-                </div>
-
-            </div>
-        </div>
-    </div>
-
-    <!-- Boarding Packages (matches daycare card layout) -->
+    <!-- Boarding Packages (matches daycare card layout, now above other content) -->
     <section class="daycare-page boarding-packages-section">
         <div class="container">
+            <h1 class="luxury-boarding-title">Luxury Boarding</h1>
             <div class="daycare-packages-grid">
                 <!-- Presidential Suite -->
                 <div class="package-card premium">
@@ -107,16 +77,6 @@
                         <li class="package-item">
                             <button class="package-header" type="button">
                                 <span class="package-icon">✓</span>
-                                <span class="package-text">Video Report Card</span>
-                                <span class="package-arrow">▼</span>
-                            </button>
-                            <div class="package-details">
-                                <p>Receive a video report card that captures transport, training, playtime, and grooming highlights, so you can see exactly how your dog spent their stay.</p>
-                            </div>
-                        </li>
-                        <li class="package-item">
-                            <button class="package-header" type="button">
-                                <span class="package-icon">✓</span>
                                 <span class="package-text">Certified Training Session (Opt-in/out)</span>
                                 <span class="package-arrow">▼</span>
                             </button>
@@ -152,6 +112,16 @@
                             </button>
                             <div class="package-details">
                                 <p>Your dog will receive a thorough refresh using Tek Shampoo (originally developed for NASA research) for the best deep clean, and Virbac Epi-Otic Advanced Ear Cleanser to refresh and protect your dog's ears.</p>
+                            </div>
+                        </li>
+                        <li class="package-item">
+                            <button class="package-header" type="button">
+                                <span class="package-icon">✓</span>
+                                <span class="package-text">Video Report Card</span>
+                                <span class="package-arrow">▼</span>
+                            </button>
+                            <div class="package-details">
+                                <p>Receive a video report card that captures transport, training, playtime, and grooming highlights, so you can see exactly how your dog spent their stay.</p>
                             </div>
                         </li>
                     </ul>
@@ -202,11 +172,50 @@
                                 <p>Your dog will enjoy three outdoor walks per day, each lasting 10 minutes. This ensures plenty of exercise, fresh air, and mental stimulation in a safe, supervised environment.</p>
                             </div>
                         </li>
+                        <li class="package-item">
+                            <button class="package-header" type="button">
+                                <span class="package-icon">✓</span>
+                                <span class="package-text">Photo Report Card</span>
+                                <span class="package-arrow">▼</span>
+                            </button>
+                            <div class="package-details">
+                                <p>Receive photo updates capturing your dog’s day—meals, walks, and social time—so you can see how they’re doing during their stay.</p>
+                            </div>
+                        </li>
                     </ul>
                 </div>
             </div>
         </div>
     </section>
+
+    <!-- Luxury Boarding Page Content (moved below cards) -->
+    <div class="luxury-boarding-page">
+        <div class="container">
+            <div class="luxury-boarding-content">
+                <div class="capacity-notice">
+                    <div class="capacity-icon">
+                        <svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="32" cy="32" r="32" fill="#F59E0B" opacity="0.1"/>
+                            <path d="M32 20V32L40 40" stroke="#F59E0B" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                            <circle cx="32" cy="32" r="24" stroke="#F59E0B" stroke-width="2"/>
+                        </svg>
+                    </div>
+                    <h2 class="capacity-title">Currently Near Capacity</h2>
+                    <p class="capacity-message">
+                        We apologize for the inconvenience and will give <span class="discount-highlight">50%</span> off your first day's boarding when you register with us.
+                    </p>
+                    <p class="capacity-submessage">
+                        To ensure the best experience for your pet, we are limiting the number of pets we board. We will notify you when a spot becomes available.
+                    </p>
+                    <div class="capacity-actions">
+                        <a href="/" class="btn-return-home">Return to Home</a>
+                        <a href="/register" class="btn-register-waitlist">Join Waitlist</a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
 
     <script>
         // Package item dropdown functionality (copied from daycare)
