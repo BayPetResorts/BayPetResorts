@@ -79,43 +79,29 @@
         return Math.round(currentActive / 1000); // Return seconds
     }
 
-    // Track time milestones
-    const timeMilestones = [30, 60, 120, 300]; // 30s, 1min, 2min, 5min
-    const achievedMilestones = new Set();
-
-    setInterval(function() {
-        const seconds = getTimeOnPage();
-        timeMilestones.forEach(function(milestone) {
-            if (seconds >= milestone && !achievedMilestones.has(milestone)) {
-                achievedMilestones.add(milestone);
-                const eventData = {
-                    seconds: milestone,
-                    milestone: milestone + 's',
-                    page: window.location.pathname
-                };
-                fbq('trackCustom', 'TimeOnPage', eventData);
-                logMetaEvent('trackCustom', 'TimeOnPage', eventData);
-            }
-        });
-    }, 5000); // Check every 5 seconds
-
     // Send final time on page unload
     window.addEventListener('beforeunload', function() {
         const seconds = getTimeOnPage();
-        if (seconds > 5) { // Only track if they stayed more than 5 seconds
-            // Use sendBeacon for reliable delivery
-            const pagePath = window.location.pathname;
-            const data = {
-                event: 'TimeOnPageExit',
-                seconds: seconds,
-                page: pagePath,
-                page_name: getPageName(pagePath)
-            };
-            // fbq might not work in beforeunload, so we also use navigator.sendBeacon
-            fbq('trackCustom', 'TimeOnPageExit', data);
-            logMetaEvent('trackCustom', 'TimeOnPageExit', data);
-        }
+        const pagePath = window.location.pathname;
+        const data = {
+            event: 'TimeOnPageBeforeExiting',
+            seconds: seconds,
+            page: pagePath,
+            page_name: getPageName(pagePath)
+        };
+        
+        // Use sendBeacon for reliable delivery in beforeunload
+        fbq('trackCustom', 'TimeOnPageBeforeExiting', data);
+        
+        // Send to server using sendBeacon (more reliable than fetch in beforeunload)
+        const serverData = JSON.stringify({
+            eventType: 'trackCustom',
+            eventName: 'TimeOnPageBeforeExiting',
+            eventData: data
+        });
+        navigator.sendBeacon('/api/meta-event', new Blob([serverData], { type: 'application/json' }));
     });
+
 
     // ============================================
     // 2. CONTACT BUTTON TRACKING
